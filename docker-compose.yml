@@ -1,0 +1,14 @@
+version: '2'
+
+services:
+  customers-service:
+    // the image needs to be uploaded to docker (cloud?), just google the image and you will see
+    image: springcommunity/spring-petclinic-customers-service
+    container_name: customers-service
+    mem_limit: 512M
+    //setup discovery server
+    depends_on:
+     - discovery-server
+    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "org.springframework.boot.loader.JarLauncher"]
+    ports:
+    - 8091:8091

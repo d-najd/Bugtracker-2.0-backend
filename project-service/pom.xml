@@ -11,14 +11,23 @@
 	<groupId>io.dnajd</groupId>
 	<artifactId>project-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>project-service</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
 		<kotlin.version>1.7.22</kotlin.version>
-		<spring-cloud.version>2022.0.0</spring-cloud.version>
+		<!-- <spring-cloud.version>2022.0.0</spring-cloud.version> -->
+
+		<docker.exposed.port>8091</docker.exposed.port>
+		<docker.image.dockerfile.dir>${basedir}/../docker</docker.image.dockerfile.dir>
 	</properties>
 	<dependencies>
+		<!-- Spring Boot -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -31,6 +40,29 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Spring Cloud -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.springframework.cloud</groupId>
+    		<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+    		<version>4.0.0</version>
+		</dependency>
+
+		<!-- Kotlin -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-kotlin</artifactId>
@@ -51,11 +83,8 @@
 			<groupId>org.jetbrains.kotlinx</groupId>
 			<artifactId>kotlinx-coroutines-reactor</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-		</dependency>
 
+		<!-- Third Parties -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -67,21 +96,37 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<groupId>io.opentelemetry</groupId>
+			<artifactId>opentelemetry-exporter-zipkin</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-            <version>2.0.2</version>
-        </dependency>
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<version>2.0.2</version>
+		</dependency>
     </dependencies>
+
+	<profiles>
+		<profile>
+			<id>buildDocker</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.spotify</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<version>${docker.plugin.version}</version>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<!--
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -139,5 +184,5 @@
 			</snapshots>
 		</repository>
 	</repositories>
-
+	-->
 </project>
