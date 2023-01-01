@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController
 class ProjectResource(val projectRepository: ProjectRepository) {
 
     // for testing
-    @GetMapping("/getAll")
+    @GetMapping
     fun getAll(): ProjectHolder {
         return ProjectHolder(projectRepository.findAll())
     }
 
-    @GetMapping("/getAll/user/{userID}")
+    @GetMapping("/user/{userID}")
     fun getAll(
         @PathVariable("userID") userID: Long
     ): ProjectHolder {

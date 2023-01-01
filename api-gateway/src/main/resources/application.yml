@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: api-gateway
+  config:
+    import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888/}
+  cloud:
+    gateway:
+      routes:
+        - id: project-service
+          uri: lb://project-service
+          predicates:
+            - Path=/api/**
+          filters:
+            - StripPrefix=2
