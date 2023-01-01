@@ -6,6 +6,7 @@ set -o nounset
 set -o pipefail
 
 cd ..
+mkdir logs
 echo "Running Apps"
 if [[ $1 == no-install ]]; then
     echo "Skipping mvn install"
