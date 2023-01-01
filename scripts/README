@@ -1,0 +1,4 @@
+run-all.sh accepts 1 argument and if that argument is "no-install" every module in the project wont be re-builded which
+is the default behaviour, any other argument will be ignored.
+
+NOTE the jars still run in the background even if the script is closed, currently I am unaware of a way to fix this.
