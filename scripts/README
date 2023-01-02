@@ -1,4 +1,30 @@
-run-all.sh accepts 1 argument and if that argument is "no-install" every module in the project wont be re-builded which
-is the default behaviour, any other argument will be ignored.
+This folder contains all the scripts for helping with building stuff
 
-NOTE the jars still run in the background even if the script is closed, currently I am unaware of a way to fix this.
+NOTE: when ran from shell the app may not close fully even if you press ctrl + z to stop the instance, closing the
+terminal for that instance fixes the issue
+
+all-services and all-services-wait-times are the services that are looked up when "run-all.sh" and "copy-jars" are
+called and any services in which are not included will be ignored from being ran.
+
+the jars from all the built services will be copies in folder called jars in the root directory of the project, currently
+this has no use
+
+build-all.sh -> takes no arguments, builds all the services in the main pom.xml file, does not read service info from
+all-services and all-services-wait-times
+
+build-one.sh -> takes 1 argument (name of the service), builds that service and copies the files to jars folder
+
+copy-jars.sh -> takes no arguments, copies all the jars which are put in all-services file
+
+run-all.sh -> takes no arguments, runs all the jars in all-services file with delays from all-services-wait-times
+
+run-one.sh -> takes 1 argument (name of service), runs one service (does not build it if it does not exist)
+
+run-one-write-logs.sh -> takes 1 argument (name of service), runs one service (does not build it if it does not exist)
+and writes the logs in a file with the format { $(pwd)/logs/$1.log }
+
+
+improvements
+- for the contents from pom.xml instead of all-services but the wait times will probably need to be kept preferably in
+key value format possibly json
+- build the service if it does not exist in run-one and run-all

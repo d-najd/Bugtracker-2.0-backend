@@ -1,18 +1,8 @@
 #!/usr/bin/env bash
 
-set -o errexit
-set -o errtrace
-set -o nounset
-set -o pipefail
+echo "finish this"
 
-cd ..
-mkdir -p logs
-echo "Running Apps"
-if [[ $1 == no-install ]]; then
-    echo "Skipping mvn install"
-else
-    mvn clean install
-fi
+sleep 10000000
 java -jar discovery-server/target/*.jar > logs/discovery-server.log &
 echo "sleeping 10 sec"
 sleep 10

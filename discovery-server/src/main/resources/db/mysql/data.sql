@@ -1,0 +1,6 @@
+INSERT INTO user_authority_types VALUES ("manage_users_auth")
+INSERT INTO user_authority_types VALUES ("assign_roles_auth")
+INSERT INTO user_authority_types VALUES ("insert_auth")
+INSERT INTO user_authority_types VALUES ("update_auth")
+INSERT INTO user_authority_types VALUES ("delete_auth")
+INSERT INTO user_authority_types VALUES ("comment_auth")
