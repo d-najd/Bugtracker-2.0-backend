@@ -12,8 +12,8 @@ class Project {
     @Column
     var id = 0L
 
-    @Column(name = "owner_id")
-    var ownerId = 0L
+    @Column(name = "owner")
+    var owner = ""
 
     @Column(name = "title")
     @NotEmpty

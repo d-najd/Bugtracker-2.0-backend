@@ -17,7 +17,6 @@
 	</parent>
 
 	<modules>
-		<module>project-service</module>
 		<module>discovery-server</module>
 		<module>api-gateway</module>
 		<!-- <module>project-table-service</module> -->

@@ -7,8 +7,8 @@ spring:
     gateway:
       routes:
         - id: project-service
-          uri: lb://project-service
+          uri: lb://project-service/project
           predicates:
             - Path=/api/**
           filters:
-            - StripPrefix=2
+            - StripPrefix=1
