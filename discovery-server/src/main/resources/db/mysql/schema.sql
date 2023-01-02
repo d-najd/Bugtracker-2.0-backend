@@ -1,7 +1,8 @@
 CREATE TABLE `user` (
   `username` varchar(255) UNIQUE PRIMARY KEY NOT NULL,
   `password` varchar(255) NOT NULL,
-  `created_at` varchar(255) NOT NULL
+  `created_at` timestamp NOT NULL,
+  `enabled` boolean NOT NULL DEFAULT true
 );
 
 CREATE TABLE `user_authority` (
