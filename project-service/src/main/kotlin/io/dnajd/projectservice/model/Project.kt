@@ -19,7 +19,7 @@ class Project {
     @NotEmpty
     var title = ""
 
-    @Column(name = "description")
+    @Column(name = "description", length = 65535)
     var description: String? = null
 
     @Column(name = "created_at")

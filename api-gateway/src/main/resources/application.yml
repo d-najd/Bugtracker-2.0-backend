@@ -1,14 +1,27 @@
 spring:
   application:
     name: api-gateway
-  config:
-    import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:8888/}
   cloud:
+    config:
+      enabled: false
     gateway:
-      routes:
-        - id: project-service
-          uri: lb://project-service/project
-          predicates:
-            - Path=/api/**
-          filters:
-            - StripPrefix=1
+      discovery:
+        locator:
+          enabled: true
+          lowerCaseServiceId: true
+      # Doesn't want to work for some reason and I have spent WAYYY too much time trying to fix this
+      #routes:
+      #  - id: project-service
+      #    uri: lb//project-service
+      #    predicates:
+      #      - Path=/api/project/**
+      #    filters:
+      #      - RewritePath=/api(?<path>/?.*), $\{path}
+management:
+  endpoints.web.exposure.include: '*'
+  endpoint:
+    health:
+      show-details: always
+    #loadBalancer:
+    #  ribbon:
+    #    enabled: true
