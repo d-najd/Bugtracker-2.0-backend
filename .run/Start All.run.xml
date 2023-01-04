@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Start All" type="CompoundRunConfigurationType">
+    <toRun name="ApiGateway" type="JetRunConfigurationType" />
+    <toRun name="DiscoveryServer" type="JetRunConfigurationType" />
+    <toRun name="ProjectService" type="JetRunConfigurationType" />
+    <toRun name="ProjectTableService" type="JetRunConfigurationType" />
+    <method v="2" />
+  </configuration>
+</component>

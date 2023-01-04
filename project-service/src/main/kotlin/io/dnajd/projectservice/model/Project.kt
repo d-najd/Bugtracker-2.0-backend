@@ -6,11 +6,11 @@ import java.util.*
 
 @Entity
 @Table(name = "project")
-class Project {
+class Project{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    var id = 0L
+    var id = -1L
 
     @Column(name = "owner")
     var owner = ""

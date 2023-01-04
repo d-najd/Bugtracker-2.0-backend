@@ -1,0 +1,15 @@
+server.port: 8092
+
+spring:
+  application.name: project-table-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/Bugtracker2
+    username: root
+    password: root-password
+  cloud.config.enabled: false
+  jpa.hibernate:
+    naming-strategy: PhysicalNamingStrategyStandardImpl
+    ddl-auto: update
+
+# security.enable.csrf: false
+# management.endpoints.web.exposure.include = "*"

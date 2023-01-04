@@ -2,6 +2,6 @@ package io.dnajd.projectservice.web
 
 import io.dnajd.projectservice.model.Project
 
-class ProjectHolder(
+data class ProjectHolder(
     val projects: List<Project> = emptyList()
 )

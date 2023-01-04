@@ -10,43 +10,38 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import java.lang.IllegalArgumentException
 
-@RequestMapping
+@RequestMapping("/api")
 @RestController
-class ProjectResource(val projectRepository: ProjectRepository) {
+class ProjectResource(val repository: ProjectRepository) {
     @GetMapping("/testing/getAll")
     fun getAll(): ProjectHolder {
-        return ProjectHolder(projectRepository.findAll())
+        return ProjectHolder(repository.findAll())
     }
 
     @GetMapping("/user/{username}")
     fun getAllForOwner(
         @PathVariable username: String
     ): ProjectHolder {
-        return ProjectHolder(projectRepository.findAllByOwner(username!!))
+        return ProjectHolder(repository.findAllByOwner(username))
     }
 
-    @PostMapping("/user/{username}")
+    @PostMapping
     fun post(
-        @PathVariable username: String,
-        @RequestBody project: Project,
+        @RequestBody pojo: Project,
     ): Project {
-        project.owner = username
-        return projectRepository.save(project)
+        return repository.save(pojo)
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     fun update(
-        @RequestBody project: Project,
-        @PathVariable id: Long,
+        @RequestBody pojo: Project,
     ): Project {
-        projectRepository.findById(id).orElseThrow { throw IllegalArgumentException("Project with id $id does not exist") }
-        project.id = id
-        return projectRepository.save(project)
+        repository.findById(pojo.id).orElseThrow { throw IllegalArgumentException("Project with id ${pojo.id} does not exist") }
+        return repository.saveAndFlush(pojo)
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -54,6 +49,6 @@ class ProjectResource(val projectRepository: ProjectRepository) {
     fun delete(
         @PathVariable id: Long
     ) {
-        projectRepository.deleteById(id)
+        repository.deleteById(id)
     }
 }
