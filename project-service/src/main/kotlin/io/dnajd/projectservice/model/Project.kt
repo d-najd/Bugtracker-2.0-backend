@@ -1,8 +1,8 @@
 package io.dnajd.projectservice.model
 
 import jakarta.persistence.*
+import jakarta.validation.constraints.NotEmpty
 import java.util.*
-import javax.validation.constraints.NotEmpty
 
 @Entity
 @Table(name = "project")

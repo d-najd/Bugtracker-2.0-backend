@@ -90,7 +90,7 @@
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
 		</dependency>
-    </dependencies>
+	</dependencies>
 
 	<build>
 		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
