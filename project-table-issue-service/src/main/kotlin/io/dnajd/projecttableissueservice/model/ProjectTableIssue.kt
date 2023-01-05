@@ -25,6 +25,7 @@ class ProjectTableIssue {
     @Column(name = "table_id")
     var tableId = -1L
 
+    //TODO create many to one relationship with user table
     @NotEmpty
     @Column(name = "reporter")
     var reporter = ""

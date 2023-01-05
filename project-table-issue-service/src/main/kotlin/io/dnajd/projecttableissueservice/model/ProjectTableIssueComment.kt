@@ -13,12 +13,10 @@ class ProjectTableIssueComment {
     @Column
     var id: Long = -1L
 
-    //TODO create many to one relationship with user table
     @NotEmpty
     @Column(name = "user")
     var user = ""
-
-    // This
+    
     @Column(name = "issue_id")
     var issueId = -1L
 
