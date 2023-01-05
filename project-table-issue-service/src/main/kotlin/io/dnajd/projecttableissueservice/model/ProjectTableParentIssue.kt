@@ -5,14 +5,10 @@ import jakarta.persistence.*
 import jakarta.validation.constraints.NotEmpty
 import java.util.*
 
+// TODO optimize this with @Inheritance
 @Entity
-@Table(
-    name = "project_table_issue",
-    uniqueConstraints = [
-        UniqueConstraint(name = "project_table_issue_unique_1", columnNames = ["table_id", "position"]),
-    ]
-)
-class ProjectTableIssue {
+@Table(name = "project_table_issue")
+class ProjectTableParentIssue{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -51,21 +47,6 @@ class ProjectTableIssue {
     @NotEmpty
     var updatedAt: Date = Date()
 
-    @OneToMany(
-        cascade = [(CascadeType.REMOVE)],
-        mappedBy = "issue",
-        fetch = FetchType.LAZY
-    )
-    val comments: MutableList<ProjectTableIssueComment> = mutableListOf()
-
-    @ManyToMany(cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "project_table_issue_label",
-        joinColumns = [JoinColumn(name = "item_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "label_id", referencedColumnName = "id")]
-    )
-    var labels: MutableList<ProjectLabel> = mutableListOf()
-
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
@@ -75,13 +56,4 @@ class ProjectTableIssue {
         insertable = false,
     )
     var table: ProjectTable? = null
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-        name = "parent_issue_id",
-        referencedColumnName = "id",
-        updatable = false,
-        insertable = false,
-    )
-    var parentIssue: ProjectTableParentIssue? = null
 }

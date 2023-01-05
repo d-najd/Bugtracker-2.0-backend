@@ -2,6 +2,7 @@ package io.dnajd.projecttableissueservice.web
 
 import io.dnajd.projecttableissueservice.model.ProjectTableIssueRepository
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -14,4 +15,12 @@ class ProjectTableIssueResource(val repository: ProjectTableIssueRepository) {
         return ProjectTableIssueHolder(repository.findAll())
     }
 
+    @GetMapping("/tableId/{tableId}")
+    fun getAllByTableId(
+        @PathVariable tableId: Long
+    ): ProjectTableIssueHolder {
+        return ProjectTableIssueHolder(repository.findAllByTableId(tableId))
+    }
+
+    // TODO add post put and delete methods
 }

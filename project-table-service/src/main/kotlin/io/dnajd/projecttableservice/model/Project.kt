@@ -14,6 +14,10 @@ class Project(
     var id = -1L
 
     @JsonIgnore
-    @OneToMany(cascade = [(CascadeType.REMOVE)], mappedBy = "project", fetch = FetchType.LAZY)
+    @OneToMany(
+        cascade = [(CascadeType.REMOVE)],
+        mappedBy = "project",
+        fetch = FetchType.LAZY
+    )
     val tables: MutableList<ProjectTable> = mutableListOf()
 }

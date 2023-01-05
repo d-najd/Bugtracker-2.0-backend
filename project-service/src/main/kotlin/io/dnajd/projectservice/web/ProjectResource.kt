@@ -23,7 +23,7 @@ class ProjectResource(val repository: ProjectRepository) {
     }
 
     @GetMapping("/user/{username}")
-    fun getAllForOwner(
+    fun getAllByOwner(
         @PathVariable username: String
     ): ProjectHolder {
         return ProjectHolder(repository.findAllByOwner(username))
