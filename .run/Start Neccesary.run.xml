@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Start Neccesary" type="CompoundRunConfigurationType">
+    <toRun name="ApiGateway" type="JetRunConfigurationType" />
+    <toRun name="DiscoveryServer" type="JetRunConfigurationType" />
+    <method v="2" />
+  </configuration>
+</component>

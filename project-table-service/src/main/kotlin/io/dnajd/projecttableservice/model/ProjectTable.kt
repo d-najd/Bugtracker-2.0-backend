@@ -19,7 +19,6 @@ class ProjectTable {
     @Column
     var id = -1L
 
-    @NotNull
     @Column(name = "projectId")
     var projectId = -1L
 
@@ -27,7 +26,6 @@ class ProjectTable {
     @Column(name = "title")
     var title = ""
 
-    @NotNull
     @Column(name = "position")
     var position = -1
 
