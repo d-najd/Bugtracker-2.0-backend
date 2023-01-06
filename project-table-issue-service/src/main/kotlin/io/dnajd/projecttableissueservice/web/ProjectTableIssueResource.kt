@@ -1,10 +1,9 @@
 package io.dnajd.projecttableissueservice.web
 
+import io.dnajd.projecttableissueservice.model.ProjectTableIssue
 import io.dnajd.projecttableissueservice.model.ProjectTableIssueRepository
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/api")
 @RestController
@@ -22,5 +21,27 @@ class ProjectTableIssueResource(val repository: ProjectTableIssueRepository) {
         return ProjectTableIssueHolder(repository.findAllByTableId(tableId))
     }
 
-    // TODO add post put and delete methods
+    @PostMapping
+    fun post(
+        @RequestBody pojo: ProjectTableIssue,
+    ): ProjectTableIssue {
+        return repository.save(pojo)
+    }
+
+    @PutMapping
+    fun update(
+        @RequestBody pojo: ProjectTableIssue,
+    ): ProjectTableIssue {
+        repository.findById(pojo.id).orElseThrow { throw IllegalArgumentException("Project Table with id ${pojo.id} does not exist") }
+        return repository.saveAndFlush(pojo)
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    fun delete(
+        @PathVariable id: Long
+    ) {
+        repository.deleteById(id)
+    }
+
 }

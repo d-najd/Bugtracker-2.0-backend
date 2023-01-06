@@ -16,7 +16,7 @@ class ProjectTableIssueComment {
     @NotEmpty
     @Column(name = "user")
     var user = ""
-    
+
     @Column(name = "issue_id")
     var issueId = -1L
 

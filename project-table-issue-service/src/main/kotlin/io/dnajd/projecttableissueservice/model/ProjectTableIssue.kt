@@ -25,7 +25,7 @@ class ProjectTableIssue {
     @Column(name = "table_id")
     var tableId = -1L
 
-    //TODO create many to one relationship with user table
+    //TODO create many-to-one relationship with user table
     @NotEmpty
     @Column(name = "reporter")
     var reporter = ""
@@ -53,13 +53,16 @@ class ProjectTableIssue {
     var updatedAt: Date = Date()
 
     @OneToMany(
-        cascade = [(CascadeType.REMOVE)],
+        cascade = [CascadeType.REMOVE],
         mappedBy = "issue",
         fetch = FetchType.LAZY
     )
     val comments: MutableList<ProjectTableIssueComment> = mutableListOf()
 
-    @ManyToMany(cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY)
+    @ManyToMany(
+        cascade = [CascadeType.REMOVE],
+        fetch = FetchType.LAZY
+    )
     @JoinTable(
         name = "project_table_issue_label",
         joinColumns = [JoinColumn(name = "item_id", referencedColumnName = "id")],
