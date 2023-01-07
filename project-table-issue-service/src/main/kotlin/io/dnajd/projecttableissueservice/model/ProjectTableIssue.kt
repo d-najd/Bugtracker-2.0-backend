@@ -57,7 +57,7 @@ class ProjectTableIssue {
         mappedBy = "issue",
         fetch = FetchType.LAZY
     )
-    val comments: MutableList<ProjectTableIssueComment> = mutableListOf()
+    var comments: MutableList<ProjectTableIssueComment> = mutableListOf()
 
     @ManyToMany(
         cascade = [CascadeType.REMOVE],
