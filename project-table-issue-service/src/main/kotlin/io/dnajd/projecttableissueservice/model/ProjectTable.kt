@@ -17,5 +17,5 @@ class ProjectTable {
         mappedBy = "table",
         fetch = FetchType.LAZY
     )
-    val tables: MutableList<ProjectTableParentIssue> = mutableListOf()
+    val issues: MutableList<ProjectTableChildIssue> = mutableListOf()
 }

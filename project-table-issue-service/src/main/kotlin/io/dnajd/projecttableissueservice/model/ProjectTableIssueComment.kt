@@ -17,6 +17,7 @@ class ProjectTableIssueComment {
     @Column(name = "user")
     var user = ""
 
+    @JsonIgnore
     @Column(name = "issue_id")
     var issueId = -1L
 

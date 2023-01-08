@@ -18,6 +18,7 @@ class ProjectTable {
     @Column
     var id = -1L
 
+    @JsonIgnore
     @Column(name = "projectId")
     var projectId = -1L
 
@@ -37,4 +38,11 @@ class ProjectTable {
         insertable = false,
     )
     var project: Project? = null
+
+    @OneToMany(
+        cascade = [(CascadeType.REMOVE)],
+        mappedBy = "table",
+        fetch = FetchType.LAZY
+    )
+    val issues: MutableList<ProjectTableIssue> = mutableListOf()
 }

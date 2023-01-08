@@ -1,9 +1,8 @@
-package io.dnajd.projecttableissueservice.model
+package io.dnajd.projecttableservice.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotEmpty
-import java.util.*
 
 @Entity
 @Table(
@@ -26,11 +25,6 @@ class ProjectTableIssue {
     @Column(name = "table_id")
     var tableId = -1L
 
-    //TODO create many-to-one relationship with user table
-    @NotEmpty
-    @Column(name = "reporter")
-    var reporter = ""
-
     @Column(name = "parent_issue_id")
     var parentIssueId: Long? = null
 
@@ -39,26 +33,6 @@ class ProjectTableIssue {
 
     @Column(name = "position")
     var position = -1
-
-    @Column(name = "description", length = 65534)
-    var description: String? = null
-
-    @Column(name = "created_at")
-    @Temporal(TemporalType.TIMESTAMP)
-    @NotEmpty
-    var createdAt: Date = Date()
-
-    @Column(name = "updated_at")
-    @Temporal(TemporalType.TIMESTAMP)
-    @NotEmpty
-    var updatedAt: Date = Date()
-
-    @OneToMany(
-        cascade = [CascadeType.REMOVE],
-        mappedBy = "issue",
-        fetch = FetchType.LAZY
-    )
-    var comments: MutableList<ProjectTableIssueComment> = mutableListOf()
 
     @ManyToMany(
         cascade = [CascadeType.REMOVE],
