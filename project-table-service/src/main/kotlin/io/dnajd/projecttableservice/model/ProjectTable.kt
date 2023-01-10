@@ -3,6 +3,8 @@ package io.dnajd.projecttableservice.model
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotEmpty
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
 
 @Entity
 @Table(
@@ -31,6 +33,7 @@ class ProjectTable {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(
         name = "projectId",
         referencedColumnName = "id",

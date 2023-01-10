@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import kotlin.jvm.Throws
+import kotlin.jvm.optionals.getOrNull
 
 @RequestMapping("/api")
 @RestController
@@ -27,6 +28,19 @@ class ProjectResource(val repository: ProjectTableRepository) {
         @RequestBody pojo: ProjectTable,
     ): ProjectTable {
         return repository.save(pojo)
+    }
+
+    @OptIn(ExperimentalStdlibApi::class)
+    @PatchMapping("/{id}/title/{newTitle}")
+    fun renameProjectTable(
+        @PathVariable("id") id: Long,
+        @PathVariable("newTitle") newTitle: String,
+    ): ProjectTable {
+        repository.findById(id).getOrNull()?.let {
+            it.title = newTitle
+            return repository.saveAndFlush(it)
+        }
+        throw IllegalArgumentException()
     }
 
     @PutMapping
