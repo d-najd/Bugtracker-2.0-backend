@@ -12,6 +12,10 @@ class ProjectTable {
     var id = -1L
 
     @JsonIgnore
+    @Column(name = "projectId")
+    var projectId = -1L
+
+    @JsonIgnore
     @OneToMany(
         cascade = [(CascadeType.REMOVE)],
         mappedBy = "table",

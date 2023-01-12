@@ -8,6 +8,5 @@ interface ProjectTableRepository: JpaRepository<ProjectTable, Long> {
     fun findAllByProjectId(projectId: Long): List<ProjectTable>
 
     fun findByIdAndProjectId(id: Long, projectId: Long): Optional<ProjectTable>
-
 }
 
