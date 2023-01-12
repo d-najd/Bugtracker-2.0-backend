@@ -2,15 +2,18 @@ package io.dnajd.projecttableservice.web
 
 import io.dnajd.projecttableservice.model.ProjectTable
 import io.dnajd.projecttableservice.model.ProjectTableRepository
+import io.dnajd.projecttableservice.util.QueryConstructor
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import kotlin.jvm.Throws
 import kotlin.jvm.optionals.getOrNull
 
 @RequestMapping("/api")
 @RestController
-class ProjectResource(val repository: ProjectTableRepository) {
+class ProjectTableResource(val repository: ProjectTableRepository) {
+    @Autowired
+    private lateinit var queryConstructor: QueryConstructor
+
     @GetMapping("/testing/getAll")
     fun getAll(): ProjectTableHolder {
         return ProjectTableHolder(repository.findAll())
@@ -30,27 +33,53 @@ class ProjectResource(val repository: ProjectTableRepository) {
         return repository.save(pojo)
     }
 
+    @PutMapping
+    fun update(
+        @RequestBody pojo: ProjectTable,
+    ): ProjectTable {
+        throw NotImplementedError("Doesn't work for some reason")
+        /*
+        repository.findById(pojo.id).orElseThrow { throw IllegalArgumentException("Project Table with id ${pojo.id} does not exist") }
+        return repository.saveAndFlush(pojo)
+         */
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @OptIn(ExperimentalStdlibApi::class)
     @PatchMapping("/{id}/title/{newTitle}")
     fun renameProjectTable(
         @PathVariable("id") id: Long,
         @PathVariable("newTitle") newTitle: String,
-    ): ProjectTable {
+    ) {
         repository.findById(id).getOrNull()?.let {
             it.title = newTitle
-            return repository.saveAndFlush(it)
+            repository.saveAndFlush(it)
+            return
         }
         throw IllegalArgumentException()
     }
 
-    @PutMapping
-    fun update(
-        @RequestBody pojo: ProjectTable,
-    ): ProjectTable {
-        repository.findById(pojo.id).orElseThrow { throw IllegalArgumentException("Project Table with id ${pojo.id} does not exist") }
-        return repository.saveAndFlush(pojo)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @OptIn(ExperimentalStdlibApi::class)
+    @PatchMapping("/{id}/switchPositionWith/{sId}")
+    fun switchProjectTablePositions(
+        @PathVariable("id") id: Long,
+        @PathVariable("sId") sId: Long,
+    ) {
+        repository.findById(id).getOrNull()?.let { fTable ->
+            repository.findByIdAndProjectId(sId, fTable.projectId).getOrNull()?.let {sTable ->
+                val query1 = "UPDATE project_table SET position = -1 WHERE id = ${fTable.id}"
+                val query2 = "UPDATE project_table SET position = ${fTable.position} WHERE id = ${sTable.id}"
+                val query3 = "UPDATE project_table SET position = ${sTable.position} WHERE id = ${fTable.id}"
+
+                queryConstructor.executeUpdate(query1, query2, query3)
+                return
+            }
+        }
+        throw IllegalArgumentException()
     }
 
+    /*
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     fun delete(
@@ -58,5 +87,6 @@ class ProjectResource(val repository: ProjectTableRepository) {
     ) {
         repository.deleteById(id)
     }
+     */
 
 }
