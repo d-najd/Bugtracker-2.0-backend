@@ -61,8 +61,8 @@ class ProjectTableResource(val repository: ProjectTableRepository) {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @OptIn(ExperimentalStdlibApi::class)
-    @PatchMapping("/{id}/switchPositionWith/{sId}")
-    fun switchProjectTablePositions(
+    @PatchMapping("/{id}/swapPositionWith/{sId}")
+    fun swapProjectTablePositions(
         @PathVariable("id") id: Long,
         @PathVariable("sId") sId: Long,
     ) {
