@@ -59,6 +59,14 @@ class ProjectTableResource(val repository: ProjectTableRepository) {
         throw IllegalArgumentException()
     }
 
+    /**
+     * FIXME calling this method can leave the project table in inconsistent state because there are multiple queries,
+     *  for example lets say user1 swaps table1 { position = 1 } with table2 { position = 2 }, now lets say the first
+     *  query gets executed and in the meantime user2 attempts to swap table2 { position = 2 } with table1 { position = -1 }
+     *  now if user1's request manages to execute before any of the queries for user2 start being executed table2 will
+     *  have { position = -1 } thus corrupting any further position swapping in the current table, a way to swap positions
+     *  in 1 query without using position like -1 will solve this problem
+     */
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @OptIn(ExperimentalStdlibApi::class)
     @PatchMapping("/{id}/swapPositionWith/{sId}")
