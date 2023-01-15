@@ -10,6 +10,7 @@ import java.util.Objects
 @Table(name = "project_table_issue_assigne")
 class ProjectTableIssueAssigne {
 
+    @JsonIgnore
     @Column(name = "issue_id", nullable = false, insertable = false, updatable = false)
     var issueId: Long = -1L
 
