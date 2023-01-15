@@ -67,6 +67,15 @@ TABLE project_table_issue_label as TL {
   }
 }
 
+TABLE project_table_issue_assigne as TIA {
+  issue_id bigint [not null]
+  assigner_username varchar [not null]
+  assigned_username varchar [not null]
+  indexes {
+    (issue_id, assigner_username, assigned_username) [pk]
+  }
+}
+
 Table project_table_issue_comment as TIC {
   id bigint [pk, increment, not null]
   user varchar [not null]
@@ -82,6 +91,10 @@ Ref: UA.authority > UAT.authority [delete: cascade, update: cascade]
 
 Ref: TL.item_id > I.id [delete: cascade]
 Ref: TL.label_id > L.id [delete: cascade]
+
+Ref: TIA.issue_id > I.id [delete: cascade]
+Ref: TIA.assigner_username > U.username [delete: cascade]
+Ref: TIA.assigned_username > U.username [delete: cascade]
 
 Ref: L.project_id > P.id [delete: cascade]
 Ref: P.owner > U.username [delete: cascade, update: cascade]

@@ -77,6 +77,28 @@ class ProjectTableIssue {
     )
     var labels: MutableList<ProjectLabel> = mutableListOf()
 
+
+    /*
+    @ManyToOne(
+        cascade = [CascadeType.REMOVE],
+        fetch = FetchType.LAZY
+    )
+    @JoinTable(
+        name = "project_table_issue_assigne",
+        joinColumns = [JoinColumn(name = "issue_id", referencedColumnName = "identity_id")],
+        inverseJoinColumns = [
+            //JoinColumn(name = "assigner_username", referencedColumnName = "username"),
+            // JoinColumn(name = "assigned_username", referencedColumnName = "username"),  // TODO FIX THIS https://stackoverflow.com/questions/43652616/jpa-manytomany-with-a-common-join-column
+        ],
+    )
+     */
+    @OneToMany(
+        cascade = [CascadeType.REMOVE],
+        mappedBy = "issue",
+        fetch = FetchType.LAZY
+    )
+    var assigned: MutableList<ProjectTableIssueAssigne> = mutableListOf()
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
