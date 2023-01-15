@@ -10,7 +10,12 @@ import org.hibernate.annotations.OnDeleteAction
 @Table(
     name = "project_table",
     uniqueConstraints = [
-        UniqueConstraint(name = "project_table_unique_1", columnNames = ["projectId", "position"]),
+        /*
+          maintaining this proved to be more pain than its worth since you CANT SWAP VALUES BETWEEN ROWS which forces the
+          position to be temporarily set to -1 which leads to more problems and breaking points which
+          defeats the whole purpose of the constraint
+         */
+        // UniqueConstraint(name = "project_table_unique_1", columnNames = ["projectId", "position"]),
         UniqueConstraint(name = "project_table_unique_2", columnNames = ["projectId", "title"])
     ]
 )

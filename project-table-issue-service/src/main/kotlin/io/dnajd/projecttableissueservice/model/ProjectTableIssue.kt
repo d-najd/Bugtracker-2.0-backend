@@ -8,9 +8,16 @@ import java.util.*
 @Entity
 @Table(
     name = "project_table_issue",
+    /*
+        maintaining this proved to be more pain than its worth since you CANT SWAP VALUES BETWEEN ROWS which forces the
+        position to be temporarily set to -1 which leads to more problems and breaking points which
+        defeats the whole purpose of the constraint
+     */
+    /*
     uniqueConstraints = [
         UniqueConstraint(name = "project_table_issue_unique_1", columnNames = ["table_id", "position"]),
     ]
+     */
 )
 class ProjectTableIssue {
     @Id

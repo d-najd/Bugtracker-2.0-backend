@@ -1,0 +1,93 @@
+Table user as U {
+  username varchar [pk, not null, unique]
+  password varchar [not null]
+  created_at timestamp [not null]
+  enabled boolean [not null, default: true]
+}
+
+
+TABLE user_authority as UA {
+  user varchar [not null]
+  project_id bigint [not null]
+  authority varchar [not null]
+  indexes {
+    (user, project_id, authority) [pk]
+  }
+}
+
+Table user_authority_types as UAT {
+  authority varchar [pk, not null]
+}
+
+Table project as P {
+  id bigint [pk, increment, not null]
+  owner varchar [not null]
+  title varchar [not null]
+  description text
+  created_at timestamp [not null]
+}
+
+Table project_table as T {
+  id bigint [pk, increment, not null]
+  project_id bigint [not null]
+  title varchar [not null]
+  position int [not null, note: 'ascending positions where 0 is the one most to the left']
+  indexes {
+    (project_id, title) [unique]
+  }
+}
+
+Table project_table_issue as I {
+  id bigint [pk, increment, not null]
+  table_id bigint [not null]
+  reporter varchar [not null]
+  parent_issue_id bigint
+  severity int [not null]
+  title varchar [not null]
+  position int [not null, note: "ascending positions where 0 is the one on the top"]
+  description text
+  created_at timestamp [not null]
+  updated_at timestamp [not null]
+}
+
+Table project_label as L {
+  id bigint [pk, increment, not null]
+  project_id bigint [not null]
+  label varchar [not null, note: 'Mutliple labels like API-ISSUE, UI, PERFORMANCE, etc']
+  indexes {
+    (project_id, label) [unique]
+  }
+}
+
+TABLE project_table_issue_label as TL {
+  item_id bigint [not null]
+  label_id bigint [not null]
+  indexes {
+    (item_id, label_id) [pk]
+  }
+}
+
+Table project_table_issue_comment as TIC {
+  id bigint [pk, increment, not null]
+  user varchar [not null]
+  issue_id bigint [not null]
+  message text [not null]
+  created_at timestamp [not null]
+  edited_at timestamp
+}
+
+Ref: UA.user > U.username [delete: cascade, update: cascade]
+Ref: UA.project_id > P.id [delete: cascade]
+Ref: UA.authority > UAT.authority [delete: cascade, update: cascade]
+
+Ref: TL.item_id > I.id [delete: cascade]
+Ref: TL.label_id > L.id [delete: cascade]
+
+Ref: L.project_id > P.id [delete: cascade]
+Ref: P.owner > U.username [delete: cascade, update: cascade]
+Ref: T.project_id > P.id [delete: cascade]
+Ref: I.table_id > T.id [delete: cascade]
+Ref: I.reporter > U.username [delete: cascade, update: cascade]
+Ref: I.parent_issue_id > I.id [delete: cascade]
+Ref: TIC.user > U.username [delete: cascade, update: cascade]
+Ref: TIC.issue_id > I.id [delete: cascade]

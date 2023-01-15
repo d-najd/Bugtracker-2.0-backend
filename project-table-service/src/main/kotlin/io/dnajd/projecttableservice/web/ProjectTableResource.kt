@@ -76,11 +76,10 @@ class ProjectTableResource(val repository: ProjectTableRepository) {
     ) {
         repository.findById(id).getOrNull()?.let { fTable ->
             repository.findByIdAndProjectId(sId, fTable.projectId).getOrNull()?.let {sTable ->
-                val query1 = "UPDATE project_table SET position = -1 WHERE id = ${fTable.id}"
-                val query2 = "UPDATE project_table SET position = ${fTable.position} WHERE id = ${sTable.id}"
-                val query3 = "UPDATE project_table SET position = ${sTable.position} WHERE id = ${fTable.id}"
+                val query1 = "UPDATE project_table SET position = ${fTable.position} WHERE id = ${sTable.id}"
+                val query2 = "UPDATE project_table SET position = ${sTable.position} WHERE id = ${fTable.id}"
 
-                queryConstructor.executeUpdate(query1, query2, query3)
+                queryConstructor.executeUpdate(query1, query2)
                 return
             }
         }

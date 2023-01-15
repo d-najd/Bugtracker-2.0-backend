@@ -6,6 +6,7 @@ import io.dnajd.projecttableissueservice.util.QueryConstructor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
+import reactor.kotlin.core.publisher.zip
 import kotlin.jvm.optionals.getOrNull
 
 @RequestMapping("/api")
@@ -54,15 +55,15 @@ class ProjectTableIssueResource(val repository: ProjectTableIssueRepository) {
     ) {
         repository.findById(id).getOrNull()?.let { fIssue ->
             repository.findByIdAndTableId(sId, fIssue.tableId).getOrNull()?.let { sIssue ->
-                val query1 = "UPDATE project_table_issue SET position = -1 WHERE id = ${fIssue.id}"
-                val query2 = "UPDATE project_table_issue SET position = ${fIssue.position} WHERE id = ${sIssue.id}"
-                val query3 = "UPDATE project_table_issue SET position = ${sIssue.position} WHERE id = ${fIssue.id}"
+                val query1 = "UPDATE project_table_issue SET position = ${fIssue.position} WHERE id = ${sIssue.id}"
+                val query2 = "UPDATE project_table_issue SET position = ${sIssue.position} WHERE id = ${fIssue.id}"
 
-                queryConstructor.executeUpdate(query1, query2, query3)
+                queryConstructor.executeUpdate(query1, query2)
                 return
             }
+            throw IllegalArgumentException("Can't find item with id $sId, the tasks have to be in the same table")
         }
-        throw IllegalArgumentException("The tasks being moved have to be in the same table")
+        throw IllegalArgumentException("Can't find item with id $id")
     }
 
     /**
@@ -77,25 +78,20 @@ class ProjectTableIssueResource(val repository: ProjectTableIssueRepository) {
     ) {
         repository.findById(id).getOrNull()?.let { fIssue ->
             repository.findByIdAndTableId(sId, fIssue.tableId).getOrNull()?.let { sIssue ->
-                if(fIssue.position > sIssue.position) {
-                    val query1 = "UPDATE project_table_issue SET position = -1 WHERE id = ${fIssue.id};"
-                    val query2 = "UPDATE project_table_issue SET position = position - 1 WHERE table_id = ${fIssue.tableId} AND position BETWEEN ${fIssue.position + 1} AND ${sIssue.position};"
-                    val query3 = "UPDATE project_table_issue SET position = ${sIssue.position} WHERE id = ${fIssue.id}"
+                if(sIssue.position > fIssue.position) {
+                    val query1 = "UPDATE project_table_issue SET position = position - 1 WHERE table_id = ${fIssue.tableId} AND position BETWEEN ${fIssue.position + 1} AND ${sIssue.position};"
+                    val query2 = "UPDATE project_table_issue SET position = ${sIssue.position} WHERE id = ${fIssue.id};"
+                    queryConstructor.executeUpdate(query1, query2)
                 } else {
-
+                    val query1 = "UPDATE project_table_issue SET position = position + 1 WHERE table_id = ${fIssue.tableId} AND position BETWEEN ${sIssue.position} AND ${fIssue.position - 1};"
+                    val query2 = "UPDATE project_table_issue SET position = ${sIssue.position} WHERE id = ${fIssue.id};"
+                    queryConstructor.executeUpdate(query1, query2)
                 }
-
-                /*
-                val query1 = "UPDATE project_table_issue SET position = -1 WHERE id = ${fIssue.id}"
-                val query2 = "UPDATE project_table_issue SET position = ${fIssue.position} WHERE id = ${sIssue.id}"
-                val query3 = "UPDATE project_table_issue SET position = ${sIssue.position} WHERE id = ${fIssue.id}"
-                 */
-
-                queryConstructor.executeUpdate(query1, query2, query3)
                 return
             }
+            throw IllegalArgumentException("Can't find item with id $sId, the tasks have to be in the same table")
         }
-        throw IllegalArgumentException("The tasks being moved have to be in the same table")
+        throw IllegalArgumentException("Can't find item with id $id")
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
