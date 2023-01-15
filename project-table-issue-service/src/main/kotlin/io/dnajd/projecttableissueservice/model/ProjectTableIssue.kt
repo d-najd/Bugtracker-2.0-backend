@@ -22,7 +22,6 @@ class ProjectTableIssue {
     @Column(name = "title")
     var title = ""
 
-    @JsonIgnore
     @Column(name = "table_id")
     var tableId = -1L
 

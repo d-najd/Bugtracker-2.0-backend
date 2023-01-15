@@ -53,7 +53,7 @@ class ProjectTableIssueResource(val repository: ProjectTableIssueRepository) {
         @PathVariable("sId") sId: Long,
     ) {
         repository.findById(id).getOrNull()?.let { fIssue ->
-            repository.findByIdAndTableProjectId(sId, fIssue.table!!.projectId).getOrNull()?.let { sIssue ->
+            repository.findByIdAndTableId(sId, fIssue.tableId).getOrNull()?.let { sIssue ->
                 val query1 = "UPDATE project_table_issue SET position = -1 WHERE id = ${fIssue.id}"
                 val query2 = "UPDATE project_table_issue SET position = ${fIssue.position} WHERE id = ${sIssue.id}"
                 val query3 = "UPDATE project_table_issue SET position = ${sIssue.position} WHERE id = ${fIssue.id}"
@@ -62,7 +62,40 @@ class ProjectTableIssueResource(val repository: ProjectTableIssueRepository) {
                 return
             }
         }
-        throw IllegalArgumentException()
+        throw IllegalArgumentException("The tasks being moved have to be in the same table")
+    }
+
+    /**
+     *
+     */
+    @PatchMapping("/{id}/movePositionTo/{sId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @OptIn(ExperimentalStdlibApi::class)
+    fun moveIssuePositions(
+        @PathVariable("id") id: Long,
+        @PathVariable("sId") sId: Long
+    ) {
+        repository.findById(id).getOrNull()?.let { fIssue ->
+            repository.findByIdAndTableId(sId, fIssue.tableId).getOrNull()?.let { sIssue ->
+                if(fIssue.position > sIssue.position) {
+                    val query1 = "UPDATE project_table_issue SET position = -1 WHERE id = ${fIssue.id};"
+                    val query2 = "UPDATE project_table_issue SET position = position - 1 WHERE table_id = ${fIssue.tableId} AND position BETWEEN ${fIssue.position + 1} AND ${sIssue.position};"
+                    val query3 = "UPDATE project_table_issue SET position = ${sIssue.position} WHERE id = ${fIssue.id}"
+                } else {
+
+                }
+
+                /*
+                val query1 = "UPDATE project_table_issue SET position = -1 WHERE id = ${fIssue.id}"
+                val query2 = "UPDATE project_table_issue SET position = ${fIssue.position} WHERE id = ${sIssue.id}"
+                val query3 = "UPDATE project_table_issue SET position = ${sIssue.position} WHERE id = ${fIssue.id}"
+                 */
+
+                queryConstructor.executeUpdate(query1, query2, query3)
+                return
+            }
+        }
+        throw IllegalArgumentException("The tasks being moved have to be in the same table")
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
