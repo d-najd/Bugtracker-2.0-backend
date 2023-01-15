@@ -27,6 +27,14 @@ class ProjectTableIssueResource(val repository: ProjectTableIssueRepository) {
         return ProjectTableIssueHolder(repository.findAllByTableId(tableId))
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
+    @GetMapping("/{id}")
+    fun get(
+        @PathVariable id: Long,
+    ): ProjectTableIssue {
+        return repository.findById(id).getOrNull() ?: throw IllegalArgumentException("Can't find item with id: $id")
+    }
+
     @PostMapping
     fun post(
         @RequestBody pojo: ProjectTableIssue,
