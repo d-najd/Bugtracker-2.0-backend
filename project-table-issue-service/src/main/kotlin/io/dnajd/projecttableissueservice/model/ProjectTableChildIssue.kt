@@ -1,5 +1,6 @@
 package io.dnajd.projecttableissueservice.model
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotEmpty
@@ -45,13 +46,13 @@ data class ProjectTableChildIssue (
 
     @JsonIgnore
     @Column(name = "created_at")
-    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
     @NotEmpty
     var createdAt: Date = Date(),
 
     @JsonIgnore
     @Column(name = "updated_at")
-    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
     @NotEmpty
     var updatedAt: Date = Date(),
 

@@ -1,5 +1,6 @@
 package io.dnajd.projectservice.model
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotEmpty
 import org.hibernate.Hibernate
@@ -24,7 +25,7 @@ data class Project (
     var description: String? = null,
 
     @Column(name = "created_at")
-    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
     @NotEmpty
     var createdAt: Date = Date(),
 ) {

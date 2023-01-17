@@ -1,5 +1,6 @@
 package io.dnajd.projecttableissueservice.model
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotEmpty
@@ -26,12 +27,12 @@ data class ProjectTableIssueComment (
     var message: String = "",
 
     @Column(name = "created_at")
-    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
     @NotEmpty
     var createdAt: Date = Date(),
 
     @Column(name = "edited_at")
-    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
     @NotEmpty
     var editedAt: Date? = null,
 
