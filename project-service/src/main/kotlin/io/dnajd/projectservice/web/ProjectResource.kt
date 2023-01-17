@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import java.lang.IllegalArgumentException
+import java.util.*
 
 @RequestMapping("/api")
 @RestController
@@ -33,7 +34,10 @@ class ProjectResource(val repository: ProjectRepository) {
     fun post(
         @RequestBody pojo: Project,
     ): Project {
-        return repository.save(pojo)
+        val transientPojo = pojo.copy(
+            createdAt = Date(),
+        )
+        return repository.save(transientPojo)
     }
 
     @PutMapping

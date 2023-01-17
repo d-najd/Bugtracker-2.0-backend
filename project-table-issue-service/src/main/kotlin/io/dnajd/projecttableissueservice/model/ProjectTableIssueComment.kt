@@ -3,36 +3,37 @@ package io.dnajd.projecttableissueservice.model
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotEmpty
+import org.hibernate.Hibernate
 import java.util.*
 
 @Entity
 @Table(name = "project_table_issue_comment")
-class ProjectTableIssueComment {
+data class ProjectTableIssueComment (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    var id: Long = -1L
+    var id: Long = -1L,
 
     @NotEmpty
     @Column(name = "user")
-    var user = ""
+    var user: String = "",
 
     @JsonIgnore
     @Column(name = "issue_id")
-    var issueId = -1L
+    var issueId: Long = -1L,
 
     @Column(name = "message", length = 65534)
-    var message = ""
+    var message: String = "",
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
     @NotEmpty
-    var createdAt: Date = Date()
+    var createdAt: Date = Date(),
 
     @Column(name = "edited_at")
     @Temporal(TemporalType.TIMESTAMP)
     @NotEmpty
-    var editedAt: Date? = null
+    var editedAt: Date? = null,
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,5 +43,20 @@ class ProjectTableIssueComment {
         updatable = false,
         insertable = false,
     )
-    var issue: ProjectTableIssue? = null
+    var issue: ProjectTableIssue? = null,
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as ProjectTableIssueComment
+
+        return id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(id = $id , user = $user , issueId = $issueId , message = $message , createdAt = $createdAt , editedAt = $editedAt )"
+    }
 }

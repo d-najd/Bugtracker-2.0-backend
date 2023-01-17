@@ -2,6 +2,7 @@ package io.dnajd.projecttableservice.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
+import org.hibernate.Hibernate
 
 @Entity
 @Table(
@@ -12,11 +13,11 @@ import jakarta.persistence.*
     ]
      */
 )
-class ProjectLabel {
+data class ProjectLabel (
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
-    var id = -1L
+    var id: Long = -1L,
 
     /*
     @Column(name = "project_id")
@@ -24,9 +25,24 @@ class ProjectLabel {
      */
 
     @Column(name = "label")
-    var label = ""
+    var label: String = "",
 
     @JsonIgnore
     @ManyToMany(mappedBy = "labels")
-    var projectTableIssues: MutableList<ProjectTableIssue> = mutableListOf()
+    var projectTableIssues: MutableList<ProjectTableIssue> = mutableListOf(),
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as ProjectLabel
+
+        return id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(id = $id , label = $label )"
+    }
 }

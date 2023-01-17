@@ -3,6 +3,7 @@ package io.dnajd.projecttableservice.model
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotEmpty
+import org.hibernate.Hibernate
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 
@@ -19,22 +20,22 @@ import org.hibernate.annotations.OnDeleteAction
         UniqueConstraint(name = "project_table_unique_2", columnNames = ["projectId", "title"])
     ]
 )
-class ProjectTable {
+data class ProjectTable (
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
-    var id = -1L
+    var id: Long = -1L,
 
     @JsonIgnore
     @Column(name = "projectId")
-    var projectId = -1L
+    var projectId: Long = -1L,
 
     @NotEmpty
     @Column(name = "title")
-    var title = ""
+    var title: String = "",
 
     @Column(name = "position")
-    var position = -1
+    var position: Int = -1,
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -45,12 +46,27 @@ class ProjectTable {
         updatable = false,
         insertable = false,
     )
-    var project: Project? = null
+    var project: Project? = null,
 
     @OneToMany(
         cascade = [(CascadeType.REMOVE)],
         mappedBy = "table",
         fetch = FetchType.LAZY
     )
-    val issues: MutableList<ProjectTableIssue> = mutableListOf()
+    val issues: MutableList<ProjectTableIssue> = mutableListOf(),
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as ProjectTable
+
+        return id == other.id
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(id = $id , projectId = $projectId , title = $title , position = $position )"
+    }
 }
