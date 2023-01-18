@@ -30,7 +30,15 @@ class ProjectTableResource(val repository: ProjectTableRepository) {
     fun post(
         @RequestBody pojo: ProjectTable,
     ): ProjectTable {
-        return repository.save(pojo)
+        return if(pojo.position == -1) {
+            val tableWithMaxPosition = repository.findAllByProjectId(projectId = pojo.projectId).maxBy { it.position }
+            val transientPojo = pojo.copy(
+                position = tableWithMaxPosition.position + 1
+            )
+            repository.save(transientPojo)
+        } else {
+            repository.save(pojo)
+        }
     }
 
     @PutMapping

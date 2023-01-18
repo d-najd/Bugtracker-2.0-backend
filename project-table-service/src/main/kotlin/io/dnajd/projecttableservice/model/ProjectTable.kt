@@ -26,7 +26,6 @@ data class ProjectTable (
     @Column
     var id: Long = -1L,
 
-    @JsonIgnore
     @Column(name = "projectId")
     var projectId: Long = -1L,
 
