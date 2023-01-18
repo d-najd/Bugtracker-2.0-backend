@@ -94,7 +94,6 @@ class ProjectTableResource(val repository: ProjectTableRepository) {
         throw IllegalArgumentException()
     }
 
-    /*
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     fun delete(
@@ -102,6 +101,5 @@ class ProjectTableResource(val repository: ProjectTableRepository) {
     ) {
         repository.deleteById(id)
     }
-     */
 
 }
