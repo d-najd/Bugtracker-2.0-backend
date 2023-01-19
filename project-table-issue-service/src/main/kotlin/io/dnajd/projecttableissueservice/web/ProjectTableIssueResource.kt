@@ -39,7 +39,11 @@ class ProjectTableIssueResource(val repository: ProjectTableIssueRepository) {
     fun post(
         @RequestBody pojo: ProjectTableIssue,
     ): ProjectTableIssue {
-        return repository.save(pojo.copy(
+        val transientPojo = if(pojo.position == -1) {
+            val tableWithMaxPosition = repository.findAllByTableId(tableId = pojo.tableId).maxBy { it.position }
+            pojo.copy(position = tableWithMaxPosition.position + 1)
+        } else pojo
+        return repository.save(transientPojo.copy(
             createdAt = Date(),
             updatedAt = null,
             comments = mutableListOf(),
