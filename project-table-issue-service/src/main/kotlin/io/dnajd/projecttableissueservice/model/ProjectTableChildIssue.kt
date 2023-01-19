@@ -54,7 +54,7 @@ data class ProjectTableChildIssue (
     @Column(name = "updated_at")
     @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
     @NotEmpty
-    var updatedAt: Date = Date(),
+    var updatedAt: Date? = null,
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

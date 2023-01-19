@@ -59,17 +59,17 @@ data class ProjectTableIssue (
     @Column(name = "updated_at")
     @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
     @NotEmpty
-    var updatedAt: Date = Date(),
+    var updatedAt: Date? = null,
 
     @OneToMany(
         cascade = [CascadeType.REMOVE],
         mappedBy = "issue",
-        fetch = FetchType.LAZY
+        fetch = FetchType.LAZY,
     )
     var comments: MutableList<ProjectTableIssueComment> = mutableListOf(),
 
     @ManyToMany(
-        cascade = [CascadeType.REMOVE],
+        // cascade = [CascadeType.REMOVE], labels should not be removed when the issue is removed
         fetch = FetchType.LAZY
     )
     @JoinTable(
@@ -78,7 +78,6 @@ data class ProjectTableIssue (
         inverseJoinColumns = [JoinColumn(name = "label_id", referencedColumnName = "id")]
     )
     var labels: MutableList<ProjectLabel> = mutableListOf(),
-
 
     /*
     @ManyToOne(

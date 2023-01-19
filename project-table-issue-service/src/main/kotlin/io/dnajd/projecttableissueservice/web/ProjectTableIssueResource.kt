@@ -6,6 +6,7 @@ import io.dnajd.projecttableissueservice.util.QueryConstructor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 @RequestMapping("/api")
@@ -38,15 +39,33 @@ class ProjectTableIssueResource(val repository: ProjectTableIssueRepository) {
     fun post(
         @RequestBody pojo: ProjectTableIssue,
     ): ProjectTableIssue {
-        return repository.save(pojo)
+        return repository.save(pojo.copy(
+            createdAt = Date(),
+            updatedAt = null,
+            comments = mutableListOf(),
+            labels = mutableListOf(),
+            assigned = mutableListOf(),
+            table = null,
+            childIssues = mutableListOf(),
+        ))
     }
 
+    // TODO this can be abused to move issues across projects
     @PutMapping
     fun update(
         @RequestBody pojo: ProjectTableIssue,
     ): ProjectTableIssue {
-        repository.findById(pojo.id).orElseThrow { throw IllegalArgumentException("Project Table with id ${pojo.id} does not exist") }
-        return repository.saveAndFlush(pojo)
+        val originalPojo = repository.findById(pojo.id).orElseThrow { throw IllegalArgumentException("Project Table with id ${pojo.id} does not exist") }
+        return repository.saveAndFlush(pojo.copy(
+            reporter = originalPojo.reporter,
+            createdAt = originalPojo.createdAt,
+            updatedAt = Date(),
+            comments = originalPojo.comments,
+            labels = originalPojo.labels,
+            assigned = originalPojo.assigned,
+            table = originalPojo.table,
+            childIssues = originalPojo.childIssues
+        ))
     }
 
     /**

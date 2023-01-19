@@ -47,7 +47,7 @@ Table project_table_issue as I {
   position int [not null, note: "ascending positions where 0 is the one on the top"]
   description text
   created_at timestamp [not null]
-  updated_at timestamp [not null]
+  updated_at timestamp
 }
 
 Table project_label as L {

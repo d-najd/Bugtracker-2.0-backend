@@ -44,8 +44,10 @@ class ProjectResource(val repository: ProjectRepository) {
     fun update(
         @RequestBody pojo: Project,
     ): Project {
-        repository.findById(pojo.id).orElseThrow { throw IllegalArgumentException("Project with id ${pojo.id} does not exist") }
-        return repository.saveAndFlush(pojo)
+        val originalPojo = repository.findById(pojo.id).orElseThrow { throw IllegalArgumentException("Project with id ${pojo.id} does not exist") }
+        return repository.saveAndFlush(originalPojo.copy(
+            createdAt = originalPojo.createdAt,
+        ))
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
