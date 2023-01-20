@@ -8,9 +8,11 @@ import org.hibernate.Hibernate
 @Entity
 @Table(
     name = "project_table_issue",
+    /*
     uniqueConstraints = [
         UniqueConstraint(name = "project_table_issue_unique_1", columnNames = ["table_id", "position"]),
     ]
+     */
 )
 data class ProjectTableIssue(
     @Id

@@ -31,8 +31,8 @@ class ProjectTableResource(val repository: ProjectTableRepository) {
         @RequestBody pojo: ProjectTable,
     ): ProjectTable {
         val transientPojo = if(pojo.position == -1) {
-            val tableWithMaxPosition = repository.findAllByProjectId(projectId = pojo.projectId).maxBy { it.position }
-            pojo.copy(position = tableWithMaxPosition.position + 1)
+            val maxPos = repository.findAllByProjectId(projectId = pojo.projectId).maxByOrNull { it.position }?.position ?: -1
+            pojo.copy(position = maxPos + 1)
         } else pojo
         return repository.save(transientPojo.copy(
             issues = mutableListOf(),
