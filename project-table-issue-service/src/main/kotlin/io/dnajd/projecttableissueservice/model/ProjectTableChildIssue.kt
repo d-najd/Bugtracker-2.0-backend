@@ -34,7 +34,7 @@ data class ProjectTableChildIssue (
 
     @JsonIgnore
     @Column(name = "severity")
-    var severity: Int = -1,
+    var severity: Int = 1,
 
     @JsonIgnore
     @Column(name = "position")

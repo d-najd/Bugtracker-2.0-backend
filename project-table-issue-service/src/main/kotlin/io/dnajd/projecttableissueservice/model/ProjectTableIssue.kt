@@ -43,7 +43,7 @@ data class ProjectTableIssue (
     var parentIssueId: Long? = null,
 
     @Column(name = "severity")
-    var severity: Int = -1,
+    var severity: Int = 1,
 
     @Column(name = "position")
     var position: Int = -1,
