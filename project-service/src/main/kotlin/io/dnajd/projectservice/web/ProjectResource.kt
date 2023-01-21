@@ -3,17 +3,10 @@ package io.dnajd.projectservice.web
 import io.dnajd.projectservice.model.Project
 import io.dnajd.projectservice.model.ProjectRepository
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestController
-import java.lang.IllegalArgumentException
+import org.springframework.web.bind.annotation.*
 import java.util.*
+import kotlin.IllegalArgumentException
+import kotlin.jvm.optionals.getOrNull
 
 @RequestMapping("/api")
 @RestController
@@ -30,6 +23,14 @@ class ProjectResource(val repository: ProjectRepository) {
         return ProjectHolder(repository.findAllByOwner(username))
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
+    @GetMapping("/{id}")
+    fun get(
+        @PathVariable id: Long
+    ): Project {
+        return repository.findById(id).getOrNull() ?: throw IllegalArgumentException()
+    }
+
     @PostMapping
     fun post(
         @RequestBody pojo: Project,
@@ -38,6 +39,21 @@ class ProjectResource(val repository: ProjectRepository) {
             createdAt = Date(),
         )
         return repository.save(transientPojo)
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @OptIn(ExperimentalStdlibApi::class)
+    @PatchMapping("/{id}/title/{newTitle}")
+    fun renameProject(
+        @PathVariable("id") id: Long,
+        @PathVariable("newTitle") newTitle: String,
+    ) {
+        repository.findById(id).getOrNull()?.let {
+            it.title = newTitle
+            repository.saveAndFlush(it)
+            return
+        }
+        throw IllegalArgumentException()
     }
 
     @PutMapping

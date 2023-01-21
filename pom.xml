@@ -22,6 +22,8 @@
 		<module>api-gateway</module>
 		<module>project-table-service</module>
 		<module>project-table-issue-service</module>
+		<module>user-service</module>
+		<module>user-authority-service</module>
 	</modules>
 
 	<properties>
