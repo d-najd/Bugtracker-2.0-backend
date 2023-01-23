@@ -10,6 +10,10 @@ import java.util.Objects
 @Table(name = "project_table_issue_assigne")
 data class ProjectTableIssueAssigne (
     @JsonIgnore
+    @EmbeddedId
+    var identity: ProjectTableIssueAssigneIdentity = ProjectTableIssueAssigneIdentity(),
+
+    @JsonIgnore
     @Column(name = "issue_id", nullable = false, insertable = false, updatable = false)
     var issueId: Long = -1L,
 
@@ -18,10 +22,6 @@ data class ProjectTableIssueAssigne (
 
     @Column(name = "assigned_username", nullable = false, insertable = false, updatable = false)
     var assignedUsername: String = "",
-
-    @JsonIgnore
-    @EmbeddedId
-    var identity: ProjectTableIssueAssigneIdentity = ProjectTableIssueAssigneIdentity(),
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,7 +41,7 @@ data class ProjectTableIssueAssigne (
         return identity == other.identity
     }
 
-    override fun hashCode(): Int = Objects.hash(identity);
+    override fun hashCode(): Int = Objects.hash(identity)
 
     @Override
     override fun toString(): String {
@@ -63,26 +63,25 @@ data class ProjectTableIssueAssigneIdentity (
     @Column(name = "assigned_username", nullable = false)
     var assignedUsername: String = "",
 ) : Serializable {
-    companion object {
-        private const val serialVersionUID = -6630648757722119042L
-    }
 
     override fun equals(other: Any?): Boolean {
-        if(this === other) return true
-        if(other == null || this::class.java != other::class.java) return false
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
 
-        val that: ProjectTableIssueAssigneIdentity = other as ProjectTableIssueAssigneIdentity
-        if(issueId == that.issueId) return false
-        if(assignerUsername == that.assignerUsername) return false
-        return assignedUsername == that.assignedUsername
+        other as ProjectTableIssueAssigneIdentity
+
+        if (issueId != other.issueId) return false
+        if (assignerUsername != other.assignerUsername) return false
+        if (assignedUsername != other.assignedUsername) return false
+
+        return true
     }
 
-    override fun hashCode(): Int = javaClass.hashCode()
-
-
-    @Override
-    override fun toString(): String {
-        return this::class.simpleName + "(Companion = $Companion , serialVersionUID = $serialVersionUID , issueId = $issueId , assignerUsername = $assignerUsername , assignedUsername = $assignedUsername )"
+    override fun hashCode(): Int {
+        var result = issueId.hashCode()
+        result = 31 * result + assignerUsername.hashCode()
+        result = 31 * result + assignedUsername.hashCode()
+        return result
     }
 
 }
