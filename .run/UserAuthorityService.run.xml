@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="UserAuthorityServiceApplication" type="JetRunConfigurationType">
+  <configuration default="false" name="UserAuthorityService" type="JetRunConfigurationType">
     <option name="MAIN_CLASS_NAME" value="io.dnajd.userauthorityservice.UserAuthorityServiceApplicationKt" />
     <module name="user-authority-service" />
     <shortenClasspath name="NONE" />

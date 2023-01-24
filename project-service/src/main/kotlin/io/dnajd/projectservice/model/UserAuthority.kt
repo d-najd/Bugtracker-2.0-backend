@@ -1,4 +1,4 @@
-package io.dnajd.userauthorityservice.model
+package io.dnajd.projectservice.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*

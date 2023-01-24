@@ -14,8 +14,7 @@ data class Project (
     @Column
     var id: Long = -1L,
 
-    @Column(name = "owner")
-    var owner: String = "",
+    // var owner: String = "", TODO, add this field using userAuthorityService possibly using transient value
 
     @Column(name = "title")
     @NotEmpty
@@ -42,7 +41,7 @@ data class Project (
 
     @Override
     override fun toString(): String {
-        return this::class.simpleName + "(id = $id , owner = $owner , title = $title , description = $description , createdAt = $createdAt )"
+        return this::class.simpleName + "(id = $id , title = $title , description = $description , createdAt = $createdAt )"
     }
 
 }

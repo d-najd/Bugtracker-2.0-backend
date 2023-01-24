@@ -1,4 +1,4 @@
-package io.dnajd.userauthorityservice.model
+package io.dnajd.projectservice.model
 
 import jakarta.persistence.*
 import java.io.Serializable

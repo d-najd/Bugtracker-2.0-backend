@@ -21,7 +21,6 @@ Table user_authority_types as UAT {
 
 Table project as P {
   id bigint [pk, increment, not null]
-  owner varchar [not null]
   title varchar [not null]
   description text
   created_at timestamp [not null]
@@ -97,7 +96,6 @@ Ref: TIA.assigner_username > U.username [delete: cascade]
 Ref: TIA.assigned_username > U.username [delete: cascade]
 
 Ref: L.project_id > P.id [delete: cascade]
-Ref: P.owner > U.username [delete: cascade, update: cascade]
 Ref: T.project_id > P.id [delete: cascade]
 Ref: I.table_id > T.id [delete: cascade]
 Ref: I.reporter > U.username [delete: cascade, update: cascade]
