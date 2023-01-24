@@ -16,6 +16,33 @@ class UserAuthorityResource(val repository: UserAuthorityRepository) {
         return UserAuthorityHolder(repository.findAll())
     }
 
+    @GetMapping("/username/{username}")
+    fun getAllByUsername(
+        @PathVariable username: String,
+    ): UserAuthorityHolder {
+        return UserAuthorityHolder(repository.findAllByUsername(username))
+    }
+
+    /**
+     * gets all projects where the user has a role and if that role is not null gets the authority where the owner is
+     * referenced, this is useful for finding who is owner of the given project
+     */
+    @GetMapping("/username/{username}/includeOwners")
+    fun getAlLByUsernameAndIncludeOwners(
+        @PathVariable username: String,
+    ): UserAuthorityHolder {
+        val authorityByUsername = repository.findAllByUsername(username).toMutableList()
+        authorityByUsername.addAll(
+            repository.findAllByAuthorityAndProjectIdIn(
+                authority = UserAuthorityType.project_owner,
+                projectIds = authorityByUsername
+                    .filterNot { it.authority == UserAuthorityType.project_owner }
+                    .map { it.projectId },
+            )
+        )
+        return UserAuthorityHolder(authorityByUsername)
+    }
+
     @PostMapping
     fun post(
         @RequestBody pojo: UserAuthority,

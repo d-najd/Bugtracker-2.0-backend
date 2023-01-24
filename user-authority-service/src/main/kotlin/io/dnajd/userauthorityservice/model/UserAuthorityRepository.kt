@@ -6,4 +6,8 @@ interface UserAuthorityRepository: JpaRepository<UserAuthority, UserAuthorityIde
 
     fun findByProjectIdAndAuthority(projectId: Long, authority: UserAuthorityType): List<UserAuthority>
 
+    fun findAllByUsername(username: String): List<UserAuthority>
+
+    fun findAllByAuthorityAndProjectIdIn(authority: UserAuthorityType, projectIds: List<Long>): List<UserAuthority>
+
 }

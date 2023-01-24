@@ -1,17 +1,10 @@
 package io.dnajd.projectservice.web
 
-import io.dnajd.projectservice.model.Project
-import io.dnajd.projectservice.model.ProjectRepository
-import io.dnajd.projectservice.model.UserAuthority
-import io.dnajd.projectservice.model.UserAuthorityType
-import jakarta.ws.rs.InternalServerErrorException
+import io.dnajd.projectservice.model.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.client.HttpServerErrorException.InternalServerError
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.bodyToMono
 import java.util.*
 import kotlin.IllegalArgumentException
 import kotlin.jvm.optionals.getOrNull
@@ -28,11 +21,22 @@ class ProjectResource(val repository: ProjectRepository) {
     }
 
     @GetMapping("/user/{username}")
-    fun getAllByOwner(
+    fun getAllByUser(
         @PathVariable username: String
     ): ProjectHolder {
-        return getAll() // TODO this does not work properly
-        // return ProjectHolder(repository.findAllByOwner(username))
+         val userAuthorities = webClientBuilder.build()
+            .get()
+            .uri("localhost:8095/api/username/$username/includeOwners") // TODO replace the uri with uri from configuration server, alternatively api could be used but that adds extra dependency
+            .retrieve()
+            .bodyToMono(UserAuthorityHolder::class.java)
+            .block()
+        val userAuthoritiesFiltered = userAuthorities!!.data
+            .filter { it.authority == UserAuthorityType.project_owner
+                    || it.authority == UserAuthorityType.project_view }
+        val projects = repository.findByIdIn(userAuthoritiesFiltered.map { it.projectId } )
+        projects.forEach { project -> project.owner = userAuthoritiesFiltered
+            .find { it.projectId == project.id && it.authority == UserAuthorityType.project_owner }!!.username }
+        return ProjectHolder(projects)
     }
 
     @OptIn(ExperimentalStdlibApi::class)

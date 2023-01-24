@@ -14,7 +14,8 @@ data class Project (
     @Column
     var id: Long = -1L,
 
-    // var owner: String = "", TODO, add this field using userAuthorityService possibly using transient value
+    @Transient
+    var owner: String? = null, // TODO, add this field using userAuthorityService possibly using transient value
 
     @Column(name = "title")
     @NotEmpty
