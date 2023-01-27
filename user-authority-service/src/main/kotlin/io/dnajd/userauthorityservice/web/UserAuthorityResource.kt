@@ -28,7 +28,7 @@ class UserAuthorityResource(val repository: UserAuthorityRepository) {
      * referenced, this is useful for finding who is owner of the given project
      */
     @GetMapping("/username/{username}/includeOwners")
-    fun getAlLByUsernameAndIncludeOwners(
+    fun getAllByUsernameAndIncludeOwners(
         @PathVariable username: String,
     ): UserAuthorityHolder {
         val authorityByUsername = repository.findAllByUsername(username).toMutableList()
@@ -43,12 +43,19 @@ class UserAuthorityResource(val repository: UserAuthorityRepository) {
         return UserAuthorityHolder(authorityByUsername)
     }
 
+    @GetMapping("/projectId/{projectId}")
+    fun getAllByProjectId(
+        @PathVariable projectId: Long,
+    ): UserAuthorityHolder {
+        return UserAuthorityHolder(repository.findAllByProjectId(projectId))
+    }
+
     @PostMapping
     fun post(
         @RequestBody pojo: UserAuthority,
     ): UserAuthority {
         if(pojo.authority == UserAuthorityType.project_owner){
-            if(repository.findByProjectIdAndAuthority(
+            if(repository.findAllByAuthorityAndProjectId(
                 authority = UserAuthorityType.project_owner,
                 projectId = pojo.projectId,
             ).isNotEmpty()) {

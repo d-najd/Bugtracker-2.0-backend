@@ -29,7 +29,6 @@ data class Project (
     @NotEmpty
     var createdAt: Date = Date(),
 ) {
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
@@ -44,5 +43,14 @@ data class Project (
     override fun toString(): String {
         return this::class.simpleName + "(id = $id , title = $title , description = $description , createdAt = $createdAt )"
     }
-
 }
+
+/**
+ * maps owners to a list of projects, this action modifies the original list
+ *
+ * @param owners list of project owners, must contain [UserAuthorityType.project_owner] for every given project in List<Project>
+ * @throws NullPointerException if [UserAuthorityType.project_owner] does not exist for a project
+ */
+fun List<Project>.mapOwners(owners: List<UserAuthority>) = forEach { project -> project.owner = owners.find {
+        it.projectId == project.id && it.authority == UserAuthorityType.project_owner
+    }!!.username }

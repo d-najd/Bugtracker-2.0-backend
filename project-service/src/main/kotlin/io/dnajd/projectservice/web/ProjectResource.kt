@@ -15,6 +15,7 @@ class ProjectResource(val repository: ProjectRepository) {
     @Autowired
     private lateinit var webClientBuilder: WebClient.Builder
 
+    // unstable
     @GetMapping("/testing/getAll")
     fun getAll(): ProjectHolder {
         return ProjectHolder(repository.findAll())
@@ -34,11 +35,11 @@ class ProjectResource(val repository: ProjectRepository) {
             .filter { it.authority == UserAuthorityType.project_owner
                     || it.authority == UserAuthorityType.project_view }
         val projects = repository.findByIdIn(userAuthoritiesFiltered.map { it.projectId } )
-        projects.forEach { project -> project.owner = userAuthoritiesFiltered
-            .find { it.projectId == project.id && it.authority == UserAuthorityType.project_owner }!!.username }
+        projects.mapOwners(owners = userAuthoritiesFiltered)
         return ProjectHolder(projects)
     }
 
+    // unstable
     @OptIn(ExperimentalStdlibApi::class)
     @GetMapping("/{id}")
     fun get(
@@ -54,6 +55,7 @@ class ProjectResource(val repository: ProjectRepository) {
     ): Project {
         val transientPojo = pojo.copy(
             createdAt = Date(),
+            owner = "user1", // TODO this is hard coded
         )
         val persistedPojo = repository.save(transientPojo)
 
@@ -90,6 +92,8 @@ class ProjectResource(val repository: ProjectRepository) {
         throw IllegalArgumentException()
     }
 
+
+    // unstable
     @PutMapping
     fun update(
         @RequestBody pojo: Project,
