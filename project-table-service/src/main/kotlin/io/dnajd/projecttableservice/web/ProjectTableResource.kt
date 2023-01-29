@@ -59,15 +59,19 @@ class ProjectTableResource(val repository: ProjectTableRepository) {
         ))
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     fun update(
-        @RequestBody pojo: ProjectTable,
-    ): ProjectTable {
-        throw NotImplementedError("Doesn't work for some reason")
-        /*
-        repository.findById(pojo.id).orElseThrow { throw IllegalArgumentException("Project Table with id ${pojo.id} does not exist") }
-        return repository.saveAndFlush(pojo)
-         */
+        @PathVariable("id") id: Long,
+        @RequestParam("title") title: String? = null,
+        @RequestParam("returnBody") shouldReturnBody: Boolean = true,
+    ): ProjectTable? {
+        val persistedTable = repository.findById(id).orElseThrow { throw IllegalArgumentException("Project Table with id $id does not exist") }
+        val returnBody = repository.saveAndFlush(
+            persistedTable.copy(
+                title = title ?: persistedTable.title,
+            )
+        )
+        return if(shouldReturnBody) returnBody else null
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

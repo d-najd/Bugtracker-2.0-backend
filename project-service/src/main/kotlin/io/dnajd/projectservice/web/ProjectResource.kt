@@ -25,16 +25,24 @@ class ProjectResource(val repository: ProjectRepository) {
     fun getAllByUser(
         @PathVariable username: String
     ): ProjectHolder {
-         val userAuthorities = webClientBuilder.build()
+        val userAuthorities = webClientBuilder.build()
             .get()
-            .uri("localhost:8095/api/username/$username/includeOwners") // TODO replace the uri with uri from configuration server, alternatively api could be used but that adds extra dependency
+            // TODO replace the uri with uri from configuration server, alternatively api could be used but that adds extra dependency
+            .uri { builder ->
+                builder
+                    .path("localhost:8095/api/username/$username")
+                    .queryParam("includeOwners", true)
+                    .build()
+            }
             .retrieve()
             .bodyToMono(UserAuthorityHolder::class.java)
             .block()
         val userAuthoritiesFiltered = userAuthorities!!.data
-            .filter { it.authority == UserAuthorityType.project_owner
-                    || it.authority == UserAuthorityType.project_view }
-        val projects = repository.findByIdIn(userAuthoritiesFiltered.map { it.projectId } )
+            .filter {
+                it.authority == UserAuthorityType.project_owner
+                        || it.authority == UserAuthorityType.project_view
+            }
+        val projects = repository.findByIdIn(userAuthoritiesFiltered.map { it.projectId })
         projects.mapOwners(owners = userAuthoritiesFiltered)
         return ProjectHolder(projects)
     }
@@ -55,7 +63,6 @@ class ProjectResource(val repository: ProjectRepository) {
     ): Project {
         val transientPojo = pojo.copy(
             createdAt = Date(),
-            owner = "user1", // TODO this is hard coded
         )
         val persistedPojo = repository.save(transientPojo)
 
@@ -77,31 +84,21 @@ class ProjectResource(val repository: ProjectRepository) {
         return persistedPojo
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @OptIn(ExperimentalStdlibApi::class)
-    @PatchMapping("/{id}/title/{newTitle}")
-    fun renameProject(
-        @PathVariable("id") id: Long,
-        @PathVariable("newTitle") newTitle: String,
-    ) {
-        repository.findById(id).getOrNull()?.let {
-            it.title = newTitle
-            repository.saveAndFlush(it)
-            return
-        }
-        throw IllegalArgumentException()
-    }
-
-
-    // unstable
     @PutMapping
     fun update(
-        @RequestBody pojo: Project,
-    ): Project {
-        val originalPojo = repository.findById(pojo.id).orElseThrow { throw IllegalArgumentException("Project with id ${pojo.id} does not exist") }
-        return repository.saveAndFlush(originalPojo.copy(
-            createdAt = originalPojo.createdAt,
-        ))
+        @PathVariable("id") id: Long,
+        @RequestParam("title") title: String? = null,
+        @RequestParam("description") description: String? = null,
+        @RequestParam("returnBody") shouldReturnBody: Boolean = true,
+    ): Project? {
+        val persistedProject = repository.findById(id).orElseThrow { throw IllegalArgumentException("Project with id $id does not exist") }
+        val returnBody = repository.saveAndFlush(
+            persistedProject.copy(
+                title = title ?: persistedProject.title,
+                description = description ?: persistedProject.description,
+            )
+        )
+        return if(shouldReturnBody) returnBody else null
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

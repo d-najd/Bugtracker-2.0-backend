@@ -19,7 +19,7 @@ data class Project (
 
     @Column(name = "title")
     @NotEmpty
-    var title: String = "",
+    var title: String,
 
     @Column(name = "description", length = 65535)
     var description: String? = null,

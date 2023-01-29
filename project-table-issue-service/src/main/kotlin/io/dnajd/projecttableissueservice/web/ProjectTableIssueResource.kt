@@ -39,10 +39,8 @@ class ProjectTableIssueResource(val repository: ProjectTableIssueRepository) {
     fun post(
         @RequestBody pojo: ProjectTableIssue,
     ): ProjectTableIssue {
-        val transientPojo = if(pojo.position == -1) {
-            val maxPos = repository.findAllByTableId(tableId = pojo.tableId).maxByOrNull { it.position }?.position ?: -1
-            pojo.copy(position = maxPos + 1)
-        } else pojo
+        val maxPos = repository.findAllByTableId(tableId = pojo.tableId).maxByOrNull { it.position }?.position ?: -1
+        val transientPojo = pojo.copy(position = maxPos + 1)
         return repository.save(transientPojo.copy(
             createdAt = Date(),
             updatedAt = null,
@@ -54,22 +52,24 @@ class ProjectTableIssueResource(val repository: ProjectTableIssueRepository) {
         ))
     }
 
-    // TODO this can be abused to move issues across projects
-    @PutMapping
+    @PutMapping("/{id}")
     fun update(
-        @RequestBody pojo: ProjectTableIssue,
-    ): ProjectTableIssue {
-        val originalPojo = repository.findById(pojo.id).orElseThrow { throw IllegalArgumentException("Project Table with id ${pojo.id} does not exist") }
-        return repository.saveAndFlush(pojo.copy(
-            reporter = originalPojo.reporter,
-            createdAt = originalPojo.createdAt,
-            updatedAt = Date(),
-            comments = originalPojo.comments,
-            labels = originalPojo.labels,
-            assigned = originalPojo.assigned,
-            table = originalPojo.table,
-            childIssues = originalPojo.childIssues
-        ))
+        @PathVariable("id") id: Long,
+        @RequestParam("title") title: String? = null,
+        @RequestParam("description") description: String? = null,
+        @RequestParam("severity") severity: Int? = null,
+        @RequestParam("returnBody") shouldReturnBody: Boolean = true,
+    ): ProjectTableIssue? {
+        val persistedIssue = repository.findById(id).orElseThrow { throw IllegalArgumentException("Project Table with id $id does not exist") }
+        val returnBody = repository.saveAndFlush(
+            persistedIssue.copy(
+                title = title ?: persistedIssue.title,
+                description = description ?: persistedIssue.description,
+                severity = severity ?: persistedIssue.severity,
+                updatedAt = Date(),
+            )
+        )
+        return if(shouldReturnBody) returnBody else null
     }
 
     /**
