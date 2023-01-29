@@ -15,15 +15,35 @@ class ProjectTableResource(val repository: ProjectTableRepository) {
     private lateinit var queryConstructor: QueryConstructor
 
     @GetMapping("/testing/getAll")
-    fun getAll(): ProjectTableHolder {
-        return ProjectTableHolder(repository.findAll())
+    fun getAll(
+        @RequestParam ignoreIssues: Boolean = false,
+    ): ProjectTableHolder {
+        val tables = repository.findAll()
+        return ProjectTableHolder(tables.map { it.copy(
+            issues = if(ignoreIssues) mutableListOf() else it.issues
+        ) })
     }
 
     @GetMapping("/projectId/{projectId}")
     fun getAllByProjectId(
-        @PathVariable projectId: Long
+        @PathVariable projectId: Long,
+        @RequestParam ignoreIssues: Boolean = false,
     ): ProjectTableHolder {
-        return ProjectTableHolder(repository.findAllByProjectId(projectId))
+        val tables = repository.findAllByProjectId(projectId)
+        return ProjectTableHolder(tables.map { it.copy(
+            issues = if(ignoreIssues) mutableListOf() else it.issues
+        ) })
+    }
+
+    @GetMapping("/id/{id}")
+    fun getById(
+        @PathVariable id: Long,
+        @RequestParam ignoreIssues: Boolean = false,
+    ): ProjectTable {
+        val table = repository.findById(id).get()
+        return table.copy(
+            issues = if(ignoreIssues) mutableListOf() else table.issues
+        )
     }
 
     @PostMapping

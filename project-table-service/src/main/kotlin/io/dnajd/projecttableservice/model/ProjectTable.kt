@@ -52,7 +52,7 @@ data class ProjectTable (
         mappedBy = "table",
         fetch = FetchType.LAZY
     )
-    val issues: MutableList<ProjectTableIssue> = mutableListOf(),
+    var issues: MutableList<ProjectTableIssue> = mutableListOf(),
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

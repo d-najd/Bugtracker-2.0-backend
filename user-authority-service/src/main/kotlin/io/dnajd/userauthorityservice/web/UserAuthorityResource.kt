@@ -19,8 +19,20 @@ class UserAuthorityResource(val repository: UserAuthorityRepository) {
     @GetMapping("/username/{username}")
     fun getAllByUsername(
         @PathVariable username: String,
+        @RequestParam includeOwners: Boolean = false,
     ): UserAuthorityHolder {
-        return UserAuthorityHolder(repository.findAllByUsername(username))
+         val authorityByUsername = repository.findAllByUsername(username).toMutableList()
+        if(includeOwners) {
+            authorityByUsername.addAll(
+                repository.findAllByAuthorityAndProjectIdIn(
+                    authority = UserAuthorityType.project_owner,
+                    projectIds = authorityByUsername
+                        .filterNot { it.authority == UserAuthorityType.project_owner }
+                        .map { it.projectId },
+                )
+            )
+        }
+        return UserAuthorityHolder(authorityByUsername)
     }
 
     /**
