@@ -12,6 +12,9 @@ data class ProjectTable (
     @Column
     var id: Long = -1L,
 
+    @Column(name = "projectId")
+    var projectId: Long = -1L,
+
     @JsonIgnore
     @OneToMany(
         cascade = [(CascadeType.REMOVE)],
