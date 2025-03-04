@@ -24,6 +24,7 @@
 		<projectreactor-kotlin.version>1.2.3</projectreactor-kotlin.version>
 		<jackson.version>2.18.3</jackson.version>
 		<jarkita.version>3.1.1</jarkita.version>
+		<flyway.version>11.3.4</flyway.version>
 	</properties>
 	<dependencies>
 		<!-- Spring Boot -->
@@ -57,6 +58,18 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<version>${spring-boot.version}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<!-- Flyway -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>${flyway.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-mysql</artifactId>
+			<version>${flyway.version}</version>
 		</dependency>
 
 		<!-- Kotlin -->
