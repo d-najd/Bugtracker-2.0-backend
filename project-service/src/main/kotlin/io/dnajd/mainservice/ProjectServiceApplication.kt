@@ -1,4 +1,4 @@
-package io.dnajd.projectservice
+package io.dnajd.mainservice
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="ProjectService" type="JetRunConfigurationType">
-    <option name="MAIN_CLASS_NAME" value="io.dnajd.projectservice.ProjectServiceApplicationKt" />
+    <option name="MAIN_CLASS_NAME" value="io.dnajd.mainservice.ProjectServiceApplicationKt" />
     <module name="project-service" />
     <shortenClasspath name="NONE" />
     <method v="2">

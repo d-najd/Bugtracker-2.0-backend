@@ -1,15 +1,12 @@
 server.port: 8080
 
+spring.datasource.driver-class-name: com.mysql.cj.jdbc.Driver
+
 spring:
   application.name: main-service
   datasource:
     url: jdbc:mysql://localhost:3306/bugtracker
     username: root
     password: root-password
-  cloud.config.enabled: false
   jpa.hibernate:
-    naming-strategy: PhysicalNamingStrategyStandardImpl
-    ddl-auto: validate
-
-# security.enable.csrf: false
-# management.endpoints.web.exposure.include = "*"
+    ddl-auto: none
