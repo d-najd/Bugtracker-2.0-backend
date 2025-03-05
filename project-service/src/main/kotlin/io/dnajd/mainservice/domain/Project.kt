@@ -1,4 +1,4 @@
-package io.dnajd.mainservice.model
+package io.dnajd.mainservice.domain
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import jakarta.persistence.*

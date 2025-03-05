@@ -1,4 +1,4 @@
-package io.dnajd.mainservice.model
+package io.dnajd.mainservice.domain
 
 import org.springframework.data.jpa.repository.JpaRepository
 

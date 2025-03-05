@@ -1,6 +1,6 @@
 package io.dnajd.mainservice.web
 
-import io.dnajd.mainservice.model.*
+import io.dnajd.mainservice.domain.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
