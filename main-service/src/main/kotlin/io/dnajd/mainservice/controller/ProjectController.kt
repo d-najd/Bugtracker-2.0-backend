@@ -32,6 +32,12 @@ class ProjectController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.OK)
+    fun createProject(@RequestBody projectDto: ProjectDto): ProjectDto {
+        return projectService.createProject(projectDto)
+    }
+
+    @PutMapping
+    @ResponseStatus(value = HttpStatus.OK)
     fun updateProject(@RequestBody projectDto: ProjectDto): ProjectDto {
         return projectService.updateProject(projectDto)
     }
