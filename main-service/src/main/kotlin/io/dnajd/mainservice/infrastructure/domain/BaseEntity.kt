@@ -11,5 +11,5 @@ open class BaseEntity : Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    open var id: Long = 0L
+    open var id: Long = -1L
 }

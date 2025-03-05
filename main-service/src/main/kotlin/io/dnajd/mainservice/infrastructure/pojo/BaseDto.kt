@@ -1,3 +1,4 @@
 package io.dnajd.mainservice.infrastructure.pojo
 
-open class BaseDto(open var uuid: String)
+open class BaseDto(open var id: Long = -1L)
+

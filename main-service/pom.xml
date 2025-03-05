@@ -25,7 +25,7 @@
 		<jackson.version>2.18.3</jackson.version>
 		<jarkita.version>3.1.1</jarkita.version>
 		<flyway.version>11.3.4</flyway.version>
-		<lombok.version>1.18.36</lombok.version>
+		<mapstruct.version>1.6.3</mapstruct.version>
 	</properties>
 	<dependencies>
 		<!-- Spring Boot -->
@@ -71,6 +71,20 @@
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-mysql</artifactId>
 			<version>${flyway.version}</version>
+		</dependency>
+
+		<!-- Mapstruct -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${mapstruct.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-processor</artifactId>
+			<version>${mapstruct.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Kotlin -->
@@ -138,11 +152,7 @@
 					<compilerPlugins>
 						<plugin>spring</plugin>
 						<plugin>jpa</plugin>
-						<plugin>lombok</plugin>
 					</compilerPlugins>
-					<pluginOptions>
-						<option>lombok:config=${project.basedir}/lombok.config</option>
-					</pluginOptions>
 				</configuration>
 				<dependencies>
 					<dependency>
@@ -154,17 +164,6 @@
 						<groupId>org.jetbrains.kotlin</groupId>
 						<artifactId>kotlin-maven-noarg</artifactId>
 						<version>${kotlin.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.jetbrains.kotlin</groupId>
-						<artifactId>kotlin-maven-lombok</artifactId>
-						<version>${kotlin.version}</version>
-					</dependency>
-					<dependency>
-						<groupId>org.projectlombok</groupId>
-						<artifactId>lombok</artifactId>
-						<version>${lombok.version}</version>
-						<scope>provided</scope>
 					</dependency>
 				</dependencies>
 			</plugin>
