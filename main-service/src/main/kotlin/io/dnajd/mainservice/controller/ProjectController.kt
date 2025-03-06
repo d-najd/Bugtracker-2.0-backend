@@ -1,9 +1,9 @@
 package io.dnajd.mainservice.controller
 
-import io.dnajd.mainservice.domain.Project.ProjectList
-import io.dnajd.mainservice.domain.Project.ProjectListResponse
-import io.dnajd.mainservice.domain.Project.ProjectRequest
-import io.dnajd.mainservice.domain.Project.ProjectResponse
+import io.dnajd.mainservice.domain.project.ProjectList
+import io.dnajd.mainservice.domain.project.ProjectListResponse
+import io.dnajd.mainservice.domain.project.ProjectRequest
+import io.dnajd.mainservice.domain.project.ProjectResponse
 import io.dnajd.mainservice.infrastructure.Endpoints
 import io.dnajd.mainservice.service.project.ProjectService
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,10 +31,18 @@ class ProjectController {
         return projectService.getById(id)
     }
 
+    /*
     @PostMapping
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.CREATED)
     fun createProject(@RequestBody projectRequest: ProjectRequest): ProjectResponse {
         return projectService.createProject(projectRequest)
+    }
+     */
+
+    @PostMapping("/")
+    fun test() {
+        val test = ""
+        projectService.createProject(ProjectRequest())
     }
 
     @PutMapping("/{id}")
@@ -43,7 +51,7 @@ class ProjectController {
         @PathVariable id: Long,
         @RequestBody projectRequest: ProjectRequest
     ): ProjectResponse {
-        return projectService.updateProject(projectRequest)
+        return projectService.updateProject(id, projectRequest)
     }
 
     @DeleteMapping("/{id}")

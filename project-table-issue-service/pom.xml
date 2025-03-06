@@ -12,7 +12,7 @@
 	<artifactId>project-table-issue-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>project-table-issue-service</name>
-	<description>Microservice for io.dnajd.mainservice.domain.Project Table Issue</description>
+	<description>Microservice for io.dnajd.mainservice.domain.project.Project Table Issue</description>
 	<properties>
 		<java.version>17</java.version>
 		<kotlin.version>1.7.22</kotlin.version>

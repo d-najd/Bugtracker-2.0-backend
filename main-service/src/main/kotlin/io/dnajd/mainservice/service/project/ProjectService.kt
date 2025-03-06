@@ -1,6 +1,6 @@
 package io.dnajd.mainservice.service.project
 
-import io.dnajd.mainservice.domain.Project.*
+import io.dnajd.mainservice.domain.project.*
 import org.springframework.stereotype.Service
 
 @Service
