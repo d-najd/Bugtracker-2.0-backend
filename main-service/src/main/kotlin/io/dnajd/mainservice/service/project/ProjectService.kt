@@ -1,24 +1,21 @@
 package io.dnajd.mainservice.service.project
 
-import io.dnajd.mainservice.domain.Project
-import io.dnajd.mainservice.domain.ProjectList
-import io.dnajd.mainservice.dto.ProjectDto
-import io.dnajd.mainservice.dto.ProjectListDto
+import io.dnajd.mainservice.domain.Project.*
 import org.springframework.stereotype.Service
 
 @Service
 interface ProjectService {
     fun findAll(): ProjectList
 
-    fun getAllByUsername(username: String): ProjectListDto
+    fun getAllByUsername(username: String): ProjectListResponse
 
     fun findById(id: Long): Project
 
-    fun getById(id: Long): ProjectDto
+    fun getById(id: Long): ProjectResponse
 
-    fun createProject(projectDto: ProjectDto): ProjectDto
+    fun createProject(projectRequest: ProjectRequest): ProjectResponse
 
-    fun updateProject(projectDto: ProjectDto): ProjectDto
+    fun updateProject(id: Long, projectRequest: ProjectRequest): ProjectResponse
 
     fun deleteProject(id: Long)
 }

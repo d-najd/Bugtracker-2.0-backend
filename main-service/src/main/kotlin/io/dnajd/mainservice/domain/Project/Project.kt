@@ -1,4 +1,4 @@
-package io.dnajd.mainservice.domain
+package io.dnajd.mainservice.domain.Project
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import io.dnajd.mainservice.infrastructure.domain.BaseEntity
@@ -11,7 +11,9 @@ import java.util.*
 
 @Entity
 @Table(name = "project")
-class Project(
+data class Project(
+    override var id: Long,
+
     @NotEmpty
     var title: String,
 
@@ -21,6 +23,8 @@ class Project(
     @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
     @NotEmpty
     var createdAt: Date = Date(),
-) : BaseEntity()
+) : BaseEntity(id)
+
+// fun Project.asResponse = ProjectRequest(::this)
 
 class ProjectList(data: List<Project>) : BaseListEntity<Project>(data)

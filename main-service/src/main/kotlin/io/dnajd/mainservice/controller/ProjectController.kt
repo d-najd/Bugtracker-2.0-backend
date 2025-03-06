@@ -1,8 +1,9 @@
 package io.dnajd.mainservice.controller
 
-import io.dnajd.mainservice.domain.ProjectList
-import io.dnajd.mainservice.dto.ProjectDto
-import io.dnajd.mainservice.dto.ProjectListDto
+import io.dnajd.mainservice.domain.Project.ProjectList
+import io.dnajd.mainservice.domain.Project.ProjectListResponse
+import io.dnajd.mainservice.domain.Project.ProjectRequest
+import io.dnajd.mainservice.domain.Project.ProjectResponse
 import io.dnajd.mainservice.infrastructure.Endpoints
 import io.dnajd.mainservice.service.project.ProjectService
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,30 +17,33 @@ class ProjectController {
     private lateinit var projectService: ProjectService
 
     @GetMapping("/testing/getAll")
-    fun getAll(): ProjectList {
+    fun findAll(): ProjectList {
         return projectService.findAll()
     }
 
     @GetMapping("/user/{username}")
-    fun getAllByUsername(@PathVariable(value = "username") username: String): ProjectListDto {
+    fun getAllByUsername(@PathVariable(value = "username") username: String): ProjectListResponse {
         return projectService.getAllByUsername(username)
     }
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long): ProjectDto {
+    fun getById(@PathVariable id: Long): ProjectResponse {
         return projectService.getById(id)
     }
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.OK)
-    fun createProject(@RequestBody projectDto: ProjectDto): ProjectDto {
-        return projectService.createProject(projectDto)
+    fun createProject(@RequestBody projectRequest: ProjectRequest): ProjectResponse {
+        return projectService.createProject(projectRequest)
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    fun updateProject(@RequestBody projectDto: ProjectDto): ProjectDto {
-        return projectService.updateProject(projectDto)
+    fun updateProject(
+        @PathVariable id: Long,
+        @RequestBody projectRequest: ProjectRequest
+    ): ProjectResponse {
+        return projectService.updateProject(projectRequest)
     }
 
     @DeleteMapping("/{id}")

@@ -1,5 +1,5 @@
 package io.dnajd.mainservice.repository
-import io.dnajd.mainservice.domain.Project
+import io.dnajd.mainservice.domain.Project.Project
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.util.*

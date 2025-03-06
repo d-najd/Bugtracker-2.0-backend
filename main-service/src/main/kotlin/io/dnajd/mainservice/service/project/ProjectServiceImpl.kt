@@ -1,9 +1,6 @@
 package io.dnajd.mainservice.service.project
 
-import io.dnajd.mainservice.domain.Project
-import io.dnajd.mainservice.domain.ProjectList
-import io.dnajd.mainservice.dto.ProjectDto
-import io.dnajd.mainservice.dto.ProjectListDto
+import io.dnajd.mainservice.domain.Project.*
 import io.dnajd.mainservice.infrastructure.exception.ResourceNotFoundException
 import io.dnajd.mainservice.mapper.ProjectMapper
 import io.dnajd.mainservice.repository.ProjectRepository
@@ -18,8 +15,8 @@ class ProjectServiceImpl: ProjectService {
     @Autowired
     private lateinit var projectRepository: ProjectRepository
 
-    @Autowired
-    private lateinit var projectMapper: ProjectMapper
+    // @Autowired
+    // private lateinit var projectMapper: ProjectMapper
 
     companion object {
         private val log = LoggerFactory.getLogger(ProjectServiceImpl::class.java)
@@ -29,7 +26,7 @@ class ProjectServiceImpl: ProjectService {
         return ProjectList(projectRepository.findAll())
     }
 
-    override fun getAllByUsername(username: String): ProjectListDto {
+    override fun getAllByUsername(username: String): ProjectListResponse {
         TODO("Not yet implemented")
     }
 
@@ -40,20 +37,20 @@ class ProjectServiceImpl: ProjectService {
         }
     }
 
-    override fun getById(id: Long): ProjectDto {
+    override fun getById(id: Long): ProjectResponse {
         return projectMapper.toDtoToEntity(findById(id))
     }
 
-    override fun createProject(projectDto: ProjectDto): ProjectDto {
-        val transientProject = projectMapper.toEntityToDto(projectDto)
+    override fun createProject(projectRequest: ProjectRequest): ProjectResponse {
+        val transientProject = projectMapper.toEntityToDto(projectRequest)
         val persistedProject = projectRepository.save(transientProject)
 
         return projectMapper.toDtoToEntity(persistedProject)
     }
 
-    override fun updateProject(projectDto: ProjectDto): ProjectDto {
-        val persistedProject = findById(projectDto.id)
-        val transientProject = projectMapper.mapRequestedFieldForUpdate(projectDto, persistedProject)
+    override fun updateProject(id: Long, projectRequest: ProjectRequest): ProjectResponse {
+        val persistedProject = findById(id)
+        val transientProject = projectMapper.mapRequestedFieldForUpdate(projectRequest, persistedProject)
 
         return projectMapper.toDtoToEntity(projectRepository.saveAndFlush(transientProject))
     }

@@ -1,6 +1,6 @@
 package io.dnajd.mainservice.mapper
 
-import io.dnajd.mainservice.domain.Project
+import io.dnajd.mainservice.domain.Project.Project
 import io.dnajd.mainservice.dto.ProjectDto
 import io.dnajd.mainservice.infrastructure.mapper.BaseMapper
 import org.mapstruct.BeanMapping
