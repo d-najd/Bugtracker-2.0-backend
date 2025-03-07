@@ -1,9 +1,6 @@
 package io.dnajd.mainservice.controller
 
-import io.dnajd.mainservice.domain.project.ProjectList
-import io.dnajd.mainservice.domain.project.ProjectListResponse
-import io.dnajd.mainservice.domain.project.ProjectRequest
-import io.dnajd.mainservice.domain.project.ProjectResponse
+import io.dnajd.mainservice.domain.project.*
 import io.dnajd.mainservice.infrastructure.Endpoints
 import io.dnajd.mainservice.service.project.ProjectService
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,36 +19,28 @@ class ProjectController {
     }
 
     @GetMapping("/user/{username}")
-    fun getAllByUsername(@PathVariable(value = "username") username: String): ProjectListResponse {
+    fun getAllByUsername(@PathVariable(value = "username") username: String): ProjectDtoList {
         return projectService.getAllByUsername(username)
     }
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long): ProjectResponse {
+    fun getById(@PathVariable id: Long): ProjectDto {
         return projectService.getById(id)
     }
 
-    /*
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    fun createProject(@RequestBody projectRequest: ProjectRequest): ProjectResponse {
-        return projectService.createProject(projectRequest)
-    }
-     */
-
-    @PostMapping("/")
-    fun test() {
-        val test = ""
-        projectService.createProject(ProjectRequest())
+    fun createProject(@RequestBody projectDto: ProjectDto): ProjectDto {
+        return projectService.createProject(projectDto)
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
     fun updateProject(
         @PathVariable id: Long,
-        @RequestBody projectRequest: ProjectRequest
-    ): ProjectResponse {
-        return projectService.updateProject(id, projectRequest)
+        @RequestBody projectDto: ProjectDto
+    ): ProjectDto {
+        return projectService.updateProject(id, projectDto)
     }
 
     @DeleteMapping("/{id}")

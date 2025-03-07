@@ -7,15 +7,15 @@ import org.springframework.stereotype.Service
 interface ProjectService {
     fun findAll(): ProjectList
 
-    fun getAllByUsername(username: String): ProjectListResponse
+    fun getAllByUsername(username: String): ProjectDtoList
 
     fun findById(id: Long): Project
 
-    fun getById(id: Long): ProjectResponse
+    fun getById(id: Long): ProjectDto
 
-    fun createProject(projectRequest: ProjectRequest): ProjectResponse
+    fun createProject(projectDto: ProjectDto): ProjectDto
 
-    fun updateProject(id: Long, projectRequest: ProjectRequest): ProjectResponse
+    fun updateProject(id: Long, projectDto: ProjectDto): ProjectDto
 
     fun deleteProject(id: Long)
 }

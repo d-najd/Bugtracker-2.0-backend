@@ -3,7 +3,6 @@ package io.dnajd.mainservice.service.project
 import dev.krud.shapeshift.ShapeShift
 import io.dnajd.mainservice.domain.project.*
 import io.dnajd.mainservice.infrastructure.exception.ResourceNotFoundException
-import io.dnajd.mainservice.infrastructure.mapForUpdate
 import io.dnajd.mainservice.repository.ProjectRepository
 import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory
@@ -25,7 +24,7 @@ class ProjectServiceImpl(
         return ProjectList(projectRepository.findAll())
     }
 
-    override fun getAllByUsername(username: String): ProjectListResponse {
+    override fun getAllByUsername(username: String): ProjectDtoList {
         TODO("Not yet implemented")
     }
 
@@ -36,28 +35,22 @@ class ProjectServiceImpl(
         }
     }
 
-    override fun getById(id: Long): ProjectResponse {
+    override fun getById(id: Long): ProjectDto {
         return mapper.map(findById(id))
     }
 
-    override fun createProject(projectRequest: ProjectRequest): ProjectResponse {
-        val transientProject: Project = mapper.map(projectRequest)
+    override fun createProject(projectDto: ProjectDto): ProjectDto {
+        val transientProject: Project = mapper.map(projectDto)
         val persistedProject = projectRepository.save(transientProject)
 
         return mapper.map(persistedProject)
     }
 
-    override fun updateProject(id: Long, projectRequest: ProjectRequest): ProjectResponse {
+    override fun updateProject(id: Long, projectDto: ProjectDto): ProjectDto {
         val persistedProject = findById(id)
-        var te = mapper.objectSuppliers;
-        var se = mapper.mappingDefinitionResolvers
-        // val transientProject: Project = mapper.mapForUpdate<Project, ProjectRequest>(persistedProject).copy(id = id)
-        //val transientProject: Project = mapper.mapForUpdate<Project, ProjectRequest>(projectRequest).copy(id = id)
-        // val transientProject = persistedProject.mapForUpdate(projectRequest)
+        val transientProject = persistedProject.mapForUpdate(projectDto)
 
-        //return mapper.map(projectRepository.saveAndFlush(transientProject))
-
-        TODO()
+        return mapper.map(projectRepository.saveAndFlush(transientProject))
     }
 
     override fun deleteProject(id: Long) {

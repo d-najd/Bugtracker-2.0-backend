@@ -6,6 +6,7 @@ import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import dev.krud.shapeshift.resolver.annotation.MappedField
+import io.dnajd.mainservice.infrastructure.DontMapCondition
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotEmpty
 import org.hibernate.annotations.CreationTimestamp
@@ -14,14 +15,14 @@ import java.util.*
 
 @Entity
 @Table(name = "project")
-@AutoMapping(ProjectResponse::class, AutoMappingStrategy.BY_NAME)
+@AutoMapping(ProjectDto::class, AutoMappingStrategy.BY_NAME)
 data class Project(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long,
+    var id: Long = -1L,
 
     @NotEmpty
-    var title: String,
+    var title: String = "",
 
     @Column(length = 65535)
     var description: String? = null,
@@ -32,7 +33,7 @@ data class Project(
     var createdAt: Date = Date(),
 )
 
-fun Project.mapForUpdate(request: ProjectRequest): Project {
+fun Project.mapForUpdate(request: ProjectDto): Project {
     this.description = request.description
     this.title = request.title
 
