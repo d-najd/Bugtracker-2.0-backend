@@ -19,6 +19,9 @@ data class Project(
     @NotEmpty
     var title: String = "",
 
+    @NotEmpty
+    var owner: String = "",
+
     @Column(length = 65535)
     var description: String? = null,
 

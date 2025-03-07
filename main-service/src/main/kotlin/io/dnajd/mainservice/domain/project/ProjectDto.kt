@@ -10,6 +10,8 @@ data class ProjectDto(
     @MappedField
     var title: String = "",
     @MappedField
+    var owner: String = "",
+    @MappedField
     var description: String? = null,
     var createdAt: Date? = null,
 )
