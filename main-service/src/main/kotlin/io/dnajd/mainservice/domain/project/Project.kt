@@ -1,16 +1,11 @@
 package io.dnajd.mainservice.domain.project
 
 import com.fasterxml.jackson.annotation.JsonFormat
-import dev.krud.shapeshift.MappingStrategy
 import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
-import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
-import dev.krud.shapeshift.resolver.annotation.MappedField
-import io.dnajd.mainservice.infrastructure.DontMapCondition
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotEmpty
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.UpdateTimestamp
 import java.util.*
 
 @Entity

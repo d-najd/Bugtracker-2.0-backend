@@ -1,4 +1,4 @@
-package io.dnajd.mainservice.infrastructure
+package io.dnajd.mainservice.infrastructure.mapper
 
 import dev.krud.shapeshift.condition.MappingCondition
 import dev.krud.shapeshift.condition.MappingConditionContext
