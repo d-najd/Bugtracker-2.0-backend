@@ -3,6 +3,7 @@ package io.dnajd.mainservice.service.project
 import dev.krud.shapeshift.ShapeShift
 import io.dnajd.mainservice.domain.project.*
 import io.dnajd.mainservice.infrastructure.exception.ResourceNotFoundException
+import io.dnajd.mainservice.infrastructure.mapper.mapChangedFields
 import io.dnajd.mainservice.repository.ProjectRepository
 import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory
@@ -20,7 +21,6 @@ class ProjectServiceImpl(
     }
 
     override fun findAll(): ProjectList {
-        val se = projectRepository.findAll()
         return ProjectList(projectRepository.findAll())
     }
 
@@ -48,7 +48,7 @@ class ProjectServiceImpl(
 
     override fun updateProject(id: Long, projectDto: ProjectDto): ProjectDto {
         val persistedProject = findById(id)
-        val transientProject = persistedProject.mapForUpdate(projectDto)
+        val transientProject = mapper.mapChangedFields(persistedProject, projectDto)
 
         return mapper.map(projectRepository.saveAndFlush(transientProject))
     }
