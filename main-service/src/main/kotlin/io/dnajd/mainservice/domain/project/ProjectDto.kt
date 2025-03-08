@@ -8,9 +8,9 @@ import java.util.*
 data class ProjectDto(
     var id: Long? = null,
     @MappedField
-    var title: String = "",
+    var title: String? = null,
     @MappedField
-    var owner: String = "",
+    var owner: String? = null,
     @MappedField
     var description: String? = null,
     var createdAt: Date? = null,

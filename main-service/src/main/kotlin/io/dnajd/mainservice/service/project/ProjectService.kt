@@ -3,7 +3,6 @@ package io.dnajd.mainservice.service.project
 import io.dnajd.mainservice.domain.project.*
 import org.springframework.stereotype.Service
 
-@Service
 interface ProjectService {
     fun findAll(): ProjectList
 

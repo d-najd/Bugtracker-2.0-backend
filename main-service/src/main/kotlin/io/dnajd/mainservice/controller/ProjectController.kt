@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping(Endpoints.PROJECT)
-class ProjectController {
-    @Autowired
-    private lateinit var projectService: ProjectService
+class ProjectController(
+    val projectService: ProjectService
+) {
 
     @GetMapping("/testing/getAll")
     fun findAll(): ProjectList {
@@ -19,7 +19,7 @@ class ProjectController {
     }
 
     @GetMapping("/user/{username}")
-    fun getAllByUsername(@PathVariable(value = "username") username: String): ProjectDtoList {
+    fun getAllByUsername(@PathVariable username: String): ProjectDtoList {
         return projectService.getAllByUsername(username)
     }
 

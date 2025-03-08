@@ -15,7 +15,6 @@ class ProjectServiceImpl(
     private val projectRepository: ProjectRepository,
     private val mapper: ShapeShift,
 ): ProjectService {
-
     companion object {
         private val log = LoggerFactory.getLogger(ProjectServiceImpl::class.java)
     }

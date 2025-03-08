@@ -4,7 +4,7 @@
     <toRun name="DiscoveryServer" type="JetRunConfigurationType" />
     <toRun name="io.dnajd.mainservice.service.project.ProjectService" type="JetRunConfigurationType" />
     <toRun name="ProjectTableIssueService" type="JetRunConfigurationType" />
-    <toRun name="ProjectTableService" type="JetRunConfigurationType" />
+    <toRun name="io.dnajd.mainservice.service.project_table.ProjectTableService" type="JetRunConfigurationType" />
     <toRun name="UserAuthorityService" type="JetRunConfigurationType" />
     <method v="2" />
   </configuration>

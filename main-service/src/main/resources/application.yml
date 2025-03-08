@@ -9,4 +9,4 @@ spring:
     username: root
     password: root-password
   jpa.hibernate:
-    ddl-auto: none
+    ddl-auto: validate
