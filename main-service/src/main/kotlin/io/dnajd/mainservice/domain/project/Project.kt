@@ -7,6 +7,7 @@ import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import dev.krud.shapeshift.resolver.annotation.MappedField
 import io.dnajd.mainservice.infrastructure.mapper.DontMapCondition
 import jakarta.persistence.*
+import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotEmpty
 import org.hibernate.annotations.CreationTimestamp
 import java.util.*
@@ -27,6 +28,7 @@ data class Project(
     var owner: String = "",
 
     @Column(length = 65535)
+    @NotBlank
     var description: String? = null,
 
     @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")

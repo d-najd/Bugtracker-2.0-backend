@@ -13,5 +13,7 @@ data class ProjectTable(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = -1L,
 
+    var projectId: Long = -1L,
+
 
 )
