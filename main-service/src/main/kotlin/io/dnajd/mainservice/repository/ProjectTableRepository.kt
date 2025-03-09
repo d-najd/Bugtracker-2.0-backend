@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ProjectTableRepository: JpaRepository<ProjectTable, Long> {
-    fun findAllByProjectId(projectId: Long): List<ProjectTable>
+    fun findAllByProjectId(projectId: Long): MutableList<ProjectTable>
 
     @Query(
         "UPDATE ProjectTable pt " +

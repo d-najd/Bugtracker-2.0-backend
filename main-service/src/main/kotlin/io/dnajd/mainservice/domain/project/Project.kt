@@ -27,9 +27,7 @@ data class Project(
     @Column(nullable = false, length = 255)
     var title: String = "",
 
-    @NotEmpty
-    @Size(max = 255)
-    @Column(nullable = false, length = 255)
+    @Column
     var owner: String = "",
 
     @NotBlank
@@ -42,7 +40,6 @@ data class Project(
     @Column(nullable = false)
     var createdAt: Date? = null,
 
-    // @MappedField(condition = DontMapCondition::class)
     @OneToMany(mappedBy = "projectId", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     var tables: List<ProjectTable> = emptyList()
 )

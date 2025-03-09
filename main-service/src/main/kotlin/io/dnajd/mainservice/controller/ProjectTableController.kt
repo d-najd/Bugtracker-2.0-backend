@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping(Endpoints.PROJECT_TABLE)
 class ProjectTableController(
-    val tableService: ProjectTableService
+    private val tableService: ProjectTableService
 ) {
     @GetMapping("/testing/getAll")
     fun findAll(): ProjectTableList {
@@ -34,7 +34,7 @@ class ProjectTableController(
         return tableService.getById(id, ignoreIssues)
     }
 
-    @PostMapping("/{projectId}")
+    @PostMapping("/projectId/{projectId}")
     @ResponseStatus(value = HttpStatus.CREATED)
     fun createTable(@PathVariable projectId: Long, @RequestBody dto: ProjectTableDto): ProjectTableDto {
         return tableService.createTable(projectId, dto)

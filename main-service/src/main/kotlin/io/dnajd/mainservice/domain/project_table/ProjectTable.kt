@@ -4,15 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
-import dev.krud.shapeshift.resolver.annotation.MappedField
 import io.dnajd.mainservice.domain.project.Project
-import io.dnajd.mainservice.domain.project.ProjectDto
-import io.dnajd.mainservice.infrastructure.mapper.DontMapCondition
+import io.dnajd.mainservice.domain.table_issue.TableIssue
 import jakarta.persistence.*
+import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
-import org.hibernate.annotations.Cascade
 
 @Entity
 @Table(name = "project_table")
@@ -23,9 +21,13 @@ data class ProjectTable(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = -1L,
 
-    @NotNull
-    @Column(nullable = false)
+    @Column
     var projectId: Long = -1L,
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "projectId", insertable = false, updatable = false)
+    var project: Project? = null,
 
     @NotEmpty
     @Size(max = 255)
@@ -34,12 +36,11 @@ data class ProjectTable(
 
     @NotNull
     @Column(nullable = false, columnDefinition = "INT UNSIGNED")
+    @Min(0)
     var position: Int = -1,
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name="projectId", insertable = false, updatable = false)
-    var project: Project? = null
+    @OneToMany(mappedBy = "tableId", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var issues: List<TableIssue> = emptyList()
 )
 
 class ProjectTableList(val data: List<ProjectTable>)

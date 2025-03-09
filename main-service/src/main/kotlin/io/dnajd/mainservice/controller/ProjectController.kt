@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping(Endpoints.PROJECT)
 class ProjectController(
-    val projectService: ProjectService
+    private val projectService: ProjectService
 ) {
 
     @GetMapping("/testing/getAll")
