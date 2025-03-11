@@ -51,7 +51,7 @@ class JwtTokenUtil {
             .setSubject(userDetails.username)
             .setIssuedAt(Date(System.currentTimeMillis()))
             .setExpiration(Date(System.currentTimeMillis() + expiration))
-            .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+            // .signWith(getSignInKey(), SignatureAlgorithm.HS256)
             .compact()
     }
 
@@ -73,6 +73,7 @@ class JwtTokenUtil {
     }
 
     private fun extractAllClaims(token: String): Claims {
+        // return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
         return Jwts
             .parserBuilder()
             .setSigningKey(getSignInKey())
@@ -81,8 +82,13 @@ class JwtTokenUtil {
             .body
     }
 
+    /*
     public fun getSignInKey(): Key {
         val keyBytes = Decoders.BASE64.decode(secretKey)
         return Keys.hmacShaKeyFor(keyBytes)
+    }
+     */
+    public fun getSignInKey(): String? {
+        return secretKey
     }
 }

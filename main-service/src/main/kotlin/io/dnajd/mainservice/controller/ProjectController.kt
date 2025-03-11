@@ -1,5 +1,6 @@
 package io.dnajd.mainservice.controller
 
+import io.dnajd.mainservice.config.validateGoogleJwt
 import io.dnajd.mainservice.util.JwtTokenUtil
 import io.dnajd.mainservice.domain.project.ProjectDto
 import io.dnajd.mainservice.domain.project.ProjectDtoList
@@ -30,12 +31,14 @@ class ProjectController(
         }
          */
 
+        /*
         Jwts
             .parserBuilder()
             .requireId("523144607813-ccib1llvilpg1e6httmo9a0d839bhh9h.apps.googleusercontent.com")
             .build()
+         */
 
-        return true
+        return validateGoogleJwt(token, "523144607813-ccib1llvilpg1e6httmo9a0d839bhh9h.apps.googleusercontent.com")
     }
 
     @GetMapping("/user/{username}")
