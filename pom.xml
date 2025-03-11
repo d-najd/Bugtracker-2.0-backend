@@ -17,13 +17,6 @@
 	</parent>
 
 	<modules>
-		<module>project-service</module>
-		<module>discovery-server</module>
-		<module>api-gateway</module>
-		<module>project-table-service</module>
-		<module>project-table-issue-service</module>
-		<module>user-service</module>
-		<module>user-authority-service</module>
 		<module>main-service</module>
 	</modules>
 

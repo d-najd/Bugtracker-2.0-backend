@@ -37,10 +37,11 @@ data class TableIssue(
     @Column(nullable = true)
     var parentIssueId: Long? = null,
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TINYINT UNSIGNED")
     @Min(0)
     @Max(5)
     @NotNull
+    // @Type(type = "org.hibernate.type.IntegerType")
     var severity: Int = -1,
 
     @Column(nullable = false, length = 255)
