@@ -17,8 +17,8 @@ spring:
           issuer-uri: https://accounts.google.com
           jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
           audiences: >
-            523144607813-fnng3pmai446jt0ajc012aav6kedo8u4.apps.googleusercontent.com
+            523144607813-ccib1llvilpg1e6httmo9a0d839bhh9h.apps.googleusercontent.com
       client:
         registration:
           google:
-            client-id: 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
+            client-id: 523144607813-fnng3pmai446jt0ajc012aav6kedo8u4.apps.googleusercontent.com
