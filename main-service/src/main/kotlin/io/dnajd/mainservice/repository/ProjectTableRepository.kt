@@ -10,7 +10,10 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ProjectTableRepository: JpaRepository<ProjectTable, Long> {
+
     fun findAllByProjectId(projectId: Long): MutableList<ProjectTable>
+
+    fun countByProjectId(projectId: Long): Int
 
     @Query(
         "UPDATE ProjectTable pt " +
@@ -24,5 +27,17 @@ interface ProjectTableRepository: JpaRepository<ProjectTable, Long> {
         @Param("sPos") sPos: Int,
     )
 
-    fun countByProjectId(projectId: Long): Int
+    /**
+     * Use after table has been removed, moves all the project tables in given project one spot to the left after the
+     * given position
+     */
+    @Query(
+        "UPDATE ProjectTable pt " +
+                "SET pt.position = pt.position - 1 " +
+                "WHERE pt.projectId = :projectId AND pt.position > :position"
+    )
+    @Modifying
+    @Transactional
+    fun moveToLeftAfter(@Param("projectId") projectId: Long, @Param("position") position: Int)
+
 }

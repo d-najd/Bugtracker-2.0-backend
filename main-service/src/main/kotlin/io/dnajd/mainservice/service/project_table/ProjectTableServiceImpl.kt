@@ -81,11 +81,9 @@ class ProjectTableServiceImpl(
     }
 
     override fun deleteTable(id: Long) {
-        TODO("NOT PROPERLY IMPLEMENTED, DELETING TABLE CAN LEAVE OTHER ISSUES IN TABLE IN BROKEN STATE")
-
-        /*
         val persistedTable = findById(id)
         tableRepository.delete(persistedTable)
-         */
+
+        tableRepository.moveToLeftAfter(persistedTable.projectId, persistedTable.position)
     }
 }
