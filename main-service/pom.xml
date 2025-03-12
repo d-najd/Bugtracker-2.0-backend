@@ -27,6 +27,7 @@
         <flyway.version>11.3.4</flyway.version>
         <shapeshift.version>0.8.0</shapeshift.version>
         <jsonwebtoken.version>0.11.5</jsonwebtoken.version>
+        <spring-security.version>6.4.3</spring-security.version>
     </properties>
     <dependencies>
         <!-- Spring Boot -->
@@ -144,6 +145,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
+            <version>${spring-security.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -165,6 +167,37 @@
             <artifactId>jwks-rsa</artifactId>
             <version>0.22.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-resource-server</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-jose</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>2.5.2.RELEASE</version>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-jwt</artifactId>
+            <version>1.1.1.RELEASE</version>
+        </dependency>
+        -->
+
+        <!--
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-security</artifactId>
+            <version>2.2.5.RELEASE</version>
+        </dependency>
+        -->
     </dependencies>
 
     <build>
