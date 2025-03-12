@@ -14,7 +14,10 @@ import org.hibernate.annotations.UpdateTimestamp
 import java.util.*
 
 @Entity
-@Table(name = "project_table_issue")
+@Table(
+    name = "project_table_issue",
+    uniqueConstraints = [UniqueConstraint(columnNames = arrayOf("table_id", "position"))]
+)
 @AutoMapping(ProjectTable::class, AutoMappingStrategy.BY_NAME)
 @DefaultMappingTarget(ProjectTable::class)
 data class TableIssue(
