@@ -54,8 +54,8 @@ class TableIssueController(
     fun changeToTable(
         @PathVariable id: Long,
         @PathVariable tableId: Long
-    ) {
-        issueService.swapIssuePositions(id, tableId)
+    ): Int {
+        return issueService.changeTable(id, tableId)
     }
 
     @PatchMapping("{id}/setParentIssue/{parentIssueId}")
