@@ -101,35 +101,28 @@ class TableIssueServiceImpl(
         issueRepository.moveToLeftAfter(originalIssue.tableId, originalIssue.position)
 
         return persistedIssue.position
-        // return mapper.map(persistedIssue)
     }
 
     override fun setParentIssue(id: Long, parentIssueId: Long) {
-        TODO()
-        /*
         if (!issueRepository.tasksBelongToSameProject(id, parentIssueId)) {
             val errorText = "Trying to set parent issue to task that doesn't belong to the same project? id: $id, parentId $parentIssueId"
             log.error(errorText)
             throw IllegalArgumentException(errorText)
         }
 
-        val originalIssue = findById(id)
-        val originalParentIssue = findById(parentIssueId)
-         */
-
-        // TODO check circular dependency for ex A -> B -> C -> A
-        /*
-        if (originalParentIssue.parentIssueId == id) {
-            val errorText = "Trying to create circular parent dependency id: $id parentIssueId: $parentIssueId"
+        val persistedParentIssue = findById(parentIssueId)
+        if (persistedParentIssue.parentIssueId != null) {
+            val errorText = "Parent issue must not have its own parent issue. id: $id, parentId: $parentIssueId"
             log.error(errorText)
             throw IllegalArgumentException(errorText)
         }
-         */
 
+        val originalIssue = findById(id)
+        val transientIssue = originalIssue.copy(
+            parentIssueId = parentIssueId
+        )
 
-        // val modifiedIssue = originalIssue.copy(parentIssueId)
-
-
+        issueRepository.saveAndFlush(transientIssue)
     }
 
     override fun deleteIssue(id: Long) {

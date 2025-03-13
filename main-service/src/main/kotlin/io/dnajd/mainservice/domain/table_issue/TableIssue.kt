@@ -40,6 +40,22 @@ data class TableIssue(
     @Column(nullable = true)
     var parentIssueId: Long? = null,
 
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @JoinColumn(
+        name = "parentIssueId",
+        updatable = false,
+        insertable = false,
+    )
+    var parentIssue: TableIssue? = null,
+
+    @OneToMany(
+        cascade = [CascadeType.ALL],
+        mappedBy = "parentIssue",
+        fetch = FetchType.LAZY
+    )
+    var childIssues: MutableList<TableIssue> = mutableListOf(),
+
     @Column(nullable = false, columnDefinition = "TINYINT UNSIGNED")
     @Min(0)
     @Max(5)
