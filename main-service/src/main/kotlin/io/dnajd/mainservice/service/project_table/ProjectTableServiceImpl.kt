@@ -82,8 +82,8 @@ class ProjectTableServiceImpl(
 
     override fun deleteTable(id: Long) {
         val persistedTable = findById(id)
-        tableRepository.delete(persistedTable)
 
+        tableRepository.delete(persistedTable)
         tableRepository.moveToLeftAfter(persistedTable.projectId, persistedTable.position)
     }
 }

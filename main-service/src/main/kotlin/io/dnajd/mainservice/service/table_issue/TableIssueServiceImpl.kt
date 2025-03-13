@@ -66,8 +66,6 @@ class TableIssueServiceImpl(
     }
 
     override fun swapIssuePositions(fId: Long, sId: Long) {
-        TODO("FINISH THIS")
-        /*
         val firstIssue = findById(fId)
         val secondIssue = findById(sId)
 
@@ -77,23 +75,66 @@ class TableIssueServiceImpl(
         }
 
         issueRepository.swapPositions(firstIssue.position, secondIssue.position)
-         */
     }
 
-    override fun changeTable(id: Long, tableId: Long) {
-        TODO("Not yet implemented")
+    override fun changeTable(id: Long, tableId: Long): TableIssueDto {
+        if (!issueRepository.taskAndTableBelongToSameProject(id, tableId)) {
+            val errorText = "Task $id and table $tableId don't belong to the same project"
+            log.error(errorText)
+            throw IllegalArgumentException(errorText)
+        }
+
+        val originalIssue = findById(id)
+        if (originalIssue.tableId == tableId) {
+            val errorText = "Trying to change table for a issue but putting the current table? taskId: $id tableId: $tableId"
+            log.error(errorText)
+            throw IllegalArgumentException(errorText)
+        }
+
+        val issuesInTableCount = issueRepository.countByTableId(tableId)
+        val modifiedIssue = originalIssue.copy(
+            tableId = tableId,
+            position = issuesInTableCount
+        )
+
+        val persistedIssue = issueRepository.saveAndFlush(modifiedIssue)
+        issueRepository.moveToLeftAfter(originalIssue.tableId, originalIssue.position)
+
+        return mapper.map(persistedIssue)
     }
 
     override fun setParentIssue(id: Long, parentIssueId: Long) {
-        TODO("Not yet implemented")
+        TODO()
+        /*
+        if (!issueRepository.tasksBelongToSameProject(id, parentIssueId)) {
+            val errorText = "Trying to set parent issue to task that doesn't belong to the same project? id: $id, parentId $parentIssueId"
+            log.error(errorText)
+            throw IllegalArgumentException(errorText)
+        }
+
+        val originalIssue = findById(id)
+        val originalParentIssue = findById(parentIssueId)
+         */
+
+        // TODO check circular dependency for ex A -> B -> C -> A
+        /*
+        if (originalParentIssue.parentIssueId == id) {
+            val errorText = "Trying to create circular parent dependency id: $id parentIssueId: $parentIssueId"
+            log.error(errorText)
+            throw IllegalArgumentException(errorText)
+        }
+         */
+
+
+        // val modifiedIssue = originalIssue.copy(parentIssueId)
+
+
     }
 
     override fun deleteIssue(id: Long) {
-        TODO("NOT PROPERLY IMPLEMENTED, DELETING TABLE CAN LEAVE OTHER ISSUES IN TABLE IN BROKEN STATE")
-
-        /*
         val persistedTable = findById(id)
-        tableRepository.delete(persistedTable)
-         */
+
+        issueRepository.delete(persistedTable)
+        issueRepository.moveToLeftAfter(persistedTable.tableId, persistedTable.position)
     }
 }

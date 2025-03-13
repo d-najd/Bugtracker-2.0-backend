@@ -1,5 +1,6 @@
 package io.dnajd.mainservice.repository
 
+import io.dnajd.mainservice.domain.project.Project
 import io.dnajd.mainservice.domain.project_table.ProjectTable
 import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaRepository
@@ -9,12 +10,16 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
 @Repository
-interface ProjectTableRepository: JpaRepository<ProjectTable, Long> {
+interface ProjectTableRepository : JpaRepository<ProjectTable, Long> {
 
     fun findAllByProjectId(projectId: Long): MutableList<ProjectTable>
 
     fun countByProjectId(projectId: Long): Int
+    
 
+    /**
+     * No checking is done to check if the id's belong to the same [Project] here
+     */
     @Query(
         "UPDATE ProjectTable pt " +
                 "SET pt.position = CASE WHEN " +
@@ -39,5 +44,4 @@ interface ProjectTableRepository: JpaRepository<ProjectTable, Long> {
     @Modifying
     @Transactional
     fun moveToLeftAfter(@Param("projectId") projectId: Long, @Param("position") position: Int)
-
 }
