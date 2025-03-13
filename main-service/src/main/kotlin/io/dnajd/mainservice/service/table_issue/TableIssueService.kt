@@ -21,7 +21,7 @@ interface TableIssueService {
 
     fun swapIssuePositions(fId: Long, sId: Long)
 
-    fun changeTable(id: Long, tableId: Long): TableIssueDto
+    fun changeTable(id: Long, tableId: Long): Int
 
     fun setParentIssue(id: Long, parentIssueId: Long)
 

@@ -77,7 +77,7 @@ class TableIssueServiceImpl(
         issueRepository.swapPositions(firstIssue.position, secondIssue.position)
     }
 
-    override fun changeTable(id: Long, tableId: Long): TableIssueDto {
+    override fun changeTable(id: Long, tableId: Long): Int {
         if (!issueRepository.taskAndTableBelongToSameProject(id, tableId)) {
             val errorText = "Task $id and table $tableId don't belong to the same project"
             log.error(errorText)
@@ -100,7 +100,8 @@ class TableIssueServiceImpl(
         val persistedIssue = issueRepository.saveAndFlush(modifiedIssue)
         issueRepository.moveToLeftAfter(originalIssue.tableId, originalIssue.position)
 
-        return mapper.map(persistedIssue)
+        return persistedIssue.position
+        // return mapper.map(persistedIssue)
     }
 
     override fun setParentIssue(id: Long, parentIssueId: Long) {

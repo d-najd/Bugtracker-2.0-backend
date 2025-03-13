@@ -15,7 +15,6 @@ interface ProjectTableRepository : JpaRepository<ProjectTable, Long> {
     fun findAllByProjectId(projectId: Long): MutableList<ProjectTable>
 
     fun countByProjectId(projectId: Long): Int
-    
 
     /**
      * No checking is done to check if the id's belong to the same [Project] here
