@@ -11,6 +11,7 @@ import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import dev.krud.shapeshift.resolver.annotation.MappedField
 import dev.krud.shapeshift.transformer.ImplicitCollectionMappingTransformer
 import io.dnajd.mainservice.domain.issue_assignee.IssueAssignee
+import io.dnajd.mainservice.domain.issue_comment.IssueComment
 import io.dnajd.mainservice.domain.project_table.ProjectTable
 import io.dnajd.mainservice.infrastructure.mapper.DontMapCondition
 import io.dnajd.mainservice.infrastructure.mapper.LazyInitializedCondition
@@ -107,14 +108,15 @@ data class TableIssue(
     @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
     var assigned: MutableList<IssueAssignee> = mutableListOf(),
 
-    /*
     @OneToMany(
         cascade = [CascadeType.REMOVE],
-        mappedBy = "issue",
-        fetch = FetchType.LAZY,
+        fetch = FetchType.LAZY
     )
-    var comments: MutableList<ProjectTableIssueComment> = mutableListOf(),
+    @JoinColumn(name = "issueId")
+    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
+    var comments: MutableList<IssueComment> = mutableListOf(),
 
+    /*
     @ManyToMany(
         // cascade = [CascadeType.REMOVE], labels should not be removed when the issue is removed
         fetch = FetchType.LAZY
@@ -134,6 +136,7 @@ data class TableIssue(
         fun entityGraph(
             includeChildIssues: Boolean = false,
             includeAssigned: Boolean = false,
+            includeComments: Boolean = false,
             graphType: EntityGraphType = EntityGraphType.LOAD,
         ): EntityGraph {
             val graph = DynamicEntityGraph.builder(graphType)
@@ -143,6 +146,9 @@ data class TableIssue(
             }
             if (includeAssigned) {
                 graph.addPath(TableIssue::assigned.name)
+            }
+            if (includeComments) {
+                graph.addPath(TableIssue::comments.name)
             }
 
             return graph.build()

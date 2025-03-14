@@ -6,6 +6,8 @@ import dev.krud.shapeshift.resolver.annotation.MappedField
 import dev.krud.shapeshift.transformer.ImplicitCollectionMappingTransformer
 import io.dnajd.mainservice.domain.issue_assignee.IssueAssignee
 import io.dnajd.mainservice.domain.issue_assignee.IssueAssigneeDto
+import io.dnajd.mainservice.domain.issue_comment.IssueComment
+import io.dnajd.mainservice.domain.issue_comment.IssueCommentDto
 import io.dnajd.mainservice.infrastructure.mapper.LazyInitializedCondition
 import jakarta.persistence.CascadeType
 import jakarta.persistence.FetchType
@@ -30,7 +32,8 @@ data class TableIssueDto(
     var createdAt: Date? = null,
     var updatedAt: Date? = null,
     var childIssues: MutableList<TableIssueDto>? = null,
-    var assigned: MutableList<IssueAssigneeDto>? = null
+    var assigned: MutableList<IssueAssigneeDto>? = null,
+    var comments: MutableList<IssueCommentDto>? = null,
 )
 
 class TableIssueDtoList(val data: List<TableIssueDto>)
