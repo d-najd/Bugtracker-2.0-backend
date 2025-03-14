@@ -1,5 +1,7 @@
 package io.dnajd.mainservice.repository
 
+import com.cosium.spring.data.jpa.entity.graph.domain2.EntityGraph
+import com.cosium.spring.data.jpa.entity.graph.repository.EntityGraphJpaRepository
 import io.dnajd.mainservice.domain.project_table.ProjectTable
 import io.dnajd.mainservice.domain.table_issue.TableIssue
 import jakarta.transaction.Transactional
@@ -10,8 +12,8 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
 @Repository
-interface TableIssueRepository : JpaRepository<TableIssue, Long> {
-    fun findAllByTableId(tableId: Long): MutableList<TableIssue>
+interface TableIssueRepository : EntityGraphJpaRepository<TableIssue, Long> {
+    fun findAllByTableId(tableId: Long, entityGraph: EntityGraph = EntityGraph.NOOP): MutableList<TableIssue>
 
     fun countByTableId(tableId: Long): Int
 

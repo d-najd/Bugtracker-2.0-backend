@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable
 interface TableIssueService {
     fun findAll(): TableIssueList
 
-    fun getAllByTableId(tableId: Long): TableIssueDtoList
+    fun getAllByTableId(tableId: Long, includeChildIssues: Boolean = false): TableIssueDtoList
 
-    fun findById(id: Long): TableIssue
+    fun findById(id: Long, includeChildIssues: Boolean = false, includeAssigned: Boolean = false): TableIssue
 
-    fun getById(id: Long): TableIssueDto
+    fun getById(id: Long, includeChildIssues: Boolean = false, includeAssigned: Boolean = false): TableIssueDto
 
     fun createIssue(tableId: Long, reporterUsername: String, dto: TableIssueDto): TableIssueDto
 

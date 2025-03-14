@@ -19,13 +19,20 @@ class TableIssueController(
     }
 
     @GetMapping("/tableId/{tableId}")
-    fun getAllByTableId(@PathVariable tableId: Long): TableIssueDtoList {
-        return issueService.getAllByTableId(tableId)
+    fun getAllByTableId(
+        @PathVariable tableId: Long,
+        @RequestParam includeChildIssues: Boolean = false,
+    ): TableIssueDtoList {
+        return issueService.getAllByTableId(tableId, includeChildIssues)
     }
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long): TableIssueDto {
-        return issueService.getById(id)
+    fun getById(
+        @PathVariable id: Long,
+        @RequestParam includeChildIssues: Boolean = false,
+        @RequestParam includeAssigned: Boolean = false,
+    ): TableIssueDto {
+        return issueService.getById(id, includeChildIssues, includeAssigned)
     }
 
     @PostMapping("/tableId/{tableId}")

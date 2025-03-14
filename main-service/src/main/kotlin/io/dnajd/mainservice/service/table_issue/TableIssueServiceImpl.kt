@@ -1,6 +1,5 @@
 package io.dnajd.mainservice.service.table_issue
 
-import io.dnajd.mainservice.repository.TableIssueRepository
 import dev.krud.shapeshift.ShapeShift
 import io.dnajd.mainservice.domain.table_issue.TableIssue
 import io.dnajd.mainservice.domain.table_issue.TableIssueDto
@@ -8,6 +7,7 @@ import io.dnajd.mainservice.domain.table_issue.TableIssueDtoList
 import io.dnajd.mainservice.domain.table_issue.TableIssueList
 import io.dnajd.mainservice.infrastructure.exception.ResourceNotFoundException
 import io.dnajd.mainservice.infrastructure.mapper.mapChangedFields
+import io.dnajd.mainservice.repository.TableIssueRepository
 import io.dnajd.mainservice.service.project.ProjectServiceImpl
 import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service
 class TableIssueServiceImpl(
     private val issueRepository: TableIssueRepository,
     private val mapper: ShapeShift,
-): TableIssueService {
+) : TableIssueService {
     companion object {
         private val log = LoggerFactory.getLogger(ProjectServiceImpl::class.java)
     }
@@ -27,21 +27,21 @@ class TableIssueServiceImpl(
         return TableIssueList(issueRepository.findAll())
     }
 
-    override fun getAllByTableId(tableId: Long): TableIssueDtoList {
-        val persistedIssues = issueRepository.findAllByTableId(tableId)
+    override fun getAllByTableId(tableId: Long, includeChildIssues: Boolean): TableIssueDtoList {
+        val persistedIssues = issueRepository.findAllByTableId(tableId, TableIssue.entityGraph(includeChildIssues))
 
         return TableIssueDtoList(mapper.mapCollection(persistedIssues))
     }
 
-    override fun findById(id: Long): TableIssue {
-        return issueRepository.findById(id).orElseThrow {
+    override fun findById(id: Long, includeChildIssues: Boolean, includeAssigned: Boolean): TableIssue {
+        return issueRepository.findById(id, TableIssue.entityGraph(includeChildIssues, includeAssigned)).orElseThrow {
             log.error("Resource ${TableIssue::class.simpleName} with id $id not found")
             throw ResourceNotFoundException(TableIssue::class)
         }
     }
 
-    override fun getById(id: Long): TableIssueDto {
-        return mapper.map(findById(id))
+    override fun getById(id: Long, includeChildIssues: Boolean, includeAssigned: Boolean): TableIssueDto {
+        return mapper.map(findById(id, includeChildIssues, includeAssigned))
     }
 
     override fun createIssue(tableId: Long, reporterUsername: String, dto: TableIssueDto): TableIssueDto {
@@ -86,7 +86,8 @@ class TableIssueServiceImpl(
 
         val originalIssue = findById(id)
         if (originalIssue.tableId == tableId) {
-            val errorText = "Trying to change table for a issue but putting the current table? taskId: $id tableId: $tableId"
+            val errorText =
+                "Trying to change table for a issue but putting the current table? taskId: $id tableId: $tableId"
             log.error(errorText)
             throw IllegalArgumentException(errorText)
         }
@@ -105,7 +106,8 @@ class TableIssueServiceImpl(
 
     override fun setParentIssue(id: Long, parentIssueId: Long) {
         if (!issueRepository.tasksBelongToSameProject(id, parentIssueId)) {
-            val errorText = "Trying to set parent issue to task that doesn't belong to the same project? id: $id, parentId $parentIssueId"
+            val errorText =
+                "Trying to set parent issue to task that doesn't belong to the same project? id: $id, parentId $parentIssueId"
             log.error(errorText)
             throw IllegalArgumentException(errorText)
         }

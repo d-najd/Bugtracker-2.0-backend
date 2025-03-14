@@ -1,5 +1,8 @@
 package io.dnajd.mainservice.domain.table_issue
 
+import com.cosium.spring.data.jpa.entity.graph.domain2.DynamicEntityGraph
+import com.cosium.spring.data.jpa.entity.graph.domain2.EntityGraph
+import com.cosium.spring.data.jpa.entity.graph.domain2.EntityGraphType
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
 import dev.krud.shapeshift.enums.AutoMappingStrategy
@@ -123,6 +126,28 @@ data class TableIssue(
     )
     var labels: MutableList<ProjectLabel> = mutableListOf(),
      */
-)
+) {
+    companion object {
+        /**
+         * If [includeChildIssues] is then [includeIssues] will be ignored
+         */
+        fun entityGraph(
+            includeChildIssues: Boolean = false,
+            includeAssigned: Boolean = false,
+            graphType: EntityGraphType = EntityGraphType.LOAD,
+        ): EntityGraph {
+            val graph = DynamicEntityGraph.builder(graphType)
+
+            if (includeChildIssues) {
+                graph.addPath(TableIssue::childIssues.name)
+            }
+            if (includeAssigned) {
+                graph.addPath(TableIssue::assigned.name)
+            }
+
+            return graph.build()
+        }
+    }
+}
 
 class TableIssueList(val data: List<TableIssue>)
