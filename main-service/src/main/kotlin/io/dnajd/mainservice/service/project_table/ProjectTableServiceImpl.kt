@@ -7,13 +7,11 @@ import io.dnajd.mainservice.domain.project_table.ProjectTable
 import io.dnajd.mainservice.domain.project_table.ProjectTableDto
 import io.dnajd.mainservice.domain.project_table.ProjectTableDtoList
 import io.dnajd.mainservice.domain.project_table.ProjectTableList
-import io.dnajd.mainservice.domain.table_issue.TableIssueDto
 import io.dnajd.mainservice.infrastructure.exception.ResourceNotFoundException
 import io.dnajd.mainservice.infrastructure.mapper.mapChangedFields
 import io.dnajd.mainservice.repository.ProjectTableRepository
 import io.dnajd.mainservice.service.project.ProjectServiceImpl
 import jakarta.transaction.Transactional
-import org.hibernate.Hibernate
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -26,7 +24,7 @@ class ProjectTableServiceImpl(
     companion object {
         private val log = LoggerFactory.getLogger(ProjectServiceImpl::class.java)
 
-        private fun namedGraphConstructor(ignoreIssues: Boolean = true): EntityGraph {
+        private fun createEntityGraph(ignoreIssues: Boolean = true): EntityGraph {
             return if (ignoreIssues) {
                 EntityGraph.NOOP
             } else {
@@ -35,35 +33,34 @@ class ProjectTableServiceImpl(
         }
     }
 
-    override fun findAll(): ProjectTableList {
-        return ProjectTableList(tableRepository.findAll())
+    override fun findAll(ignoreIssues: Boolean): ProjectTableList {
+        val persistedTables = tableRepository.findAll(createEntityGraph(ignoreIssues))
+
+        return ProjectTableList(persistedTables)
     }
 
     override fun getAllByProjectId(projectId: Long, ignoreIssues: Boolean): ProjectTableDtoList {
-        val persistedTables = tableRepository.findAllByProjectId(projectId, namedGraphConstructor(ignoreIssues))
-        val test: List<ProjectTableDto> = mapper.mapCollection(persistedTables)
+        val persistedTables = tableRepository.findAllByProjectId(projectId, createEntityGraph(ignoreIssues))
 
-        return ProjectTableDtoList(mapper.mapCollection(persistedTables))
+        return ProjectTableDtoList(mapper.mapCollection(persistedTables) )
     }
 
-    override fun findById(id: Long, ignoreIssued: Boolean): ProjectTable {
-        return tableRepository.findById(id).orElseThrow {
+    override fun findById(id: Long, ignoreIssues: Boolean): ProjectTable {
+        return tableRepository.findById(id, createEntityGraph(ignoreIssues)).orElseThrow {
             log.error("Resource ${ProjectTable::class.simpleName} with id $id not found")
             throw ResourceNotFoundException(ProjectTable::class)
         }
     }
 
     override fun getById(id: Long, ignoreIssues: Boolean): ProjectTableDto {
-        val persistedTable = findById(id)
-        if (ignoreIssues) {
-            persistedTable.issues = emptyList()
-        }
+        val persistedTable = findById(id, ignoreIssues)
         return mapper.map(persistedTable)
     }
 
     override fun createTable(projectId: Long, dto: ProjectTableDto): ProjectTableDto {
-        val tablesInProjectCount = tableRepository.countByProjectId(projectId)
+        dto.issues = null
 
+        val tablesInProjectCount = tableRepository.countByProjectId(projectId)
         var transientTable: ProjectTable = mapper.map(dto)
         transientTable = transientTable.copy(
             projectId = projectId,
@@ -75,8 +72,9 @@ class ProjectTableServiceImpl(
     }
 
     override fun updateTable(id: Long, dto: ProjectTableDto): ProjectTableDto {
-        val persistedTable = findById(id)
-        persistedTable.issues = emptyList()
+        dto.issues = null
+
+        val persistedTable = findById(id, ignoreIssues = true)
         val transientTable = mapper.mapChangedFields(persistedTable, dto)
 
         return mapper.map(tableRepository.saveAndFlush(transientTable))

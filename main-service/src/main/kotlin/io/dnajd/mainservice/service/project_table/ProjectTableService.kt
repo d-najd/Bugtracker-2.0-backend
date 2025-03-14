@@ -6,13 +6,13 @@ import io.dnajd.mainservice.domain.project_table.ProjectTableDtoList
 import io.dnajd.mainservice.domain.project_table.ProjectTableList
 
 interface ProjectTableService {
-    fun findAll(): ProjectTableList
+    fun findAll(ignoreIssues: Boolean = true): ProjectTableList
 
-    fun getAllByProjectId(projectId: Long, ignoreIssues: Boolean): ProjectTableDtoList
+    fun getAllByProjectId(projectId: Long, ignoreIssues: Boolean = true): ProjectTableDtoList
 
-    fun findById(id: Long): ProjectTable
+    fun findById(id: Long, ignoreIssues: Boolean = true): ProjectTable
 
-    fun getById(id: Long, ignoreIssues: Boolean): ProjectTableDto
+    fun getById(id: Long, ignoreIssues: Boolean = true): ProjectTableDto
 
     fun createTable(projectId: Long, dto: ProjectTableDto): ProjectTableDto
 

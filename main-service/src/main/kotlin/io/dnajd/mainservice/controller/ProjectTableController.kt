@@ -14,14 +14,16 @@ class ProjectTableController(
     private val tableService: ProjectTableService
 ) {
     @GetMapping("/testing/getAll")
-    fun findAll(): ProjectTableList {
-        return tableService.findAll()
+    fun findAll(
+        @RequestParam ignoreIssues: Boolean = true,
+    ): ProjectTableList {
+        return tableService.findAll(ignoreIssues)
     }
 
     @GetMapping("/projectId/{projectId}")
     fun getAllByProjectId(
         @PathVariable projectId: Long,
-        @RequestParam ignoreIssues: Boolean = false,
+        @RequestParam ignoreIssues: Boolean = true,
     ): ProjectTableDtoList {
         return tableService.getAllByProjectId(projectId, ignoreIssues)
     }
@@ -29,7 +31,7 @@ class ProjectTableController(
     @GetMapping("/id/{id}")
     fun getById(
         @PathVariable id: Long,
-        @RequestParam ignoreIssues: Boolean = false,
+        @RequestParam ignoreIssues: Boolean = true,
     ): ProjectTableDto {
         return tableService.getById(id, ignoreIssues)
     }

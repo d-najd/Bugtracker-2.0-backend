@@ -49,9 +49,9 @@ data class ProjectTable(
     @Min(0)
     var position: Int = -1,
 
-    @OneToMany(mappedBy = "tableId", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToMany(mappedBy = "tableId", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = false)
     @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
-    var issues: List<TableIssue> = emptyList()
+    var issues: MutableList<TableIssue> = mutableListOf()
 )
 
 class ProjectTableList(val data: List<ProjectTable>)

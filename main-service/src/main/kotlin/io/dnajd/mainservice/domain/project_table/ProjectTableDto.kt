@@ -13,7 +13,7 @@ data class ProjectTableDto(
     @MappedField
     var title: String? = null,
     var position: Int? = null,
-    var issues: List<TableIssueDto>? = null
+    var issues: MutableList<TableIssueDto>? = null
 )
 
 class ProjectTableDtoList(val data: List<ProjectTableDto>)

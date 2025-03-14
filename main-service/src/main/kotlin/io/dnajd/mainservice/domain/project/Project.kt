@@ -44,7 +44,7 @@ data class Project(
 
     @OneToMany(mappedBy = "projectId", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @MappedField(DontMapCondition::class)
-    var tables: List<ProjectTable> = emptyList()
+    var tables: MutableList<ProjectTable> = mutableListOf()
 )
 
 class ProjectList(val data: List<Project>)
