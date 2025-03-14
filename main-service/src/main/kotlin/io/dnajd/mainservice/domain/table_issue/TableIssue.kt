@@ -101,7 +101,28 @@ data class TableIssue(
         fetch = FetchType.LAZY
     )
     @JoinColumn(name = "issueId")
+    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
     var assigned: MutableList<IssueAssignee> = mutableListOf(),
+
+    /*
+    @OneToMany(
+        cascade = [CascadeType.REMOVE],
+        mappedBy = "issue",
+        fetch = FetchType.LAZY,
+    )
+    var comments: MutableList<ProjectTableIssueComment> = mutableListOf(),
+
+    @ManyToMany(
+        // cascade = [CascadeType.REMOVE], labels should not be removed when the issue is removed
+        fetch = FetchType.LAZY
+    )
+    @JoinTable(
+        name = "project_table_issue_label",
+        joinColumns = [JoinColumn(name = "item_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "label_id", referencedColumnName = "id")]
+    )
+    var labels: MutableList<ProjectLabel> = mutableListOf(),
+     */
 )
 
 class TableIssueList(val data: List<TableIssue>)

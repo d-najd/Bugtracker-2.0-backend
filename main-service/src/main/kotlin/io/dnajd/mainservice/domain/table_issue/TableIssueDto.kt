@@ -3,8 +3,13 @@ package io.dnajd.mainservice.domain.table_issue
 import com.fasterxml.jackson.annotation.JsonIgnore
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import dev.krud.shapeshift.resolver.annotation.MappedField
+import dev.krud.shapeshift.transformer.ImplicitCollectionMappingTransformer
+import io.dnajd.mainservice.domain.issue_assignee.IssueAssignee
+import io.dnajd.mainservice.domain.issue_assignee.IssueAssigneeDto
+import io.dnajd.mainservice.infrastructure.mapper.LazyInitializedCondition
 import jakarta.persistence.CascadeType
 import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
 import jakarta.persistence.OneToMany
 import java.util.*
 
@@ -17,7 +22,6 @@ data class TableIssueDto(
     var parentIssueId: Long? = null,
     @MappedField
     var severity: Int = -1,
-    var childIssues: MutableList<TableIssueDto>? = null,
     @MappedField
     var title: String = "",
     var position: Int = -1,
@@ -25,6 +29,8 @@ data class TableIssueDto(
     var description: String? = null,
     var createdAt: Date? = null,
     var updatedAt: Date? = null,
+    var childIssues: MutableList<TableIssueDto>? = null,
+    var assigned: MutableList<IssueAssigneeDto>? = null
 )
 
 class TableIssueDtoList(val data: List<TableIssueDto>)
