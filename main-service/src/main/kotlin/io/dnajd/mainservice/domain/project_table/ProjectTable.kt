@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
+import dev.krud.shapeshift.resolver.annotation.MappedField
 import io.dnajd.mainservice.domain.project.Project
 import io.dnajd.mainservice.domain.table_issue.TableIssue
+import io.dnajd.mainservice.infrastructure.mapper.DontMapCondition
 import jakarta.persistence.*
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotEmpty

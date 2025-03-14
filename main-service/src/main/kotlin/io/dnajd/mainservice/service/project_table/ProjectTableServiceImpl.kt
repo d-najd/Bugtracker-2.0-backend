@@ -30,9 +30,12 @@ class ProjectTableServiceImpl(
 
     override fun getAllByProjectId(projectId: Long, ignoreIssues: Boolean): ProjectTableDtoList {
         val persistedTables = tableRepository.findAllByProjectId(projectId)
+        if (ignoreIssues) {
+             persistedTables.forEach { o -> o.issues = emptyList() }
+        }
 
-        val test = ProjectTableDtoList(mapper.mapCollection(persistedTables))
-        log.error("IS RETRIEVED ${Hibernate.isInitialized(persistedTables[0].project)}")
+        val test1 = ProjectTableDtoList(mapper.mapCollection(persistedTables))
+        log.error("IS RETRIEVED ${Hibernate.isInitialized(persistedTables[0].issues)}")
 
         return ProjectTableDtoList(mapper.mapCollection(persistedTables))
     }
@@ -45,7 +48,11 @@ class ProjectTableServiceImpl(
     }
 
     override fun getById(id: Long, ignoreIssues: Boolean): ProjectTableDto {
-        return mapper.map(findById(id))
+        val persistedTable = findById(id)
+        if (ignoreIssues) {
+            persistedTable.issues = emptyList()
+        }
+        return mapper.map(persistedTable)
     }
 
     override fun createTable(projectId: Long, dto: ProjectTableDto): ProjectTableDto {
@@ -63,6 +70,7 @@ class ProjectTableServiceImpl(
 
     override fun updateTable(id: Long, dto: ProjectTableDto): ProjectTableDto {
         val persistedTable = findById(id)
+        persistedTable.issues = emptyList()
         val transientTable = mapper.mapChangedFields(persistedTable, dto)
 
         return mapper.map(tableRepository.saveAndFlush(transientTable))
