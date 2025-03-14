@@ -7,6 +7,7 @@ import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import dev.krud.shapeshift.resolver.annotation.MappedField
 import dev.krud.shapeshift.transformer.ImplicitCollectionMappingTransformer
+import io.dnajd.mainservice.domain.issue_assignee.IssueAssignee
 import io.dnajd.mainservice.domain.project_table.ProjectTable
 import io.dnajd.mainservice.infrastructure.mapper.DontMapCondition
 import io.dnajd.mainservice.infrastructure.mapper.LazyInitializedCondition
@@ -32,35 +33,12 @@ data class TableIssue(
     @Column
     var tableId: Long = -1L,
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "tableId", insertable = false, updatable = false)
-    var table: ProjectTable? = null,
-
     @Column
     var reporter: String = "",
 
     @Nullable
     @Column(nullable = true)
     var parentIssueId: Long? = null,
-
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    @JoinColumn(
-        name = "parentIssueId",
-        updatable = false,
-        insertable = false,
-    )
-    @MappedField(DontMapCondition::class)
-    var parentIssue: TableIssue? = null,
-
-    @OneToMany(
-        cascade = [CascadeType.ALL],
-        mappedBy = "parentIssue",
-        fetch = FetchType.LAZY
-    )
-    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
-    var childIssues: MutableList<TableIssue> = mutableListOf(),
 
     @Column(nullable = false, columnDefinition = "TINYINT UNSIGNED")
     @Min(0)
@@ -94,6 +72,36 @@ data class TableIssue(
     @NotNull
     @UpdateTimestamp
     var updatedAt: Date? = null,
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "tableId", insertable = false, updatable = false)
+    var table: ProjectTable? = null,
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @JoinColumn(
+        name = "parentIssueId",
+        updatable = false,
+        insertable = false,
+    )
+    @MappedField(DontMapCondition::class)
+    var parentIssue: TableIssue? = null,
+
+    @OneToMany(
+        cascade = [CascadeType.ALL],
+        mappedBy = "parentIssue",
+        fetch = FetchType.LAZY
+    )
+    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
+    var childIssues: MutableList<TableIssue> = mutableListOf(),
+
+    @OneToMany(
+        cascade = [CascadeType.REMOVE],
+        fetch = FetchType.LAZY
+    )
+    @JoinColumn(name = "issueId")
+    var assigned: MutableList<IssueAssignee> = mutableListOf(),
 )
 
 class TableIssueList(val data: List<TableIssue>)

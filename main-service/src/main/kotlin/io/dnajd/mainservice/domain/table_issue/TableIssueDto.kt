@@ -1,5 +1,6 @@
 package io.dnajd.mainservice.domain.table_issue
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import dev.krud.shapeshift.resolver.annotation.MappedField
 import jakarta.persistence.CascadeType
@@ -12,6 +13,7 @@ data class TableIssueDto(
     var id: Long = -1L,
     var tableId: Long = -1L,
     var reporter: String = "",
+    @JsonIgnore
     var parentIssueId: Long? = null,
     @MappedField
     var severity: Int = -1,
