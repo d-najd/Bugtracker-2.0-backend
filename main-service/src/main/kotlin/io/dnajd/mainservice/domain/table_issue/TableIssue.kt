@@ -6,8 +6,10 @@ import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import dev.krud.shapeshift.resolver.annotation.MappedField
+import dev.krud.shapeshift.transformer.ImplicitCollectionMappingTransformer
 import io.dnajd.mainservice.domain.project_table.ProjectTable
 import io.dnajd.mainservice.infrastructure.mapper.DontMapCondition
+import io.dnajd.mainservice.infrastructure.mapper.LazyInitializedCondition
 import jakarta.annotation.Nullable
 import jakarta.persistence.*
 import jakarta.validation.constraints.*
@@ -57,6 +59,7 @@ data class TableIssue(
         mappedBy = "parentIssue",
         fetch = FetchType.LAZY
     )
+    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
     var childIssues: MutableList<TableIssue> = mutableListOf(),
 
     @Column(nullable = false, columnDefinition = "TINYINT UNSIGNED")

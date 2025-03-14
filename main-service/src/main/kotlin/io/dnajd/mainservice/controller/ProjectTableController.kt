@@ -15,30 +15,33 @@ class ProjectTableController(
 ) {
     @GetMapping("/testing/getAll")
     fun findAll(
-        @RequestParam ignoreIssues: Boolean = true,
+        @RequestParam includeIssues: Boolean = false,
     ): ProjectTableList {
-        return tableService.findAll(ignoreIssues)
+        return tableService.findAll(includeIssues)
     }
 
     @GetMapping("/projectId/{projectId}")
     fun getAllByProjectId(
         @PathVariable projectId: Long,
-        @RequestParam ignoreIssues: Boolean = true,
+        @RequestParam includeIssues: Boolean = false,
     ): ProjectTableDtoList {
-        return tableService.getAllByProjectId(projectId, ignoreIssues)
+        return tableService.getAllByProjectId(projectId, includeIssues)
     }
 
     @GetMapping("/id/{id}")
     fun getById(
         @PathVariable id: Long,
-        @RequestParam ignoreIssues: Boolean = true,
+        @RequestParam includeIssues: Boolean = false,
     ): ProjectTableDto {
-        return tableService.getById(id, ignoreIssues)
+        return tableService.getById(id, includeIssues)
     }
 
     @PostMapping("/projectId/{projectId}")
     @ResponseStatus(value = HttpStatus.CREATED)
-    fun createTable(@PathVariable projectId: Long, @RequestBody dto: ProjectTableDto): ProjectTableDto {
+    fun createTable(
+        @PathVariable projectId: Long,
+        @RequestBody dto: ProjectTableDto
+    ): ProjectTableDto {
         return tableService.createTable(projectId, dto)
     }
 

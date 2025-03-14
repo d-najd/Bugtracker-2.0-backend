@@ -1,7 +1,5 @@
 package io.dnajd.mainservice.service.project_table
 
-import com.cosium.spring.data.jpa.entity.graph.domain2.EntityGraph
-import com.cosium.spring.data.jpa.entity.graph.domain2.NamedEntityGraph
 import dev.krud.shapeshift.ShapeShift
 import io.dnajd.mainservice.domain.project_table.ProjectTable
 import io.dnajd.mainservice.domain.project_table.ProjectTableDto
@@ -23,37 +21,32 @@ class ProjectTableServiceImpl(
 ) : ProjectTableService {
     companion object {
         private val log = LoggerFactory.getLogger(ProjectServiceImpl::class.java)
-
-        private fun createEntityGraph(ignoreIssues: Boolean = true): EntityGraph {
-            return if (ignoreIssues) {
-                EntityGraph.NOOP
-            } else {
-                NamedEntityGraph.loading("ProjectTable.issues")
-            }
-        }
     }
 
-    override fun findAll(ignoreIssues: Boolean): ProjectTableList {
-        val persistedTables = tableRepository.findAll(createEntityGraph(ignoreIssues))
+    override fun findAll(includeIssues: Boolean): ProjectTableList {
+        val persistedTables = tableRepository.findAll(ProjectTable.entityGraph(includeIssues = includeIssues))
 
         return ProjectTableList(persistedTables)
     }
 
-    override fun getAllByProjectId(projectId: Long, ignoreIssues: Boolean): ProjectTableDtoList {
-        val persistedTables = tableRepository.findAllByProjectId(projectId, createEntityGraph(ignoreIssues))
+    override fun getAllByProjectId(projectId: Long, includeIssues: Boolean): ProjectTableDtoList {
+        val persistedTables = tableRepository.findAllByProjectId(
+            projectId, ProjectTable.entityGraph(includeIssues = includeIssues)
+        )
 
-        return ProjectTableDtoList(mapper.mapCollection(persistedTables) )
+        return ProjectTableDtoList(mapper.mapCollection(persistedTables))
     }
 
-    override fun findById(id: Long, ignoreIssues: Boolean): ProjectTable {
-        return tableRepository.findById(id, createEntityGraph(ignoreIssues)).orElseThrow {
+    override fun findById(id: Long, includeIssues: Boolean): ProjectTable {
+        return tableRepository.findById(id, ProjectTable.entityGraph(includeIssues = includeIssues)).orElseThrow {
             log.error("Resource ${ProjectTable::class.simpleName} with id $id not found")
             throw ResourceNotFoundException(ProjectTable::class)
         }
     }
 
-    override fun getById(id: Long, ignoreIssues: Boolean): ProjectTableDto {
-        val persistedTable = findById(id, ignoreIssues)
+    override fun getById(id: Long, includeIssues: Boolean): ProjectTableDto {
+        val persistedTable = findById(id, includeIssues)
+
         return mapper.map(persistedTable)
     }
 
@@ -74,7 +67,7 @@ class ProjectTableServiceImpl(
     override fun updateTable(id: Long, dto: ProjectTableDto): ProjectTableDto {
         dto.issues = null
 
-        val persistedTable = findById(id, ignoreIssues = true)
+        val persistedTable = findById(id, includeIssues = true)
         val transientTable = mapper.mapChangedFields(persistedTable, dto)
 
         return mapper.map(tableRepository.saveAndFlush(transientTable))

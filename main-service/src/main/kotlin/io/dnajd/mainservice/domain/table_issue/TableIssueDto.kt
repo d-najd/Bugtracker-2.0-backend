@@ -2,6 +2,9 @@ package io.dnajd.mainservice.domain.table_issue
 
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import dev.krud.shapeshift.resolver.annotation.MappedField
+import jakarta.persistence.CascadeType
+import jakarta.persistence.FetchType
+import jakarta.persistence.OneToMany
 import java.util.*
 
 @DefaultMappingTarget(TableIssue::class)
@@ -12,6 +15,7 @@ data class TableIssueDto(
     var parentIssueId: Long? = null,
     @MappedField
     var severity: Int = -1,
+    var childIssues: MutableList<TableIssueDto>? = null,
     @MappedField
     var title: String = "",
     var position: Int = -1,

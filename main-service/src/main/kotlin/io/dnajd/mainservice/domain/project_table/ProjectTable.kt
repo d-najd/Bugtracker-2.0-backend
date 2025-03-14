@@ -1,5 +1,8 @@
 package io.dnajd.mainservice.domain.project_table
 
+import com.cosium.spring.data.jpa.entity.graph.domain2.DynamicEntityGraph
+import com.cosium.spring.data.jpa.entity.graph.domain2.EntityGraph
+import com.cosium.spring.data.jpa.entity.graph.domain2.EntityGraphType
 import com.fasterxml.jackson.annotation.JsonIgnore
 import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
@@ -8,7 +11,6 @@ import dev.krud.shapeshift.resolver.annotation.MappedField
 import dev.krud.shapeshift.transformer.ImplicitCollectionMappingTransformer
 import io.dnajd.mainservice.domain.project.Project
 import io.dnajd.mainservice.domain.table_issue.TableIssue
-import io.dnajd.mainservice.domain.table_issue.TableIssueDto
 import io.dnajd.mainservice.infrastructure.mapper.DontMapCondition
 import io.dnajd.mainservice.infrastructure.mapper.LazyInitializedCondition
 import jakarta.persistence.*
@@ -21,10 +23,6 @@ import jakarta.validation.constraints.Size
 @Table(name = "project_table")
 @AutoMapping(ProjectTableDto::class, AutoMappingStrategy.BY_NAME)
 @DefaultMappingTarget(ProjectTableDto::class)
-@NamedEntityGraph(
-    name = "ProjectTable.issues",
-    attributeNodes = [NamedAttributeNode("issues")]
-)
 data class ProjectTable(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +50,27 @@ data class ProjectTable(
     @OneToMany(mappedBy = "tableId", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = false)
     @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
     var issues: MutableList<TableIssue> = mutableListOf()
-)
+) {
+    companion object {
+        /**
+         * If [includeChildIssues] is then [includeIssues] will be ignored
+         */
+        fun entityGraph(
+            includeIssues: Boolean = false,
+            includeChildIssues: Boolean = false,
+            graphType: EntityGraphType = EntityGraphType.LOAD,
+        ): EntityGraph {
+            val graph = DynamicEntityGraph.builder(graphType)
+
+            if (includeChildIssues) {
+                graph.addPath(ProjectTable::issues.name, TableIssue::childIssues.name)
+            } else if (includeIssues) {
+                graph.addPath(ProjectTable::issues.name)
+            }
+
+            return graph.build()
+        }
+    }
+}
 
 class ProjectTableList(val data: List<ProjectTable>)
