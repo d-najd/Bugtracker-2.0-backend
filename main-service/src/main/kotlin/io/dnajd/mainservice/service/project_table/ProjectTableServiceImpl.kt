@@ -1,5 +1,6 @@
 package io.dnajd.mainservice.service.project_table
 
+import com.cosium.spring.data.jpa.entity.graph.domain2.EntityGraph
 import com.cosium.spring.data.jpa.entity.graph.domain2.NamedEntityGraph
 import dev.krud.shapeshift.ShapeShift
 import io.dnajd.mainservice.domain.project_table.ProjectTable
@@ -24,6 +25,14 @@ class ProjectTableServiceImpl(
 ) : ProjectTableService {
     companion object {
         private val log = LoggerFactory.getLogger(ProjectServiceImpl::class.java)
+
+        private fun namedGraphConstructor(ignoreIssues: Boolean = true): EntityGraph {
+            return if (ignoreIssues) {
+                EntityGraph.NOOP
+            } else {
+                NamedEntityGraph.loading("ProjectTable.issues")
+            }
+        }
     }
 
     override fun findAll(): ProjectTableList {
@@ -31,42 +40,13 @@ class ProjectTableServiceImpl(
     }
 
     override fun getAllByProjectId(projectId: Long, ignoreIssues: Boolean): ProjectTableDtoList {
-        val entityGraph = if (ignoreIssues) {
-            NamedEntityGraph.NOOP
-        } else {
-            NamedEntityGraph.loading("ProjectTable.issues")
-        }
-
-        // val persistedTables = tableRepository.findAllByProjectId(projectId, entityGraph)
-        val persistedTables = tableRepository.findAllByProjectId(projectId)
+        val persistedTables = tableRepository.findAllByProjectId(projectId, namedGraphConstructor(ignoreIssues))
         val test: List<ProjectTableDto> = mapper.mapCollection(persistedTables)
-        log.error("IS RETRIEVED 0 ${Hibernate.isInitialized(persistedTables[0].issues)}")
-        if (!ignoreIssues) {
-            test.forEach { o ->
-                var p = persistedTables.first { o.id == it.id }
-                var issues = p.issues
-                var mappedIssues: List<TableIssueDto> = mapper.mapCollection(issues)
-                o.issues = mappedIssues
-            }
 
-            /*
-            test.forEach { o -> o.issues = mapper.mapCollection(persistedTables.first { p ->
-                p.id == o.id
-            }.issues.toList()) }
-             */
-            // test.data.forEach { o -> o.issues = mapper.mapCollection(persistedTables.first { p -> p.id == o.id }.issues) }
-            // val test1 = ProjectTableDtoList(mapper.mapCollection(persistedTables))
-            // persistedTables.forEach { o -> o.issues = emptyList() }
-        }
-
-        log.error("IS RETRIEVED 1 ${Hibernate.isInitialized(persistedTables[0].issues)}")
-        val test1 = ProjectTableDtoList(mapper.mapCollection(persistedTables))
-        log.error("IS RETRIEVED 2 ${Hibernate.isInitialized(persistedTables[0].issues)}")
-
-        return ProjectTableDtoList(test)
+        return ProjectTableDtoList(mapper.mapCollection(persistedTables))
     }
 
-    override fun findById(id: Long): ProjectTable {
+    override fun findById(id: Long, ignoreIssued: Boolean): ProjectTable {
         return tableRepository.findById(id).orElseThrow {
             log.error("Resource ${ProjectTable::class.simpleName} with id $id not found")
             throw ResourceNotFoundException(ProjectTable::class)

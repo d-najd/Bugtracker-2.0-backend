@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
+import dev.krud.shapeshift.resolver.annotation.MappedField
 import io.dnajd.mainservice.domain.project_table.ProjectTable
+import io.dnajd.mainservice.infrastructure.mapper.DontMapCondition
 import jakarta.annotation.Nullable
 import jakarta.persistence.*
 import jakarta.validation.constraints.*
@@ -47,6 +49,7 @@ data class TableIssue(
         updatable = false,
         insertable = false,
     )
+    @MappedField(DontMapCondition::class)
     var parentIssue: TableIssue? = null,
 
     @OneToMany(

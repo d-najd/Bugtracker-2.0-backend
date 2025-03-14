@@ -12,10 +12,10 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
 @Repository
-interface ProjectTableRepository : JpaRepository<ProjectTable, Long> {
-    // fun findAllByProjectId(projectId: Long, entityGraph: EntityGraph = EntityGraph.NOOP): MutableList<ProjectTable>
+interface ProjectTableRepository : EntityGraphJpaRepository<ProjectTable, Long> {
+    fun findAllByProjectId(projectId: Long, entityGraph: EntityGraph = EntityGraph.NOOP): MutableList<ProjectTable>
 
-    fun findAllByProjectId(projectId: Long): MutableList<ProjectTable>
+    // fun findAllByProjectId(projectId: Long): MutableList<ProjectTable>
 
     fun countByProjectId(projectId: Long): Int
 

@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
+import dev.krud.shapeshift.resolver.annotation.MappedField
 import io.dnajd.mainservice.domain.project_table.ProjectTable
+import io.dnajd.mainservice.infrastructure.mapper.DontMapCondition
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotEmpty
@@ -41,6 +43,7 @@ data class Project(
     var createdAt: Date? = null,
 
     @OneToMany(mappedBy = "projectId", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @MappedField(DontMapCondition::class)
     var tables: List<ProjectTable> = emptyList()
 )
 

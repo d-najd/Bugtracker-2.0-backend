@@ -5,9 +5,12 @@ import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import dev.krud.shapeshift.resolver.annotation.MappedField
+import dev.krud.shapeshift.transformer.ImplicitCollectionMappingTransformer
 import io.dnajd.mainservice.domain.project.Project
 import io.dnajd.mainservice.domain.table_issue.TableIssue
+import io.dnajd.mainservice.domain.table_issue.TableIssueDto
 import io.dnajd.mainservice.infrastructure.mapper.DontMapCondition
+import io.dnajd.mainservice.infrastructure.mapper.LazyInitializedCondition
 import jakarta.persistence.*
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotEmpty
@@ -18,12 +21,10 @@ import jakarta.validation.constraints.Size
 @Table(name = "project_table")
 @AutoMapping(ProjectTableDto::class, AutoMappingStrategy.BY_NAME)
 @DefaultMappingTarget(ProjectTableDto::class)
-/*
 @NamedEntityGraph(
     name = "ProjectTable.issues",
     attributeNodes = [NamedAttributeNode("issues")]
 )
- */
 data class ProjectTable(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +36,7 @@ data class ProjectTable(
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "projectId", insertable = false, updatable = false)
+    @MappedField(DontMapCondition::class)
     var project: Project? = null,
 
     @NotEmpty
@@ -48,7 +50,7 @@ data class ProjectTable(
     var position: Int = -1,
 
     @OneToMany(mappedBy = "tableId", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    @MappedField(condition = DontMapCondition::class)
+    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
     var issues: List<TableIssue> = emptyList()
 )
 
