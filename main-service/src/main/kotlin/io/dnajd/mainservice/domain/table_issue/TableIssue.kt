@@ -18,8 +18,8 @@ import java.util.*
     name = "project_table_issue",
     uniqueConstraints = [UniqueConstraint(columnNames = arrayOf("table_id", "position"))]
 )
-@AutoMapping(ProjectTable::class, AutoMappingStrategy.BY_NAME)
-@DefaultMappingTarget(ProjectTable::class)
+@AutoMapping(TableIssueDto::class, AutoMappingStrategy.BY_NAME)
+@DefaultMappingTarget(TableIssueDto::class)
 data class TableIssue(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

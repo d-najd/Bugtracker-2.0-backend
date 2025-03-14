@@ -1,5 +1,7 @@
 package io.dnajd.mainservice.repository
 
+import com.cosium.spring.data.jpa.entity.graph.domain2.EntityGraph
+import com.cosium.spring.data.jpa.entity.graph.repository.EntityGraphJpaRepository
 import io.dnajd.mainservice.domain.project.Project
 import io.dnajd.mainservice.domain.project_table.ProjectTable
 import jakarta.transaction.Transactional
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ProjectTableRepository : JpaRepository<ProjectTable, Long> {
+    // fun findAllByProjectId(projectId: Long, entityGraph: EntityGraph = EntityGraph.NOOP): MutableList<ProjectTable>
 
     fun findAllByProjectId(projectId: Long): MutableList<ProjectTable>
 

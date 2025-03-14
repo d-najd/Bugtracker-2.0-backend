@@ -1,10 +1,12 @@
 package io.dnajd.mainservice.service.project_table
 
+import com.cosium.spring.data.jpa.entity.graph.domain2.NamedEntityGraph
 import dev.krud.shapeshift.ShapeShift
 import io.dnajd.mainservice.domain.project_table.ProjectTable
 import io.dnajd.mainservice.domain.project_table.ProjectTableDto
 import io.dnajd.mainservice.domain.project_table.ProjectTableDtoList
 import io.dnajd.mainservice.domain.project_table.ProjectTableList
+import io.dnajd.mainservice.domain.table_issue.TableIssueDto
 import io.dnajd.mainservice.infrastructure.exception.ResourceNotFoundException
 import io.dnajd.mainservice.infrastructure.mapper.mapChangedFields
 import io.dnajd.mainservice.repository.ProjectTableRepository
@@ -29,15 +31,39 @@ class ProjectTableServiceImpl(
     }
 
     override fun getAllByProjectId(projectId: Long, ignoreIssues: Boolean): ProjectTableDtoList {
-        val persistedTables = tableRepository.findAllByProjectId(projectId)
-        if (ignoreIssues) {
-             persistedTables.forEach { o -> o.issues = emptyList() }
+        val entityGraph = if (ignoreIssues) {
+            NamedEntityGraph.NOOP
+        } else {
+            NamedEntityGraph.loading("ProjectTable.issues")
         }
 
-        val test1 = ProjectTableDtoList(mapper.mapCollection(persistedTables))
-        log.error("IS RETRIEVED ${Hibernate.isInitialized(persistedTables[0].issues)}")
+        // val persistedTables = tableRepository.findAllByProjectId(projectId, entityGraph)
+        val persistedTables = tableRepository.findAllByProjectId(projectId)
+        val test: List<ProjectTableDto> = mapper.mapCollection(persistedTables)
+        log.error("IS RETRIEVED 0 ${Hibernate.isInitialized(persistedTables[0].issues)}")
+        if (!ignoreIssues) {
+            test.forEach { o ->
+                var p = persistedTables.first { o.id == it.id }
+                var issues = p.issues
+                var mappedIssues: List<TableIssueDto> = mapper.mapCollection(issues)
+                o.issues = mappedIssues
+            }
 
-        return ProjectTableDtoList(mapper.mapCollection(persistedTables))
+            /*
+            test.forEach { o -> o.issues = mapper.mapCollection(persistedTables.first { p ->
+                p.id == o.id
+            }.issues.toList()) }
+             */
+            // test.data.forEach { o -> o.issues = mapper.mapCollection(persistedTables.first { p -> p.id == o.id }.issues) }
+            // val test1 = ProjectTableDtoList(mapper.mapCollection(persistedTables))
+            // persistedTables.forEach { o -> o.issues = emptyList() }
+        }
+
+        log.error("IS RETRIEVED 1 ${Hibernate.isInitialized(persistedTables[0].issues)}")
+        val test1 = ProjectTableDtoList(mapper.mapCollection(persistedTables))
+        log.error("IS RETRIEVED 2 ${Hibernate.isInitialized(persistedTables[0].issues)}")
+
+        return ProjectTableDtoList(test)
     }
 
     override fun findById(id: Long): ProjectTable {

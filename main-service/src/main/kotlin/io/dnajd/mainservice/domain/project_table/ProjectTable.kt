@@ -18,6 +18,12 @@ import jakarta.validation.constraints.Size
 @Table(name = "project_table")
 @AutoMapping(ProjectTableDto::class, AutoMappingStrategy.BY_NAME)
 @DefaultMappingTarget(ProjectTableDto::class)
+/*
+@NamedEntityGraph(
+    name = "ProjectTable.issues",
+    attributeNodes = [NamedAttributeNode("issues")]
+)
+ */
 data class ProjectTable(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +48,7 @@ data class ProjectTable(
     var position: Int = -1,
 
     @OneToMany(mappedBy = "tableId", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @MappedField(condition = DontMapCondition::class)
     var issues: List<TableIssue> = emptyList()
 )
 
