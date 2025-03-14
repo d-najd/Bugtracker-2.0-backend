@@ -21,7 +21,7 @@ import java.util.*
 @Entity
 @Table(
     name = "project_table_issue",
-    uniqueConstraints = [UniqueConstraint(columnNames = arrayOf("table_id", "position"))]
+    uniqueConstraints = [UniqueConstraint(columnNames = ["table_id", "position"])]
 )
 @AutoMapping(TableIssueDto::class, AutoMappingStrategy.BY_NAME)
 @DefaultMappingTarget(TableIssueDto::class)

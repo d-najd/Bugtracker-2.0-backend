@@ -20,7 +20,10 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 
 @Entity
-@Table(name = "project_table")
+@Table(name = "project_table", uniqueConstraints = [
+    UniqueConstraint(columnNames = ["project_id", "title"]),
+    UniqueConstraint(columnNames = ["project_id", "position"])
+])
 @AutoMapping(ProjectTableDto::class, AutoMappingStrategy.BY_NAME)
 @DefaultMappingTarget(ProjectTableDto::class)
 data class ProjectTable(

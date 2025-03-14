@@ -6,11 +6,14 @@ import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "project_table_issue_assignee")
+@Table(
+    name = "project_table_issue_assignee",
+    uniqueConstraints = [UniqueConstraint(columnNames = ["issue_id", "assigned_username"])]
+)
 @IdClass(IssueAssigneeIdentity::class)
 @AutoMapping(IssueAssigneeDto::class, AutoMappingStrategy.BY_NAME)
 @DefaultMappingTarget(IssueAssigneeDto::class)
-data class IssueAssignee (
+data class IssueAssignee(
     @Id
     @Column(nullable = false, insertable = false, updatable = false)
     var issueId: Long = -1L,
@@ -24,7 +27,7 @@ data class IssueAssignee (
     var assignedUsername: String = "",
 )
 
-data class IssueAssigneeIdentity (
+data class IssueAssigneeIdentity(
     var issueId: Long = -1L,
     var assignerUsername: String = "",
     var assignedUsername: String = "",
