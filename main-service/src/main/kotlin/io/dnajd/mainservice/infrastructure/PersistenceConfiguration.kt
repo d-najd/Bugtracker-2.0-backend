@@ -5,8 +5,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-public class PersistanceConfiguration {
-
+class PersistenceConfiguration {
     @Bean
     fun cleanMigrateStrategy(): FlywayMigrationStrategy {
         return FlywayMigrationStrategy() { flyway ->
@@ -14,18 +13,4 @@ public class PersistanceConfiguration {
             flyway.migrate()
         }
     }
-    /*
-    @Bean
-    public FlywayMigrationStrategy cleanMigrateStrategy() {
-        FlywayMigrationStrategy strategy = new FlywayMigrationStrategy() {
-            @Override
-            public void migrate(Flyway flyway) {
-                flyway.repair();
-                flyway.migrate();
-            }
-        };
-        return strategy;
-    }
-     */
-
 }
