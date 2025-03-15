@@ -15,15 +15,15 @@ import jakarta.persistence.*
 @DefaultMappingTarget(IssueAssigneeDto::class)
 data class IssueAssignee(
     @Id
-    @Column(nullable = false, insertable = false, updatable = false)
+    @Column(updatable = false)
     var issueId: Long = -1L,
 
     @Id
-    @Column(nullable = false, insertable = false, updatable = false)
+    @Column(updatable = false)
     var assignerUsername: String = "",
 
     @Id
-    @Column(nullable = false, insertable = false, updatable = false)
+    @Column(updatable = false)
     var assignedUsername: String = "",
 )
 

@@ -22,11 +22,11 @@ data class IssueComment(
     var id: Long = -1L,
 
     @NotEmpty
-    @Column(insertable = false, updatable = false)
+    @Column(updatable = false)
     var user: String = "",
 
     @JsonIgnore
-    @Column(insertable = false, updatable = false)
+    @Column(updatable = false)
     var issueId: Long = -1L,
 
     @Column(columnDefinition = "TEXT")

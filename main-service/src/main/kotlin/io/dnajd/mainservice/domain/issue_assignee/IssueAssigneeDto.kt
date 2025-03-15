@@ -10,11 +10,3 @@ data class IssueAssigneeDto (
     var assignerUsername: String? = null,
     var assignedUsername: String? = null,
 )
-
-/*
-data class IssueAssigneeIdentityDto (
-    var issueId: Long = -1L,
-    var assignerUsername: String? = null,
-    var assignedUsername: String? = null,
-)
- */

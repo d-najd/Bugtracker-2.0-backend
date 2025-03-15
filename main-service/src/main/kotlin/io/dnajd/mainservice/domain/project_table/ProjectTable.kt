@@ -31,7 +31,7 @@ data class ProjectTable(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = -1L,
 
-    @Column
+    @Column(updatable = false)
     var projectId: Long = -1L,
 
     @JsonIgnore
