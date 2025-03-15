@@ -33,15 +33,35 @@ class TableIssueServiceImpl(
         return TableIssueDtoList(mapper.mapCollection(persistedIssues))
     }
 
-    override fun findById(id: Long, includeChildIssues: Boolean, includeAssigned: Boolean): TableIssue {
-        return issueRepository.findById(id, TableIssue.entityGraph(includeChildIssues, includeAssigned)).orElseThrow {
+    override fun findById(
+        id: Long,
+        includeChildIssues: Boolean,
+        includeAssigned: Boolean,
+        includeComments: Boolean,
+        includeLabels: Boolean
+    ): TableIssue {
+        return issueRepository.findById(
+            id,
+            TableIssue.entityGraph(
+                includeChildIssues,
+                includeAssigned,
+                includeComments,
+                includeLabels
+            )
+        ).orElseThrow {
             log.error("Resource ${TableIssue::class.simpleName} with id $id not found")
             throw ResourceNotFoundException(TableIssue::class)
         }
     }
 
-    override fun getById(id: Long, includeChildIssues: Boolean, includeAssigned: Boolean): TableIssueDto {
-        return mapper.map(findById(id, includeChildIssues, includeAssigned))
+    override fun getById(
+        id: Long,
+        includeChildIssues: Boolean,
+        includeAssigned: Boolean,
+        includeComments: Boolean,
+        includeLabels: Boolean
+    ): TableIssueDto {
+        return mapper.map(findById(id, includeChildIssues, includeAssigned, includeComments, includeLabels))
     }
 
     override fun createIssue(tableId: Long, reporterUsername: String, dto: TableIssueDto): TableIssueDto {

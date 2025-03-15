@@ -11,9 +11,21 @@ interface TableIssueService {
 
     fun getAllByTableId(tableId: Long, includeChildIssues: Boolean = false): TableIssueDtoList
 
-    fun findById(id: Long, includeChildIssues: Boolean = false, includeAssigned: Boolean = false): TableIssue
+    fun findById(
+        id: Long,
+        includeChildIssues: Boolean = false,
+        includeAssigned: Boolean = false,
+        includeComments: Boolean = false,
+        includeLabels: Boolean = false
+    ): TableIssue
 
-    fun getById(id: Long, includeChildIssues: Boolean = false, includeAssigned: Boolean = false): TableIssueDto
+    fun getById(
+        id: Long,
+        includeChildIssues: Boolean = false,
+        includeAssigned: Boolean = false,
+        includeComments: Boolean = false,
+        includeLabels: Boolean = false
+    ): TableIssueDto
 
     fun createIssue(tableId: Long, reporterUsername: String, dto: TableIssueDto): TableIssueDto
 

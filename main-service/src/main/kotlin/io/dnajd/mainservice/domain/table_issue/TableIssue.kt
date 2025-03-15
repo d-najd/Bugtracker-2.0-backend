@@ -12,6 +12,7 @@ import dev.krud.shapeshift.resolver.annotation.MappedField
 import dev.krud.shapeshift.transformer.ImplicitCollectionMappingTransformer
 import io.dnajd.mainservice.domain.issue_assignee.IssueAssignee
 import io.dnajd.mainservice.domain.issue_comment.IssueComment
+import io.dnajd.mainservice.domain.issue_label.IssueLabel
 import io.dnajd.mainservice.domain.project_table.ProjectTable
 import io.dnajd.mainservice.infrastructure.mapper.DontMapCondition
 import io.dnajd.mainservice.infrastructure.mapper.LazyInitializedCondition
@@ -102,7 +103,7 @@ data class TableIssue(
 
     @OneToMany(
         cascade = [CascadeType.REMOVE],
-        fetch = FetchType.LAZY
+        fetch = FetchType.LAZY,
     )
     @JoinColumn(name = "issueId")
     @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
@@ -110,24 +111,19 @@ data class TableIssue(
 
     @OneToMany(
         cascade = [CascadeType.REMOVE],
-        fetch = FetchType.LAZY
+        fetch = FetchType.LAZY,
     )
     @JoinColumn(name = "issueId")
     @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
     var comments: MutableList<IssueComment> = mutableListOf(),
 
-    /*
-    @ManyToMany(
-        // cascade = [CascadeType.REMOVE], labels should not be removed when the issue is removed
-        fetch = FetchType.LAZY
+    @OneToMany(
+        cascade = [CascadeType.REMOVE],
+        fetch = FetchType.LAZY,
     )
-    @JoinTable(
-        name = "project_table_issue_label",
-        joinColumns = [JoinColumn(name = "item_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "label_id", referencedColumnName = "id")]
-    )
-    var labels: MutableList<ProjectLabel> = mutableListOf(),
-     */
+    @JoinColumn(name = "issueId")
+    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
+    var labels: MutableList<IssueLabel> = mutableListOf(),
 ) {
     companion object {
         /**
@@ -137,6 +133,7 @@ data class TableIssue(
             includeChildIssues: Boolean = false,
             includeAssigned: Boolean = false,
             includeComments: Boolean = false,
+            includeLabels: Boolean = false,
             graphType: EntityGraphType = EntityGraphType.LOAD,
         ): EntityGraph {
             val graph = DynamicEntityGraph.builder(graphType)
@@ -149,6 +146,9 @@ data class TableIssue(
             }
             if (includeComments) {
                 graph.addPath(TableIssue::comments.name)
+            }
+            if (includeLabels) {
+                graph.addPath(TableIssue::labels.name)
             }
 
             return graph.build()

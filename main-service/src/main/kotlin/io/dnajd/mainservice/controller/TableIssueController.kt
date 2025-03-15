@@ -29,10 +29,12 @@ class TableIssueController(
     @GetMapping("/{id}")
     fun getById(
         @PathVariable id: Long,
-        @RequestParam includeChildIssues: Boolean = false,
-        @RequestParam includeAssigned: Boolean = false,
+        @RequestParam includeChildIssues: Boolean = true,
+        @RequestParam includeAssigned: Boolean = true,
+        @RequestParam includeComments: Boolean = true,
+        @RequestParam includeLabels: Boolean = true,
     ): TableIssueDto {
-        return issueService.getById(id, includeChildIssues, includeAssigned)
+        return issueService.getById(id, includeChildIssues, includeAssigned, includeComments, includeLabels)
     }
 
     @PostMapping("/tableId/{tableId}")
