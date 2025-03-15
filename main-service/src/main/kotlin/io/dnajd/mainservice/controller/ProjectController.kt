@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*
 class ProjectController(
     private val projectService: ProjectService,
 ) {
-
     @GetMapping("/testing/getAll")
     fun findAll(): ProjectList {
         return projectService.findAll()
@@ -46,7 +45,7 @@ class ProjectController(
 
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    fun removeProject(@PathVariable id: Long) {
-        projectService.deleteProject(id)
+    fun deleteById(@PathVariable id: Long) {
+        projectService.deleteById(id)
     }
 }

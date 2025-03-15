@@ -24,7 +24,11 @@ class ProjectServiceImpl(
     }
 
     override fun getAllByUsername(username: String): ProjectDtoList {
-        TODO("Not yet implemented")
+        log.error("This is just a placeholder implementation till RBAC is implemented")
+
+        val persistedProjects: List<ProjectDto> = mapper.map(projectRepository.findAll())
+
+        return ProjectDtoList(persistedProjects)
     }
 
     override fun findById(id: Long): Project {
@@ -52,8 +56,9 @@ class ProjectServiceImpl(
         return mapper.map(projectRepository.saveAndFlush(transientProject))
     }
 
-    override fun deleteProject(id: Long) {
+    override fun deleteById(id: Long) {
         val persistedProject = findById(id)
+
         projectRepository.delete(persistedProject)
     }
 }

@@ -20,5 +20,5 @@ interface ProjectTableService {
 
     fun swapTablePositions(fId: Long, sId: Long)
 
-    fun deleteTable(id: Long)
+    fun deleteById(id: Long)
 }

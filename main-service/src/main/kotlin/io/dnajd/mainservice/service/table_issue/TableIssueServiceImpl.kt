@@ -147,7 +147,7 @@ class TableIssueServiceImpl(
         issueRepository.saveAndFlush(transientIssue)
     }
 
-    override fun deleteIssue(id: Long) {
+    override fun deleteById(id: Long) {
         val persistedTable = findById(id)
 
         issueRepository.delete(persistedTable)

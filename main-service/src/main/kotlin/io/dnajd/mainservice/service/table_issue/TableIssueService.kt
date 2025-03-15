@@ -37,5 +37,5 @@ interface TableIssueService {
 
     fun setParentIssue(id: Long, parentIssueId: Long)
 
-    fun deleteIssue(id: Long)
+    fun deleteById(id: Long)
 }

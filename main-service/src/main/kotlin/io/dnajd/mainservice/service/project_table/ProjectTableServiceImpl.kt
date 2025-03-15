@@ -85,7 +85,7 @@ class ProjectTableServiceImpl(
         tableRepository.swapPositions(firstTable.position, secondTable.position)
     }
 
-    override fun deleteTable(id: Long) {
+    override fun deleteById(id: Long) {
         val persistedTable = findById(id)
 
         tableRepository.delete(persistedTable)

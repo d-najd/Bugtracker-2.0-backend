@@ -78,9 +78,9 @@ class TableIssueController(
 
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    fun deleteIssue(
+    fun deleteById(
         @PathVariable id: Long,
     ) {
-        issueService.deleteIssue(id)
+        issueService.deleteById(id)
     }
 }

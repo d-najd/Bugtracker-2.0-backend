@@ -65,7 +65,7 @@ class ProjectTableController(
 
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    fun deleteTable(@PathVariable id: Long) {
-        return tableService.deleteTable(id)
+    fun deleteById(@PathVariable id: Long) {
+        return tableService.deleteById(id)
     }
 }
