@@ -26,7 +26,7 @@ class ProjectServiceImpl(
     override fun getAllByUsername(username: String): ProjectDtoList {
         log.error("This is just a placeholder implementation till RBAC is implemented")
 
-        val persistedProjects: List<ProjectDto> = mapper.map(projectRepository.findAll())
+        val persistedProjects: List<ProjectDto> = mapper.mapCollection(projectRepository.findAll())
 
         return ProjectDtoList(persistedProjects)
     }
@@ -43,7 +43,9 @@ class ProjectServiceImpl(
     }
 
     override fun createProject(projectDto: ProjectDto): ProjectDto {
+        // TODO fix this
         val transientProject: Project = mapper.map(projectDto)
+        transientProject.owner = "user1"
         val persistedProject = projectRepository.save(transientProject)
 
         return mapper.map(persistedProject)

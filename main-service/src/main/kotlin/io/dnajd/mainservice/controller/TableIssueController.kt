@@ -39,13 +39,19 @@ class TableIssueController(
 
     @PostMapping("/tableId/{tableId}")
     @ResponseStatus(value = HttpStatus.CREATED)
-    fun createIssue(@PathVariable tableId: Long, dto: TableIssueDto): TableIssueDto {
+    fun createIssue(
+        @PathVariable tableId: Long,
+        @RequestBody dto: TableIssueDto
+    ): TableIssueDto {
         return issueService.createIssue(tableId, "user1", dto)
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    fun updateIssue(@PathVariable id: Long, dto: TableIssueDto): TableIssueDto {
+    fun updateIssue(
+        @PathVariable id: Long,
+        @RequestBody dto: TableIssueDto
+    ): TableIssueDto {
         return issueService.updateIssue(id, dto)
     }
 

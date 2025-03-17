@@ -3,6 +3,7 @@ server.port: 8080
 spring.datasource.driver-class-name: com.mysql.cj.jdbc.Driver
 
 spring:
+  jackson.date-format: yyyy-MM-d HH:mm:ss
   application.name: main-service
   datasource:
     url: jdbc:mysql://localhost:3306/bugtracker
