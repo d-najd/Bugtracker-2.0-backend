@@ -21,14 +21,6 @@ interface ProjectTableRepository : EntityGraphJpaRepository<ProjectTable, Long> 
 
     fun countByProjectId(projectId: Long): Int
 
-    /*
-        "UPDATE ProjectTable pt " +
-                "SET pt.position = CASE WHEN " +
-                "pt.position = :fPos THEN :sPos ELSE :fPos END WHERE pt.position IN (:fPos, :sPos)"
-
-     */
-
-
     /**
      * No checking is done to check if the id's belong to the same [Project] here
      */
@@ -36,8 +28,8 @@ interface ProjectTableRepository : EntityGraphJpaRepository<ProjectTable, Long> 
     @Modifying
     @Transactional
     fun swapPositions(
-        @Param("fId") sId: Int,
-        @Param("sId") fId: Int,
+        @Param("fId") sId: Long,
+        @Param("sId") fId: Long,
     )
 
     /**

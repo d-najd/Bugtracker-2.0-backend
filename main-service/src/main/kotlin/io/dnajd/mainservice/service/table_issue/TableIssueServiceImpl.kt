@@ -64,6 +64,13 @@ class TableIssueServiceImpl(
         return mapper.map(findById(id, includeChildIssues, includeAssigned, includeComments, includeLabels))
     }
 
+    override fun issuesBelongToSameTable(fId: Long, sId: Long): Boolean {
+        val firstIssue = findById(fId)
+        val secondIssue = findById(sId)
+
+        return firstIssue.tableId == secondIssue.tableId
+    }
+
     override fun createIssue(tableId: Long, reporterUsername: String, dto: TableIssueDto): TableIssueDto {
         val issuesInTableCount = issueRepository.countByTableId(tableId)
 
@@ -86,15 +93,21 @@ class TableIssueServiceImpl(
     }
 
     override fun swapIssuePositions(fId: Long, sId: Long) {
-        val firstIssue = findById(fId)
-        val secondIssue = findById(sId)
-
-        if (firstIssue.tableId != secondIssue.tableId) {
+        if (!issuesBelongToSameTable(fId, sId)) {
             log.error("Issues don't belong to the same table $fId $sId")
             throw IllegalArgumentException("Issues don't belong to the same table $fId $sId")
         }
 
-        issueRepository.swapPositions(firstIssue.position, secondIssue.position)
+        issueRepository.swapPositions(fId, sId)
+    }
+
+    override fun movePositionTo(fId: Long, sId: Long) {
+        if (!issuesBelongToSameTable(fId, sId)) {
+            log.error("Issues don't belong to the same table $fId $sId")
+            throw IllegalArgumentException("Issues don't belong to the same table $fId $sId")
+        }
+
+        issueRepository.movePositionTo(fId, sId)
     }
 
     override fun changeTable(id: Long, tableId: Long): Int {

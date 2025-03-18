@@ -64,6 +64,15 @@ class TableIssueController(
         issueService.swapIssuePositions(fId, sId)
     }
 
+    @PatchMapping("/{fId}/movePositionTo/{sId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    fun moveTaskPositions(
+        @PathVariable fId: Long,
+        @PathVariable sId: Long
+    ) {
+        issueService.movePositionTo(fId, sId)
+    }
+
     @PatchMapping("/{id}/moveToTable/{tableId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     fun changeToTable(

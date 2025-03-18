@@ -27,11 +27,15 @@ interface TableIssueService {
         includeLabels: Boolean = false
     ): TableIssueDto
 
+    fun issuesBelongToSameTable(fId: Long, sId: Long): Boolean
+
     fun createIssue(tableId: Long, reporterUsername: String, dto: TableIssueDto): TableIssueDto
 
     fun updateIssue(@PathVariable id: Long, dto: TableIssueDto): TableIssueDto
 
     fun swapIssuePositions(fId: Long, sId: Long)
+
+    fun movePositionTo(fId: Long, sId: Long)
 
     fun changeTable(id: Long, tableId: Long): Int
 
