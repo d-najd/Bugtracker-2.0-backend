@@ -82,7 +82,7 @@ class ProjectTableServiceImpl(
             throw IllegalArgumentException("Tables don't belong to the same project $fId $sId")
         }
 
-        tableRepository.swapPositions(firstTable.position, secondTable.position)
+        tableRepository.swapPositions(fId.toInt(), sId.toInt())
     }
 
     override fun deleteById(id: Long) {

@@ -13,7 +13,6 @@ services:
     environment:
       MYSQL_DATABASE: bugtracker
       MYSQL_ROOT_PASSWORD: root-password
-
 networks:
   database:
     driver: bridge
