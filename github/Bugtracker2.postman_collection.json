@@ -1,0 +1,711 @@
+{
+	"info": {
+		"_postman_id": "e4caa513-230c-4107-a4d0-ccc55b0eff37",
+		"name": "Bugtracker2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18642682"
+	},
+	"item": [
+		{
+			"name": "Project",
+			"item": [
+				{
+					"name": "Find All",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{project}}testing/getAll",
+							"host": [
+								"{{project}}testing"
+							],
+							"path": [
+								"getAll"
+							]
+						},
+						"description": "Used for testing, returns all projects"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{project}}user/user2",
+							"host": [
+								"{{project}}user"
+							],
+							"path": [
+								"user2"
+							]
+						},
+						"description": "Get all projects which user has access to"
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{project}}14",
+							"host": [
+								"{{project}}14"
+							]
+						},
+						"description": "Get By project id"
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 0,\r\n  \"owner\": \"user1\",\r\n  \"title\": \"aergaerg\",\r\n  \"description\": \"ggegare\",\r\n  \"createdAt\": \"2025-03-06T23:38:51.000+00:00\"\r\n}"
+						},
+						"url": {
+							"raw": "{{project}}",
+							"host": [
+								"{{project}}"
+							]
+						},
+						"description": "Creates project"
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 4,\r\n    \"title\": \"Updated\",\r\n    \"createdAt\": \"2018-06-01T13:13:45.000+00:01\"\r\n}"
+						},
+						"url": {
+							"raw": "{{project}}14?",
+							"host": [
+								"{{project}}14"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"description": "Fields that are modifiable are description and title"
+								}
+							]
+						},
+						"description": "Updates project.\n\nFields that can be updated are:\n\ntitle,\n\ndescription"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{project}}22",
+							"host": [
+								"{{project}}22"
+							]
+						},
+						"description": "Deletes project by id"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Project Table",
+			"item": [
+				{
+					"name": "Find All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{projectTable}}testing/getAll?includeIssues=true",
+							"host": [
+								"{{projectTable}}testing"
+							],
+							"path": [
+								"getAll"
+							],
+							"query": [
+								{
+									"key": "includeIssues",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Used for testing, returns all tables\n\nparam: includeIssues - if true will return issues belonging to the tables"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Project Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{projectTable}}projectId/28?includeIssues=true",
+							"host": [
+								"{{projectTable}}projectId"
+							],
+							"path": [
+								"28"
+							],
+							"query": [
+								{
+									"key": "includeIssues",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Gets all tables belonging to project by id\n\nparam: includeIssues - if true will return issues belonging to the tables"
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{projectTable}}id/1?includeIssues=true",
+							"host": [
+								"{{projectTable}}id"
+							],
+							"path": [
+								"1"
+							],
+							"query": [
+								{
+									"key": "includeIssues",
+									"value": "true"
+								}
+							]
+						},
+						"description": "Gets table by id\n\nparam: includeIssues - if true will return issues belonging to the tables"
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 44,\r\n    \"projectId\": 100,\r\n    \"title\": \"second\",\r\n    \"position\": -100\r\n}"
+						},
+						"url": {
+							"raw": "{{projectTable}}projectId/15",
+							"host": [
+								"{{projectTable}}projectId"
+							],
+							"path": [
+								"15"
+							]
+						},
+						"description": "Creates table inside project (by input id)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Updated\",\n    \"position\": -10\n}"
+						},
+						"url": {
+							"raw": "{{projectTable}}7",
+							"host": [
+								"{{projectTable}}7"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "Title 1",
+									"disabled": true
+								}
+							]
+						},
+						"description": "updates project table.\n\nFields that can be updated are:\n\ntitle"
+					},
+					"response": []
+				},
+				{
+					"name": "Swap Positions",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{projectTable}}1/swapPositionWith/2",
+							"host": [
+								"{{projectTable}}1"
+							],
+							"path": [
+								"swapPositionWith",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{projectTable}}8",
+							"host": [
+								"{{projectTable}}8"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Project Table Issue",
+			"item": [
+				{
+					"name": "Find All",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{projectTableIssue}}testing/findAll",
+							"host": [
+								"{{projectTableIssue}}testing"
+							],
+							"path": [
+								"findAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All By Table Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{projectTableIssue}}tableId/22?includeChildIssues=true",
+							"host": [
+								"{{projectTableIssue}}tableId"
+							],
+							"path": [
+								"22"
+							],
+							"query": [
+								{
+									"key": "includeChildIssues",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{projectTableIssue}}13?includeChildIssues=true&includeAssigned=true&includeComments=true&includeLabels=true",
+							"host": [
+								"{{projectTableIssue}}13"
+							],
+							"query": [
+								{
+									"key": "includeChildIssues",
+									"value": "true"
+								},
+								{
+									"key": "includeAssigned",
+									"value": "true"
+								},
+								{
+									"key": "includeComments",
+									"value": "true"
+								},
+								{
+									"key": "includeLabels",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"TESTINGGGbabb\",\r\n    \"tableId\": 1,\r\n    \"reporter\": \"user1\",\r\n    \"severity\": 3\r\n}"
+						},
+						"url": {
+							"raw": "{{projectTableIssue}}tableId/1",
+							"host": [
+								"{{projectTableIssue}}tableId"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 4,\r\n    \"title\": \"Modified\",\r\n    \"tableId\": 1,\r\n    \"reporter\": \"user1\",\r\n    \"parentIssueId\": 1,\r\n    \"severity\": 2,\r\n    \"position\": 3,\r\n    \"description\": null,\r\n    \"createdAt\": \"2018-06-01T13:13:45.000+00:00\",\r\n    \"updatedAt\": \"2018-06-01T13:13:45.000+00:00\",\r\n    \"comments\": [\r\n        {\r\n            \"id\": 2\r\n        }\r\n    ],\r\n    \"labels\": [\r\n        {\r\n            \"id\": 2\r\n        }\r\n    ],\r\n    \"parentIssue\": {\r\n        \"id\": 1\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "{{projectTableIssue}}",
+							"host": [
+								"{{projectTableIssue}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Swap Positions",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{projectTableIssue}}25/swapPositionWith/26",
+							"host": [
+								"{{projectTableIssue}}25"
+							],
+							"path": [
+								"swapPositionWith",
+								"26"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Move Issue Positions",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{projectTableIssue}}29/movePositionTo/27",
+							"host": [
+								"{{projectTableIssue}}29"
+							],
+							"path": [
+								"movePositionTo",
+								"27"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Move To Table",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{projectTableIssue}}26/moveToTable/23",
+							"host": [
+								"{{projectTableIssue}}26"
+							],
+							"path": [
+								"moveToTable",
+								"23"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set Parent Issue",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{projectTableIssue}}13/setParentIssue/12",
+							"host": [
+								"{{projectTableIssue}}13"
+							],
+							"path": [
+								"setParentIssue",
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{projectTableIssue}}30",
+							"host": [
+								"{{projectTableIssue}}30"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Authority",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{userAuthority}}/testing/getAll",
+							"host": [
+								"{{userAuthority}}"
+							],
+							"path": [
+								"testing",
+								"getAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All By Username",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{userAuthority}}/username/user2?includeOwners=true",
+							"host": [
+								"{{userAuthority}}"
+							],
+							"path": [
+								"username",
+								"user2"
+							],
+							"query": [
+								{
+									"key": "includeOwners",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All By ProjectId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{userAuthority}}/projectId/1",
+							"host": [
+								"{{userAuthority}}"
+							],
+							"path": [
+								"projectId",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"user1\",\r\n    \"projectId\": 1,\r\n    \"authority\": \"project_owner\"\r\n}"
+						},
+						"url": {
+							"raw": "{{userAuthority}}",
+							"host": [
+								"{{userAuthority}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"user2\",\r\n    \"projectId\": 1,\r\n    \"authority\": \"project_owner\"\r\n}"
+						},
+						"url": {
+							"raw": "{{userAuthority}}",
+							"host": [
+								"{{userAuthority}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "api",
+			"value": "http://localhost:8080/api/"
+		},
+		{
+			"key": "project",
+			"value": "{{api}}project/",
+			"type": "string"
+		},
+		{
+			"key": "projectTable",
+			"value": "{{api}}project-table/",
+			"type": "string"
+		},
+		{
+			"key": "projectTableIssue",
+			"value": "{{api}}project-table-issue/",
+			"type": "string"
+		},
+		{
+			"key": "userAuthority",
+			"value": "localhost:8095/api",
+			"type": "string"
+		}
+	]
+}

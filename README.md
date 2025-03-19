@@ -21,7 +21,9 @@ Backend for [android app](https://github.com/d-najd/Bugtracker-2.0-App) used for
   * Docker Compose
   * Docker Volumes
 * MySQL
+* Maven
 * Kotlin
+* Postman ([click to see get Collection](./github/Bugtracker2.postman_collection.json))
 
 # Setup
 
