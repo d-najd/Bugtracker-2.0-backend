@@ -9,7 +9,7 @@ Backend for [android app](https://github.com/d-najd/Bugtracker-2.0-App) used for
 
 # Used technologies
 
-* Spring boot
+* Spring Boot
   * Flyway
   * JPA
   * JPA Entity Graph
