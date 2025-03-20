@@ -1,5 +1,4 @@
 # Bugtracker Backend
-# About
 Backend for [android app](https://github.com/d-najd/Bugtracker-2.0-App) used for project management and issue tracking
 
 # Architecture
@@ -30,7 +29,7 @@ Backend for [android app](https://github.com/d-najd/Bugtracker-2.0-App) used for
 1. Git clone the project
 
 ```shell
-git clone https://github.com/d-najd/portfolio.git
+git clone https://github.com/d-najd/Bugtracker-2.0-backend.git
 ```
 
 2. Install [docker compose](https://docs.docker.com/compose/install/)
