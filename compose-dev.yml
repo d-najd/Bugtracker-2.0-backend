@@ -19,7 +19,6 @@ services:
   db:
     image: mysql
     container_name: db
-    restart: always
     networks:
       - bugtracker-dev
     ports:
