@@ -33,4 +33,4 @@ git clone https://github.com/d-najd/Bugtracker-2.0-backend.git
 ```
 
 2. Install [docker compose](https://docs.docker.com/compose/install/)
-3. Run [docker-compose.yml](docker-compose.yml) in root directory
+3. Run [docker-compose.yml](compose-dev.yml) in root directory

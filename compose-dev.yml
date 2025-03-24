@@ -1,11 +1,13 @@
 # version: '3.1'
 
 services:
+  backend:
+
   db:
     image: mysql
     restart: always
     networks:
-      - database
+      - bugtracker-dev
     ports:
       - "3306:3306"
     volumes:
@@ -13,8 +15,9 @@ services:
     environment:
       MYSQL_DATABASE: bugtracker
       MYSQL_ROOT_PASSWORD: root-password
+
 networks:
-  database:
+  bugtracker-dev:
     driver: bridge
     driver_opts:
       com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"
