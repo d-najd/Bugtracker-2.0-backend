@@ -1,8 +1,6 @@
 # version: '3.1'
 
 services:
-  backend:
-
   db:
     image: mysql
     restart: always
