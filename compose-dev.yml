@@ -1,8 +1,23 @@
 # version: '3.1'
 
 services:
+  backend:
+    image: bugtracker
+    container_name: bugtracker
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - bugtracker-dev
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/bugtracker
   db:
     image: mysql
+    container_name: db
     restart: always
     networks:
       - bugtracker-dev
@@ -16,9 +31,7 @@ services:
 
 networks:
   bugtracker-dev:
-    driver: bridge
-    driver_opts:
-      com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"
+    name: bugtracker-dev
 
 volumes:
   bugtracker-mysql-data:

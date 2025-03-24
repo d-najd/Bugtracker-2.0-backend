@@ -9,12 +9,12 @@ import org.springframework.web.reactive.function.client.WebClient
 
 @SpringBootApplication
 @EnableJpaRepositories(repositoryFactoryBeanClass = EntityGraphJpaRepositoryFactoryBean::class)
-class MainServiceApplication
+class BugtrackerApplication
 
 @Bean
 fun getWebClientBuilder(): WebClient.Builder =
 	WebClient.builder()
 
 fun main(args: Array<String>) {
-	runApplication<MainServiceApplication>(*args)
+	runApplication<BugtrackerApplication>(*args)
 }
