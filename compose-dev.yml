@@ -12,7 +12,8 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/bugtracker
   db:
@@ -28,6 +29,12 @@ services:
     environment:
       MYSQL_DATABASE: bugtracker
       MYSQL_ROOT_PASSWORD: root-password
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u bugtracker --password=root-password
+      start_period: 5s
+      interval: 5s
+      retries: 5
+      timeout: 5s
 
 networks:
   bugtracker-dev:

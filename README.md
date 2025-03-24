@@ -22,7 +22,7 @@ Backend for [android app](https://github.com/d-najd/Bugtracker-2.0-App) used for
 * MySQL
 * Maven
 * Kotlin
-* Postman ([click to see get Collection](./github/Bugtracker2.postman_collection.json))
+* Postman ([click to see Collection](./github/Bugtracker2.postman_collection.json))
 
 # Setup
 
@@ -31,6 +31,11 @@ Backend for [android app](https://github.com/d-najd/Bugtracker-2.0-App) used for
 ```shell
 git clone https://github.com/d-najd/Bugtracker-2.0-backend.git
 ```
-
-2. Install [docker compose](https://docs.docker.com/compose/install/)
-3. Run [docker-compose.yml](compose-dev.yml) in root directory
+2. Build the backend
+```shell
+./mvnw clean package
+```
+3. Start the docker containers using docker compose
+```shell
+docker-compose -f compose-dev.yml up 
+```
