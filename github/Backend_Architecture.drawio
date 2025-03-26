@@ -4,7 +4,7 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="q3jxpWBxmI74hbCxYRzW-8" value="User" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+        <mxCell id="q3jxpWBxmI74hbCxYRzW-8" value="io.dnajd.mainservice.domain.user.User" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="955" y="80" width="50" height="30" as="geometry" />
         </mxCell>
         <mxCell id="q3jxpWBxmI74hbCxYRzW-9" value="&lt;div&gt;Android&amp;nbsp;&lt;/div&gt;&lt;div&gt;Application&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
@@ -56,7 +56,7 @@
             <mxPoint x="940.01" y="260" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="q3jxpWBxmI74hbCxYRzW-81" value="&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;JWT Master Token Per User&lt;/font&gt;&lt;/div&gt;" style="edgeLabel;resizable=0;html=1;;align=center;verticalAlign=middle;" parent="q3jxpWBxmI74hbCxYRzW-80" connectable="0" vertex="1">
+        <mxCell id="q3jxpWBxmI74hbCxYRzW-81" value="&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;JWT Master Token Per io.dnajd.mainservice.domain.user.User&lt;/font&gt;&lt;/div&gt;" style="edgeLabel;resizable=0;html=1;;align=center;verticalAlign=middle;" parent="q3jxpWBxmI74hbCxYRzW-80" connectable="0" vertex="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="1" as="offset" />
           </mxGeometry>

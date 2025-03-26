@@ -1,4 +1,4 @@
-package io.dnajd.mainservice.infrastructure.jwt_validators
+package io.dnajd.mainservice.infrastructure.jwt.validators
 
 import io.jsonwebtoken.lang.Assert
 import org.springframework.security.oauth2.core.OAuth2Error

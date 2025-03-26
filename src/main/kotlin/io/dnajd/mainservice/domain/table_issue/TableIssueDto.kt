@@ -10,16 +10,16 @@ import java.util.*
 
 @DefaultMappingTarget(TableIssue::class)
 data class TableIssueDto(
-    var id: Long = -1L,
-    var tableId: Long = -1L,
-    var reporter: String = "",
+    var id: Long? = null,
+    var tableId: Long? = null,
+    var reporter: String? = null,
     @JsonIgnore
     var parentIssueId: Long? = null,
     @MappedField
-    var severity: Int = -1,
+    var severity: Int? = null,
     @MappedField
-    var title: String = "",
-    var position: Int = -1,
+    var title: String? = null,
+    var position: Int? = null,
     @MappedField
     var description: String? = null,
     var createdAt: Date? = null,

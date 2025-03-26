@@ -1,7 +1,7 @@
 package io.dnajd.mainservice.config
 
-import io.dnajd.mainservice.infrastructure.jwt_validators.JwtAudienceValidator
-import io.dnajd.mainservice.infrastructure.jwt_validators.JwtAuthorizedPartyValidator
+import io.dnajd.mainservice.infrastructure.jwt.validators.JwtAudienceValidator
+import io.dnajd.mainservice.infrastructure.jwt.validators.JwtAuthorizedPartyValidator
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
