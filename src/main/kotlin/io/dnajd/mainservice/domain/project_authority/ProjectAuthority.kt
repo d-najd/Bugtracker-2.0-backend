@@ -17,6 +17,7 @@ data class ProjectAuthority(
 
     @Id
     @Column(updatable = false)
+    @Enumerated(EnumType.STRING)
     val authority: AuthorityType = AuthorityType.PROJECT_VIEW,
 )
 

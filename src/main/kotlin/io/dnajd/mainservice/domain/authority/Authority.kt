@@ -13,7 +13,6 @@ data class Authority(
     @Enumerated(EnumType.STRING)
     @NotNull
     var authority: AuthorityType = AuthorityType.PROJECT_VIEW
-
 ): GrantedAuthority {
     override fun getAuthority(): String {
         return authority.value

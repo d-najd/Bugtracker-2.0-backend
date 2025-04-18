@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
-import jakarta.persistence.*
+import io.dnajd.mainservice.domain.table_issue.TableIssue
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import org.hibernate.annotations.CreationTimestamp
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import jakarta.persistence.*
 import java.util.*
 
 @Entity
@@ -49,3 +50,5 @@ data class User(
         return username
     }
 }
+
+class UserList(val data: List<UserList>)
