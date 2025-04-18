@@ -4,6 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
+import dev.krud.shapeshift.resolver.annotation.MappedField
+import dev.krud.shapeshift.transformer.ImplicitCollectionMappingTransformer
+import io.dnajd.mainservice.domain.issue_assignee.IssueAssignee
+import io.dnajd.mainservice.domain.project_authority.ProjectAuthority
+import io.dnajd.mainservice.infrastructure.mapper.LazyInitializedCondition
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
@@ -11,6 +16,7 @@ import org.hibernate.annotations.CreationTimestamp
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import jakarta.persistence.*
+import org.hibernate.Hibernate
 import java.util.*
 
 @Entity
@@ -31,14 +37,16 @@ data class User(
     @NotNull
     var createdAt: Date = Date(),
 
-    /*
-    @OneToMany(mappedBy = "projectId", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    @MappedField(DontMapCondition::class)
-    var authorities: MutableList<ProjectAuthority>,
-     */
+    @OneToMany(
+        cascade = [CascadeType.REMOVE],
+        fetch = FetchType.LAZY,
+    )
+    @JoinColumn(name = "username")
+    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
+    var projectAuthorities: MutableList<ProjectAuthority> = mutableListOf(),
 ) : UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        return mutableListOf()
+        return projectAuthorities
     }
 
     override fun getPassword(): String {
