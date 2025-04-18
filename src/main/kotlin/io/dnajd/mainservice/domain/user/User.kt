@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
-import io.dnajd.mainservice.domain.table_issue.TableIssue
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size

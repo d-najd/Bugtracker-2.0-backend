@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 class ProjectController(
     private val projectService: ProjectService,
 ) {
-    @GetMapping("/testing/getAll")
+    @GetMapping("/testing/findAll")
     fun findAll(): List<Project> {
         return projectService.findAll()
     }

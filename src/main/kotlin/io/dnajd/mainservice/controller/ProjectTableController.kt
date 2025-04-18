@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 class ProjectTableController(
     private val tableService: ProjectTableService
 ) {
-    @GetMapping("/testing/getAll")
+    @GetMapping("/testing/findAll")
     fun findAll(
         @RequestParam includeIssues: Boolean = false,
     ): List<ProjectTable> {
