@@ -46,5 +46,3 @@ data class Project(
     @MappedField(DontMapCondition::class)
     var tables: MutableList<ProjectTable> = mutableListOf(),
 )
-
-class ProjectList(val data: List<Project>)

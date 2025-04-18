@@ -126,9 +126,6 @@ data class TableIssue(
     var labels: MutableList<IssueLabel> = mutableListOf(),
 ) {
     companion object {
-        /**
-         * If [includeChildIssues] is then [includeIssues] will be ignored
-         */
         fun entityGraph(
             includeChildIssues: Boolean = false,
             includeAssigned: Boolean = false,
@@ -155,5 +152,3 @@ data class TableIssue(
         }
     }
 }
-
-class TableIssueList(val data: List<TableIssue>)

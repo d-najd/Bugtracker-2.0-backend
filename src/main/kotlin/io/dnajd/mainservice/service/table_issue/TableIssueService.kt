@@ -3,11 +3,10 @@ package io.dnajd.mainservice.service.table_issue
 import io.dnajd.mainservice.domain.table_issue.TableIssue
 import io.dnajd.mainservice.domain.table_issue.TableIssueDto
 import io.dnajd.mainservice.domain.table_issue.TableIssueDtoList
-import io.dnajd.mainservice.domain.table_issue.TableIssueList
 import org.springframework.web.bind.annotation.PathVariable
 
 interface TableIssueService {
-    fun findAll(): TableIssueList
+    fun findAll(): List<TableIssue>
 
     fun getAllByTableId(tableId: Long, includeChildIssues: Boolean = false): TableIssueDtoList
 

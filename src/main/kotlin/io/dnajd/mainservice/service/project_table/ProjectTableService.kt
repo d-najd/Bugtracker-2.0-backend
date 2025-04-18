@@ -3,10 +3,9 @@ package io.dnajd.mainservice.service.project_table
 import io.dnajd.mainservice.domain.project_table.ProjectTable
 import io.dnajd.mainservice.domain.project_table.ProjectTableDto
 import io.dnajd.mainservice.domain.project_table.ProjectTableDtoList
-import io.dnajd.mainservice.domain.project_table.ProjectTableList
 
 interface ProjectTableService {
-    fun findAll(includeIssues: Boolean = false): ProjectTableList
+    fun findAll(includeIssues: Boolean = false): List<ProjectTable>
 
     fun getAllByProjectId(projectId: Long, includeIssues: Boolean = false): ProjectTableDtoList
 

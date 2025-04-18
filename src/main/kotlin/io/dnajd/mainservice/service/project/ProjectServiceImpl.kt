@@ -19,8 +19,8 @@ class ProjectServiceImpl(
         private val log = LoggerFactory.getLogger(ProjectServiceImpl::class.java)
     }
 
-    override fun findAll(): ProjectList {
-        return ProjectList(projectRepository.findAll())
+    override fun findAll(): List<Project> {
+        return projectRepository.findAll()
     }
 
     override fun getAllByUsername(username: String): ProjectDtoList {

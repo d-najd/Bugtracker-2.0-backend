@@ -1,8 +1,8 @@
 package io.dnajd.mainservice.controller
 
+import io.dnajd.mainservice.domain.table_issue.TableIssue
 import io.dnajd.mainservice.domain.table_issue.TableIssueDto
 import io.dnajd.mainservice.domain.table_issue.TableIssueDtoList
-import io.dnajd.mainservice.domain.table_issue.TableIssueList
 import io.dnajd.mainservice.infrastructure.Endpoints
 import io.dnajd.mainservice.service.table_issue.TableIssueService
 import org.springframework.http.HttpStatus
@@ -14,7 +14,7 @@ class TableIssueController(
     private val issueService: TableIssueService
 ) {
     @GetMapping("/testing/findAll")
-    fun findAll(): TableIssueList {
+    fun findAll(): List<TableIssue> {
         return issueService.findAll()
     }
 

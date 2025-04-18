@@ -75,5 +75,3 @@ data class ProjectTable(
         }
     }
 }
-
-class ProjectTableList(val data: List<ProjectTable>)

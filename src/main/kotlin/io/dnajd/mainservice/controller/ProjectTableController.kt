@@ -1,8 +1,8 @@
 package io.dnajd.mainservice.controller
 
+import io.dnajd.mainservice.domain.project_table.ProjectTable
 import io.dnajd.mainservice.domain.project_table.ProjectTableDto
 import io.dnajd.mainservice.domain.project_table.ProjectTableDtoList
-import io.dnajd.mainservice.domain.project_table.ProjectTableList
 import io.dnajd.mainservice.infrastructure.Endpoints
 import io.dnajd.mainservice.service.project_table.ProjectTableService
 import org.springframework.http.HttpStatus
@@ -16,7 +16,7 @@ class ProjectTableController(
     @GetMapping("/testing/getAll")
     fun findAll(
         @RequestParam includeIssues: Boolean = false,
-    ): ProjectTableList {
+    ): List<ProjectTable> {
         return tableService.findAll(includeIssues)
     }
 

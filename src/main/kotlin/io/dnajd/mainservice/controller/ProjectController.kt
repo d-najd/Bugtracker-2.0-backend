@@ -1,8 +1,8 @@
 package io.dnajd.mainservice.controller
 
+import io.dnajd.mainservice.domain.project.Project
 import io.dnajd.mainservice.domain.project.ProjectDto
 import io.dnajd.mainservice.domain.project.ProjectDtoList
-import io.dnajd.mainservice.domain.project.ProjectList
 import io.dnajd.mainservice.infrastructure.Endpoints
 import io.dnajd.mainservice.service.project.ProjectService
 import org.springframework.http.HttpStatus
@@ -14,7 +14,7 @@ class ProjectController(
     private val projectService: ProjectService,
 ) {
     @GetMapping("/testing/getAll")
-    fun findAll(): ProjectList {
+    fun findAll(): List<Project> {
         return projectService.findAll()
     }
 

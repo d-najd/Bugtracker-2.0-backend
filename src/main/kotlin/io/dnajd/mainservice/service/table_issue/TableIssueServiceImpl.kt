@@ -4,7 +4,6 @@ import dev.krud.shapeshift.ShapeShift
 import io.dnajd.mainservice.domain.table_issue.TableIssue
 import io.dnajd.mainservice.domain.table_issue.TableIssueDto
 import io.dnajd.mainservice.domain.table_issue.TableIssueDtoList
-import io.dnajd.mainservice.domain.table_issue.TableIssueList
 import io.dnajd.mainservice.infrastructure.exception.ResourceNotFoundException
 import io.dnajd.mainservice.infrastructure.mapper.mapChangedFields
 import io.dnajd.mainservice.repository.TableIssueRepository
@@ -23,8 +22,8 @@ class TableIssueServiceImpl(
         private val log = LoggerFactory.getLogger(ProjectServiceImpl::class.java)
     }
 
-    override fun findAll(): TableIssueList {
-        return TableIssueList(issueRepository.findAll())
+    override fun findAll(): List<TableIssue> {
+        return issueRepository.findAll()
     }
 
     override fun getAllByTableId(tableId: Long, includeChildIssues: Boolean): TableIssueDtoList {

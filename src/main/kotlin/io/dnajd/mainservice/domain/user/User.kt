@@ -50,5 +50,3 @@ data class User(
         return username
     }
 }
-
-class UserList(val data: List<UserList>)

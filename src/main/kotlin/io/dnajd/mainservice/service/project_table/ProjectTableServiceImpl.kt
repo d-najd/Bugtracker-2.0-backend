@@ -4,7 +4,6 @@ import dev.krud.shapeshift.ShapeShift
 import io.dnajd.mainservice.domain.project_table.ProjectTable
 import io.dnajd.mainservice.domain.project_table.ProjectTableDto
 import io.dnajd.mainservice.domain.project_table.ProjectTableDtoList
-import io.dnajd.mainservice.domain.project_table.ProjectTableList
 import io.dnajd.mainservice.infrastructure.exception.ResourceNotFoundException
 import io.dnajd.mainservice.infrastructure.mapper.mapChangedFields
 import io.dnajd.mainservice.repository.ProjectTableRepository
@@ -23,10 +22,8 @@ class ProjectTableServiceImpl(
         private val log = LoggerFactory.getLogger(ProjectServiceImpl::class.java)
     }
 
-    override fun findAll(includeIssues: Boolean): ProjectTableList {
-        val persistedTables = tableRepository.findAll(ProjectTable.entityGraph(includeIssues = includeIssues))
-
-        return ProjectTableList(persistedTables)
+    override fun findAll(includeIssues: Boolean): List<ProjectTable> {
+        return tableRepository.findAll(ProjectTable.entityGraph(includeIssues = includeIssues))
     }
 
     override fun getAllByProjectId(projectId: Long, includeIssues: Boolean): ProjectTableDtoList {
