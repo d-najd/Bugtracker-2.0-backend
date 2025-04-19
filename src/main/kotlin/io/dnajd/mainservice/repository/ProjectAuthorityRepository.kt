@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ProjectAuthorityRepository : EntityGraphJpaRepository<ProjectAuthority, ProjectAuthorityIdentity> {
-
+    fun findByUsernameAndProjectId(username: String, projectId: Long): MutableList<ProjectAuthority>
 }

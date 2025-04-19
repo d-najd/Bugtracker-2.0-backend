@@ -8,3 +8,5 @@ data class ProjectAuthorityDto(
     val projectId: Long? = null,
     val authority: String? = null,
 )
+
+class ProjectAuthorityDtoList(val data: List<ProjectAuthorityDto>)

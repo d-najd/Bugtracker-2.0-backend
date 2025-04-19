@@ -1,13 +1,16 @@
 package io.dnajd.mainservice.domain.user
 
+import com.cosium.spring.data.jpa.entity.graph.domain2.DynamicEntityGraph
+import com.cosium.spring.data.jpa.entity.graph.domain2.EntityGraphType
 import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonIgnore
 import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import dev.krud.shapeshift.resolver.annotation.MappedField
 import dev.krud.shapeshift.transformer.ImplicitCollectionMappingTransformer
-import io.dnajd.mainservice.domain.issue_assignee.IssueAssignee
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthority
+import io.dnajd.mainservice.domain.table_issue.TableIssue
 import io.dnajd.mainservice.infrastructure.mapper.LazyInitializedCondition
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
@@ -16,11 +19,13 @@ import org.hibernate.annotations.CreationTimestamp
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import jakarta.persistence.*
-import org.hibernate.Hibernate
 import java.util.*
 
 @Entity
-@Table(name = "user")
+@Table(
+    name = "user",
+    uniqueConstraints = [UniqueConstraint(columnNames = ["gmail"])]
+)
 @AutoMapping(UserDto::class, AutoMappingStrategy.BY_NAME)
 @DefaultMappingTarget(UserDto::class)
 data class User(
@@ -30,6 +35,10 @@ data class User(
     @Column(nullable = false, length = 255)
     @JvmField
     var username: String = "",
+
+    @NotEmpty
+    @Column(nullable = false, updatable = false)
+    var gmail: String = "",
 
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
@@ -45,15 +54,47 @@ data class User(
     @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
     var projectAuthorities: MutableList<ProjectAuthority> = mutableListOf(),
 ) : UserDetails {
+    companion object {
+        fun entityGraph(
+            includeAuthorities: Boolean = false,
+            graphType: EntityGraphType = EntityGraphType.LOAD,
+        ): DynamicEntityGraph {
+            val graph = DynamicEntityGraph.builder(graphType)
+
+            if (includeAuthorities) {
+                graph.addPath(User::projectAuthorities.name)
+            }
+
+            return graph.build()
+        }
+    }
+
+    @JsonIgnore
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         return projectAuthorities
     }
 
+    override fun getUsername(): String {
+        return username
+    }
+
+    @JsonIgnore
     override fun getPassword(): String {
         return ""
     }
 
-    override fun getUsername(): String {
-        return username
+    @JsonIgnore
+    override fun isAccountNonExpired(): Boolean {
+        return super.isAccountNonExpired()
+    }
+
+    @JsonIgnore
+    override fun isAccountNonLocked(): Boolean {
+        return super.isAccountNonLocked()
+    }
+
+    @JsonIgnore
+    override fun isCredentialsNonExpired(): Boolean {
+        return super.isCredentialsNonExpired()
     }
 }
