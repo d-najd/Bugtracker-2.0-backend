@@ -1,17 +1,16 @@
 package io.dnajd.mainservice.domain.project_authority
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import dev.krud.shapeshift.resolver.annotation.MappedField
-import io.dnajd.mainservice.domain.authority.AuthorityType
-import io.dnajd.mainservice.domain.project.Project
-import io.dnajd.mainservice.domain.user.User
-import io.dnajd.mainservice.infrastructure.mapper.DontMapCondition
+import dev.krud.shapeshift.enums.AutoMappingStrategy
+import dev.krud.shapeshift.resolver.annotation.AutoMapping
+import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import jakarta.persistence.*
 import org.springframework.security.core.GrantedAuthority
 
-@IdClass(ProjectAuthorityId::class)
+@IdClass(ProjectAuthorityIdentity::class)
 @Entity
 @Table(name = "project_user_authority")
+@AutoMapping(ProjectAuthorityDto::class, AutoMappingStrategy.BY_NAME)
+@DefaultMappingTarget(ProjectAuthorityDto::class)
 data class ProjectAuthority(
     @Id
     @Column(updatable = false)
@@ -23,16 +22,16 @@ data class ProjectAuthority(
 
     @Id
     @Column(updatable = false)
-    @Enumerated(EnumType.STRING)
-    val authority: AuthorityType = AuthorityType.PROJECT_VIEW,
-): GrantedAuthority {
+    @JvmField
+    val authority: String = "",
+) : GrantedAuthority {
     override fun getAuthority(): String {
-        return authority.value
+        return authority
     }
 }
 
-data class ProjectAuthorityId(
+data class ProjectAuthorityIdentity(
     val username: String = "",
     val projectId: Long = -1L,
-    val authority: AuthorityType = AuthorityType.PROJECT_VIEW,
+    val authority: String = "",
 )
