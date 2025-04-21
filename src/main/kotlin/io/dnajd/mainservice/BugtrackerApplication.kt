@@ -13,8 +13,8 @@ class BugtrackerApplication
 
 @Bean
 fun getWebClientBuilder(): WebClient.Builder =
-	WebClient.builder()
+    WebClient.builder()
 
 fun main(args: Array<String>) {
-	runApplication<BugtrackerApplication>(*args)
+    runApplication<BugtrackerApplication>(*args)
 }

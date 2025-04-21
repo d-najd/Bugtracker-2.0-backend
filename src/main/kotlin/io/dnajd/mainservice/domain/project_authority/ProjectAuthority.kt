@@ -6,8 +6,8 @@ import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import jakarta.persistence.*
 import org.springframework.security.core.GrantedAuthority
 
-@IdClass(ProjectAuthorityIdentity::class)
 @Entity
+@IdClass(ProjectAuthorityIdentity::class)
 @Table(name = "project_user_authority")
 @AutoMapping(ProjectAuthorityDto::class, AutoMappingStrategy.BY_NAME)
 @DefaultMappingTarget(ProjectAuthorityDto::class)
