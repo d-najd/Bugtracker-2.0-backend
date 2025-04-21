@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping(Endpoints.PROJECT_TABLE)
 class ProjectTableController(
-    private val tableService: ProjectTableService
+    private val service: ProjectTableService
 ) {
     @GetMapping("/testing/findAll")
     fun findAll(
         @RequestParam includeIssues: Boolean = false,
     ): List<ProjectTable> {
-        return tableService.findAll(includeIssues)
+        return service.findAll(includeIssues)
     }
 
     @GetMapping("/projectId/{projectId}")
@@ -25,33 +25,33 @@ class ProjectTableController(
         @PathVariable projectId: Long,
         @RequestParam includeIssues: Boolean = false,
     ): ProjectTableDtoList {
-        return tableService.getAllByProjectId(projectId, includeIssues)
+        return service.getAllByProjectId(projectId, includeIssues)
     }
 
-    @GetMapping("/id/{id}")
-    fun getById(
+    @GetMapping("/{id}")
+    fun get(
         @PathVariable id: Long,
         @RequestParam includeIssues: Boolean = false,
     ): ProjectTableDto {
-        return tableService.getById(id, includeIssues)
+        return service.get(id, includeIssues)
     }
 
     @PostMapping("/projectId/{projectId}")
     @ResponseStatus(value = HttpStatus.CREATED)
-    fun createTable(
+    fun create(
         @PathVariable projectId: Long,
         @RequestBody dto: ProjectTableDto
     ): ProjectTableDto {
-        return tableService.createTable(projectId, dto)
+        return service.create(projectId, dto)
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    fun updateTable(
+    fun update(
         @PathVariable id: Long,
         @RequestBody dto: ProjectTableDto
     ): ProjectTableDto {
-        return tableService.updateTable(id, dto)
+        return service.update(id, dto)
     }
 
     @PatchMapping("/{fId}/swapPositionWith/{sId}")
@@ -60,12 +60,12 @@ class ProjectTableController(
         @PathVariable fId: Long,
         @PathVariable sId: Long
     ) {
-        return tableService.swapTablePositions(fId, sId)
+        return service.swapTablePositions(fId, sId)
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    fun deleteById(@PathVariable id: Long) {
-        return tableService.deleteById(id)
+    fun delete(@PathVariable id: Long) {
+        return service.delete(id)
     }
 }

@@ -7,13 +7,13 @@ interface ProjectService {
 
     fun getAllByUsername(username: String): ProjectDtoList
 
-    fun findById(id: Long): Project
+    fun find(id: Long): Project
 
-    fun getById(id: Long): ProjectDto
+    fun get(id: Long): ProjectDto
 
-    fun createProject(projectDto: ProjectDto): ProjectDto
+    fun create(projectDto: ProjectDto): ProjectDto
 
-    fun updateProject(id: Long, projectDto: ProjectDto): ProjectDto
+    fun update(id: Long, projectDto: ProjectDto): ProjectDto
 
-    fun deleteById(id: Long)
+    fun delete(id: Long)
 }

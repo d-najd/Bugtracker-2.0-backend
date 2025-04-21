@@ -10,15 +10,15 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional
 class ProjectAuthorityServiceImpl(
-    private val projectAuthorityRepository: ProjectAuthorityRepository,
+    private val repository: ProjectAuthorityRepository,
     private val mapper: ShapeShift
 ): ProjectAuthorityService {
     override fun findAll(): List<ProjectAuthority> {
-        return projectAuthorityRepository.findAll()
+        return repository.findAll()
     }
 
     override fun findByUsernameAndProjectId(username: String, projectId: Long): ProjectAuthorityDtoList {
-        val persistedAuthorities = projectAuthorityRepository.findByUsernameAndProjectId(username, projectId)
+        val persistedAuthorities = repository.findByUsernameAndProjectId(username, projectId)
 
         return ProjectAuthorityDtoList(mapper.mapCollection(persistedAuthorities))
     }

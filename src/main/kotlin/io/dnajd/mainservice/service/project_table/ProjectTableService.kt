@@ -9,15 +9,15 @@ interface ProjectTableService {
 
     fun getAllByProjectId(projectId: Long, includeIssues: Boolean = false): ProjectTableDtoList
 
-    fun findById(id: Long, includeIssues: Boolean = false): ProjectTable
+    fun find(id: Long, includeIssues: Boolean = false): ProjectTable
 
-    fun getById(id: Long, includeIssues: Boolean = false): ProjectTableDto
+    fun get(id: Long, includeIssues: Boolean = false): ProjectTableDto
 
-    fun createTable(projectId: Long, dto: ProjectTableDto): ProjectTableDto
+    fun create(projectId: Long, dto: ProjectTableDto): ProjectTableDto
 
-    fun updateTable(id: Long, dto: ProjectTableDto): ProjectTableDto
+    fun update(id: Long, dto: ProjectTableDto): ProjectTableDto
 
     fun swapTablePositions(fId: Long, sId: Long)
 
-    fun deleteById(id: Long)
+    fun delete(id: Long)
 }

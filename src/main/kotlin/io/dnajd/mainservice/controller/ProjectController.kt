@@ -11,41 +11,41 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping(Endpoints.PROJECT)
 class ProjectController(
-    private val projectService: ProjectService,
+    private val service: ProjectService,
 ) {
     @GetMapping("/testing/findAll")
     fun findAll(): List<Project> {
-        return projectService.findAll()
+        return service.findAll()
     }
 
-    @GetMapping("/user/{username}")
+    @GetMapping("/username/{username}")
     fun getAllByUsername(@PathVariable username: String): ProjectDtoList {
-        return projectService.getAllByUsername(username)
+        return service.getAllByUsername(username)
     }
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long): ProjectDto {
-        return projectService.getById(id)
+    fun get(@PathVariable id: Long): ProjectDto {
+        return service.get(id)
     }
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    fun createProject(@RequestBody projectDto: ProjectDto): ProjectDto {
-        return projectService.createProject(projectDto)
+    fun create(@RequestBody projectDto: ProjectDto): ProjectDto {
+        return service.create(projectDto)
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    fun updateProject(
+    fun update(
         @PathVariable id: Long,
         @RequestBody projectDto: ProjectDto
     ): ProjectDto {
-        return projectService.updateProject(id, projectDto)
+        return service.update(id, projectDto)
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    fun deleteById(@PathVariable id: Long) {
-        projectService.deleteById(id)
+    fun delete(@PathVariable id: Long) {
+        service.delete(id)
     }
 }

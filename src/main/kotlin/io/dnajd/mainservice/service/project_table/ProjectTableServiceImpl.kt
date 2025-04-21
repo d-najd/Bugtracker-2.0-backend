@@ -7,85 +7,77 @@ import io.dnajd.mainservice.domain.project_table.ProjectTableDtoList
 import io.dnajd.mainservice.infrastructure.exception.ResourceNotFoundException
 import io.dnajd.mainservice.infrastructure.mapper.mapChangedFields
 import io.dnajd.mainservice.repository.ProjectTableRepository
-import io.dnajd.mainservice.service.project.ProjectServiceImpl
 import jakarta.transaction.Transactional
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
 @Transactional
 class ProjectTableServiceImpl(
-    private val tableRepository: ProjectTableRepository,
+    private val repository: ProjectTableRepository,
     private val mapper: ShapeShift,
 ) : ProjectTableService {
-    companion object {
-        private val log = LoggerFactory.getLogger(ProjectServiceImpl::class.java)
-    }
-
     override fun findAll(includeIssues: Boolean): List<ProjectTable> {
-        return tableRepository.findAll(ProjectTable.entityGraph(includeIssues = includeIssues))
+        return repository.findAll(ProjectTable.entityGraph(includeIssues = includeIssues))
     }
 
     override fun getAllByProjectId(projectId: Long, includeIssues: Boolean): ProjectTableDtoList {
-        val persistedTables = tableRepository.findAllByProjectId(
+        val persistedTables = repository.findAllByProjectId(
             projectId, ProjectTable.entityGraph(includeIssues = includeIssues)
         )
 
         return ProjectTableDtoList(mapper.mapCollection(persistedTables))
     }
 
-    override fun findById(id: Long, includeIssues: Boolean): ProjectTable {
-        return tableRepository.findById(id, ProjectTable.entityGraph(includeIssues = includeIssues)).orElseThrow {
-            log.error("Resource ${ProjectTable::class.simpleName} with id $id not found")
+    override fun find(id: Long, includeIssues: Boolean): ProjectTable {
+        return repository.findById(id, ProjectTable.entityGraph(includeIssues = includeIssues)).orElseThrow {
             throw ResourceNotFoundException(ProjectTable::class)
         }
     }
 
-    override fun getById(id: Long, includeIssues: Boolean): ProjectTableDto {
-        val persistedTable = findById(id, includeIssues)
+    override fun get(id: Long, includeIssues: Boolean): ProjectTableDto {
+        val persistedTable = find(id, includeIssues)
 
         return mapper.map(persistedTable)
     }
 
-    override fun createTable(projectId: Long, dto: ProjectTableDto): ProjectTableDto {
+    override fun create(projectId: Long, dto: ProjectTableDto): ProjectTableDto {
         dto.issues = null
 
-        val tablesInProjectCount = tableRepository.countByProjectId(projectId)
+        val tablesInProjectCount = repository.countByProjectId(projectId)
         var transientTable: ProjectTable = mapper.map(dto)
         transientTable = transientTable.copy(
             projectId = projectId,
             position = tablesInProjectCount
         )
 
-        val persistedTable = tableRepository.save(transientTable)
+        val persistedTable = repository.save(transientTable)
         return mapper.map(persistedTable)
     }
 
-    override fun updateTable(id: Long, dto: ProjectTableDto): ProjectTableDto {
+    override fun update(id: Long, dto: ProjectTableDto): ProjectTableDto {
         dto.issues = null
 
-        val persistedTable = findById(id, includeIssues = true)
+        val persistedTable = find(id, includeIssues = true)
         val transientTable = mapper.mapChangedFields(persistedTable, dto)
 
-        return mapper.map(tableRepository.saveAndFlush(transientTable))
+        return mapper.map(repository.saveAndFlush(transientTable))
     }
 
     override fun swapTablePositions(fId: Long, sId: Long) {
-        val firstTable = findById(fId)
-        val secondTable = findById(sId)
+        val firstTable = find(fId)
+        val secondTable = find(sId)
 
         if (firstTable.projectId != secondTable.projectId) {
-            log.error("Tables don't belong to the same project $fId $sId")
             throw IllegalArgumentException("Tables don't belong to the same project $fId $sId")
         }
 
-        tableRepository.swapPositions(fId, sId)
+        repository.swapPositions(fId, sId)
     }
 
-    override fun deleteById(id: Long) {
-        val persistedTable = findById(id)
+    override fun delete(id: Long) {
+        val persistedTable = find(id)
 
-        tableRepository.delete(persistedTable)
-        tableRepository.moveToLeftAfter(persistedTable.projectId, persistedTable.position)
+        repository.delete(persistedTable)
+        repository.moveToLeftAfter(persistedTable.projectId, persistedTable.position)
     }
 }

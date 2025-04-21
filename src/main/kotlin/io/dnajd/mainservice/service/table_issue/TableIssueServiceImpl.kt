@@ -7,27 +7,21 @@ import io.dnajd.mainservice.domain.table_issue.TableIssueDtoList
 import io.dnajd.mainservice.infrastructure.exception.ResourceNotFoundException
 import io.dnajd.mainservice.infrastructure.mapper.mapChangedFields
 import io.dnajd.mainservice.repository.TableIssueRepository
-import io.dnajd.mainservice.service.project.ProjectServiceImpl
 import jakarta.transaction.Transactional
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
 @Transactional
 class TableIssueServiceImpl(
-    private val issueRepository: TableIssueRepository,
+    private val repository: TableIssueRepository,
     private val mapper: ShapeShift,
 ) : TableIssueService {
-    companion object {
-        private val log = LoggerFactory.getLogger(ProjectServiceImpl::class.java)
-    }
-
     override fun findAll(): List<TableIssue> {
-        return issueRepository.findAll()
+        return repository.findAll()
     }
 
     override fun getAllByTableId(tableId: Long, includeChildIssues: Boolean): TableIssueDtoList {
-        val persistedIssues = issueRepository.findAllByTableId(tableId, TableIssue.entityGraph(includeChildIssues))
+        val persistedIssues = repository.findAllByTableId(tableId, TableIssue.entityGraph(includeChildIssues))
 
         return TableIssueDtoList(mapper.mapCollection(persistedIssues))
     }
@@ -39,7 +33,7 @@ class TableIssueServiceImpl(
         includeComments: Boolean,
         includeLabels: Boolean
     ): TableIssue {
-        return issueRepository.findById(
+        return repository.findById(
             id,
             TableIssue.entityGraph(
                 includeChildIssues,
@@ -48,12 +42,11 @@ class TableIssueServiceImpl(
                 includeLabels
             )
         ).orElseThrow {
-            log.error("Resource ${TableIssue::class.simpleName} with id $id not found")
             throw ResourceNotFoundException(TableIssue::class)
         }
     }
 
-    override fun getById(
+    override fun get(
         id: Long,
         includeChildIssues: Boolean,
         includeAssigned: Boolean,
@@ -70,8 +63,8 @@ class TableIssueServiceImpl(
         return firstIssue.tableId == secondIssue.tableId
     }
 
-    override fun createIssue(tableId: Long, reporterUsername: String, dto: TableIssueDto): TableIssueDto {
-        val issuesInTableCount = issueRepository.countByTableId(tableId)
+    override fun create(tableId: Long, reporterUsername: String, dto: TableIssueDto): TableIssueDto {
+        val issuesInTableCount = repository.countByTableId(tableId)
 
         var transientIssue: TableIssue = mapper.map(dto)
         transientIssue = transientIssue.copy(
@@ -80,75 +73,64 @@ class TableIssueServiceImpl(
             position = issuesInTableCount
         )
 
-        val persistedIssue = issueRepository.save(transientIssue)
+        val persistedIssue = repository.save(transientIssue)
         return mapper.map(persistedIssue)
     }
 
-    override fun updateIssue(id: Long, dto: TableIssueDto): TableIssueDto {
+    override fun update(id: Long, dto: TableIssueDto): TableIssueDto {
         val persistedIssue = findById(id)
         val transientIssue = mapper.mapChangedFields(persistedIssue, dto)
 
-        return mapper.map(issueRepository.saveAndFlush(transientIssue))
+        return mapper.map(repository.saveAndFlush(transientIssue))
     }
 
     override fun swapIssuePositions(fId: Long, sId: Long) {
         if (!issuesBelongToSameTable(fId, sId)) {
-            log.error("Issues don't belong to the same table $fId $sId")
             throw IllegalArgumentException("Issues don't belong to the same table $fId $sId")
         }
 
-        issueRepository.swapPositions(fId, sId)
+        repository.swapPositions(fId, sId)
     }
 
     override fun movePositionTo(fId: Long, sId: Long) {
         if (!issuesBelongToSameTable(fId, sId)) {
-            log.error("Issues don't belong to the same table $fId $sId")
             throw IllegalArgumentException("Issues don't belong to the same table $fId $sId")
         }
 
-        issueRepository.movePositionTo(fId, sId)
+        repository.movePositionTo(fId, sId)
     }
 
-    override fun changeTable(id: Long, tableId: Long): Int {
-        if (!issueRepository.taskAndTableBelongToSameProject(id, tableId)) {
-            val errorText = "Task $id and table $tableId don't belong to the same project"
-            log.error(errorText)
-            throw IllegalArgumentException(errorText)
+    override fun moveToTable(id: Long, tableId: Long): Int {
+        if (!repository.taskAndTableBelongToSameProject(id, tableId)) {
+            throw IllegalArgumentException("Task $id and table $tableId don't belong to the same project")
         }
 
         val originalIssue = findById(id)
         if (originalIssue.tableId == tableId) {
-            val errorText =
-                "Trying to change table for a issue but putting the current table? taskId: $id tableId: $tableId"
-            log.error(errorText)
-            throw IllegalArgumentException(errorText)
+            throw IllegalArgumentException("Trying to change table for a issue but putting the current table? taskId: $id tableId: $tableId")
         }
 
-        val issuesInTableCount = issueRepository.countByTableId(tableId)
+        val issuesInTableCount = repository.countByTableId(tableId)
         val modifiedIssue = originalIssue.copy(
             tableId = tableId,
             position = issuesInTableCount
         )
 
-        val persistedIssue = issueRepository.saveAndFlush(modifiedIssue)
-        issueRepository.moveToLeftAfter(originalIssue.tableId, originalIssue.position)
+        val persistedIssue = repository.saveAndFlush(modifiedIssue)
+        repository.moveToLeftAfter(originalIssue.tableId, originalIssue.position)
 
         return persistedIssue.position
     }
 
     override fun setParentIssue(id: Long, parentIssueId: Long) {
-        if (!issueRepository.tasksBelongToSameProject(id, parentIssueId)) {
-            val errorText =
-                "Trying to set parent issue to task that doesn't belong to the same project? id: $id, parentId $parentIssueId"
-            log.error(errorText)
-            throw IllegalArgumentException(errorText)
+        if (!repository.tasksBelongToSameProject(id, parentIssueId)) {
+            throw IllegalArgumentException("Trying to set parent issue to task that doesn't belong to the same project? id: $id, parentId $parentIssueId")
         }
 
         val persistedParentIssue = findById(parentIssueId)
         if (persistedParentIssue.parentIssueId != null) {
             val errorText = "Parent issue must not have its own parent issue. id: $id, parentId: $parentIssueId"
-            log.error(errorText)
-            throw IllegalArgumentException(errorText)
+            throw IllegalArgumentException("Parent issue must not have its own parent issue. id: $id, parentId: $parentIssueId")
         }
 
         val originalIssue = findById(id)
@@ -156,13 +138,13 @@ class TableIssueServiceImpl(
             parentIssueId = parentIssueId
         )
 
-        issueRepository.saveAndFlush(transientIssue)
+        repository.saveAndFlush(transientIssue)
     }
 
-    override fun deleteById(id: Long) {
+    override fun delete(id: Long) {
         val persistedTable = findById(id)
 
-        issueRepository.delete(persistedTable)
-        issueRepository.moveToLeftAfter(persistedTable.tableId, persistedTable.position)
+        repository.delete(persistedTable)
+        repository.moveToLeftAfter(persistedTable.tableId, persistedTable.position)
     }
 }

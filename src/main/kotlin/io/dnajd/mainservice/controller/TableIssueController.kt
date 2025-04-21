@@ -27,32 +27,32 @@ class TableIssueController(
     }
 
     @GetMapping("/{id}")
-    fun getById(
+    fun get(
         @PathVariable id: Long,
         @RequestParam includeChildIssues: Boolean = true,
         @RequestParam includeAssigned: Boolean = true,
         @RequestParam includeComments: Boolean = true,
         @RequestParam includeLabels: Boolean = true,
     ): TableIssueDto {
-        return issueService.getById(id, includeChildIssues, includeAssigned, includeComments, includeLabels)
+        return issueService.get(id, includeChildIssues, includeAssigned, includeComments, includeLabels)
     }
 
     @PostMapping("/tableId/{tableId}")
     @ResponseStatus(value = HttpStatus.CREATED)
-    fun createIssue(
+    fun create(
         @PathVariable tableId: Long,
         @RequestBody dto: TableIssueDto
     ): TableIssueDto {
-        return issueService.createIssue(tableId, "user1", dto)
+        return issueService.create(tableId, "user1", dto)
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    fun updateIssue(
+    fun update(
         @PathVariable id: Long,
         @RequestBody dto: TableIssueDto
     ): TableIssueDto {
-        return issueService.updateIssue(id, dto)
+        return issueService.update(id, dto)
     }
 
     @PatchMapping("/{fId}/swapPositionWith/{sId}")
@@ -66,7 +66,7 @@ class TableIssueController(
 
     @PatchMapping("/{fId}/movePositionTo/{sId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    fun moveTaskPositions(
+    fun movePositionTo(
         @PathVariable fId: Long,
         @PathVariable sId: Long
     ) {
@@ -75,14 +75,14 @@ class TableIssueController(
 
     @PatchMapping("/{id}/moveToTable/{tableId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    fun changeToTable(
+    fun moveToTable(
         @PathVariable id: Long,
         @PathVariable tableId: Long
     ): Int {
-        return issueService.changeTable(id, tableId)
+        return issueService.moveToTable(id, tableId)
     }
 
-    @PatchMapping("{id}/setParentIssue/{parentIssueId}")
+    @PatchMapping("/id/{id}/setParentIssue/{parentIssueId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     fun setParentIssue(
         @PathVariable id: Long,
@@ -93,9 +93,9 @@ class TableIssueController(
 
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    fun deleteById(
+    fun delete(
         @PathVariable id: Long,
     ) {
-        issueService.deleteById(id)
+        issueService.delete(id)
     }
 }

@@ -18,7 +18,7 @@ interface TableIssueService {
         includeLabels: Boolean = false
     ): TableIssue
 
-    fun getById(
+    fun get(
         id: Long,
         includeChildIssues: Boolean = false,
         includeAssigned: Boolean = false,
@@ -28,17 +28,17 @@ interface TableIssueService {
 
     fun issuesBelongToSameTable(fId: Long, sId: Long): Boolean
 
-    fun createIssue(tableId: Long, reporterUsername: String, dto: TableIssueDto): TableIssueDto
+    fun create(tableId: Long, reporterUsername: String, dto: TableIssueDto): TableIssueDto
 
-    fun updateIssue(@PathVariable id: Long, dto: TableIssueDto): TableIssueDto
+    fun update(@PathVariable id: Long, dto: TableIssueDto): TableIssueDto
 
     fun swapIssuePositions(fId: Long, sId: Long)
 
     fun movePositionTo(fId: Long, sId: Long)
 
-    fun changeTable(id: Long, tableId: Long): Int
+    fun moveToTable(id: Long, tableId: Long): Int
 
     fun setParentIssue(id: Long, parentIssueId: Long)
 
-    fun deleteById(id: Long)
+    fun delete(id: Long)
 }

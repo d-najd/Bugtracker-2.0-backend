@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(Endpoints.PROJECT_AUTHORITY)
 class ProjectAuthorityController(
-    private val projectAuthorityService: ProjectAuthorityService,
+    private val service: ProjectAuthorityService,
 ) {
     @GetMapping("/testing/findAll")
     fun findAll(): List<ProjectAuthority> {
-        return projectAuthorityService.findAll()
+        return service.findAll()
     }
 
     @GetMapping("/username/{username}/projectId/{projectId}")
@@ -24,6 +24,6 @@ class ProjectAuthorityController(
         @PathVariable username: String,
         @PathVariable projectId: Long,
     ): ProjectAuthorityDtoList {
-        return projectAuthorityService.findByUsernameAndProjectId(username, projectId)
+        return service.findByUsernameAndProjectId(username, projectId)
     }
 }

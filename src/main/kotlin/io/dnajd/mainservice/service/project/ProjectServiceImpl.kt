@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 @Service
 @Transactional
 class ProjectServiceImpl(
-    private val projectRepository: ProjectRepository,
+    private val repository: ProjectRepository,
     private val mapper: ShapeShift,
 ): ProjectService {
     companion object {
@@ -20,47 +20,46 @@ class ProjectServiceImpl(
     }
 
     override fun findAll(): List<Project> {
-        return projectRepository.findAll()
+        return repository.findAll()
     }
 
     override fun getAllByUsername(username: String): ProjectDtoList {
         log.error("This is just a placeholder implementation till RBAC is implemented")
 
-        val persistedProjects: List<ProjectDto> = mapper.mapCollection(projectRepository.findAll())
+        val persistedProjects: List<ProjectDto> = mapper.mapCollection(repository.findAll())
 
         return ProjectDtoList(persistedProjects)
     }
 
-    override fun findById(id: Long): Project {
-        return projectRepository.findById(id).orElseThrow {
-            log.error("Resource ${Project::class.simpleName} with id $id not found")
+    override fun find(id: Long): Project {
+        return repository.findById(id).orElseThrow {
             throw ResourceNotFoundException(Project::class)
         }
     }
 
-    override fun getById(id: Long): ProjectDto {
-        return mapper.map(findById(id))
+    override fun get(id: Long): ProjectDto {
+        return mapper.map(find(id))
     }
 
-    override fun createProject(projectDto: ProjectDto): ProjectDto {
+    override fun create(projectDto: ProjectDto): ProjectDto {
         // TODO fix this
         val transientProject: Project = mapper.map(projectDto)
         transientProject.owner = "user1"
-        val persistedProject = projectRepository.save(transientProject)
+        val persistedProject = repository.save(transientProject)
 
         return mapper.map(persistedProject)
     }
 
-    override fun updateProject(id: Long, projectDto: ProjectDto): ProjectDto {
-        val persistedProject = findById(id)
+    override fun update(id: Long, projectDto: ProjectDto): ProjectDto {
+        val persistedProject = find(id)
         val transientProject = mapper.mapChangedFields(persistedProject, projectDto)
 
-        return mapper.map(projectRepository.saveAndFlush(transientProject))
+        return mapper.map(repository.saveAndFlush(transientProject))
     }
 
-    override fun deleteById(id: Long) {
-        val persistedProject = findById(id)
+    override fun delete(id: Long) {
+        val persistedProject = find(id)
 
-        projectRepository.delete(persistedProject)
+        repository.delete(persistedProject)
     }
 }
