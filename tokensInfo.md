@@ -9,7 +9,7 @@ will be checked in the db if the user can do the action that he requested.
 
 # Main Token
 - 1 day length
-- 
+- token should be regenerated if there are 2h or less remaining
 * fields
 - sub username (identifier)
 - aud audience (client id)
@@ -31,7 +31,6 @@ will be checked in the db if the user can do the action that he requested.
 - aud audience (client id)
 - azp Authorized party 
 - first_issue_date (the date when the first refresh token was issued)
-- refresh_after (if this time has passed try to refresh the refresh token)
 - iat issued at
 - exp expiration date
 - iss issuer
