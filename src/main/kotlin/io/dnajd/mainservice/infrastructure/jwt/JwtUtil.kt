@@ -1,10 +1,10 @@
 package io.dnajd.mainservice.infrastructure.jwt
 
+import io.dnajd.mainservice.domain.token.JwtUserTokenHolder
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
-import org.springframework.security.core.userdetails.UserDetails
 import java.security.Key
 import java.util.*
 
@@ -13,36 +13,52 @@ object JwtUtil {
     private const val secret =
         "KUeiSYMzwk/I7E2p8SBSmhSnBVfP56iimMGM6J5yJLAdAtf3sN4MmC7a7fxMnXU2ahFG1Aaq+38tuwOANLbVXw=="
     private const val accessExpirationMillis = 24 * 60 * 60 * 1000L // 1 day
-    private const val refreshExpirationMillis = 180 * 24 * 60 * 60 * 1000L // 180 days
-    private const val issuer = "d-najd.bugtracker"
+    private const val refreshExpirationMillis = 30 * 24 * 60 * 60 * 1000L // 30 days
+    private const val refreshMaxExpirationMillis = 365 * 24 * 60 * 60 * 1000L // 365 days
+    private const val issuer = "d-najd.bugtracker.backend"
+    private const val audience = "d-najd.bugtracker.android"
 
-    fun validateAccessToken(token: String, userDetails: UserDetails): Boolean {
-        return (validateToken(token, userDetails) && getTokenType(token) == "access")
+    private const val firstIssueDateField = "first_issue_date"
+
+    private const val tokenType = "token_type"
+    private const val tokenTypeAccess = "access"
+    private const val tokenTypeRefresh = "access"
+
+    fun generateUserTokens(username: String): JwtUserTokenHolder {
+        return JwtUserTokenHolder(
+            generateAccessToken(username),
+            generateRefreshToken(username),
+        )
     }
 
-    fun validateRefreshToken(token: String, userDetails: UserDetails): Boolean {
-        return (validateToken(token, userDetails) && getTokenType(token) == "refresh")
+    fun validateAccessToken(token: String, username: String): Boolean {
+        return (validateToken(token, username) && getTokenType(token) == tokenTypeAccess)
     }
 
-    fun generateAccessToken(userDetails: UserDetails): String {
-        val claims: Map<String, Any> = mapOf(Pair("token_type", "access"))
-        return doGenerateToken(userDetails.username, accessExpirationMillis, claims)
+    fun validateRefreshToken(token: String, username: String): Boolean {
+        return (validateToken(token, username) && getTokenType(token) == tokenTypeRefresh)
     }
 
-    fun generateRefreshToken(userDetails: UserDetails): String {
-        val claims: Map<String, Any> = mapOf(Pair("token_type", "refresh"))
-        return doGenerateToken(userDetails.username, refreshExpirationMillis, claims)
+    fun generateAccessToken(username: String): String {
+        val claims: Map<String, Any> = mapOf(Pair(tokenType, tokenTypeAccess))
+        return doGenerateToken(username, accessExpirationMillis, claims)
     }
 
-    /*
-    fun canTokenBeRefreshed(token: String): Boolean {
-        return (!isTokenExpired(token) || ignoreTokenExpiration(token))
+    fun generateRefreshToken(username: String): String {
+        val claims: Map<String, Any> = mapOf(
+            Pair(tokenType, tokenTypeRefresh),
+            Pair(firstIssueDateField, Date(System.currentTimeMillis()))
+        )
+        return doGenerateToken(username, refreshExpirationMillis, claims)
     }
-     */
 
-    private fun validateToken(token: String, userDetails: UserDetails): Boolean {
-        val username = getUsernameFromToken(token)
-        return (username == userDetails.username && !isTokenExpired(token))
+    private fun validateToken(token: String, username: String): Boolean {
+        val tokenUsername = getUsernameFromToken(token)
+        return (tokenUsername == username &&
+                !isTokenExpired(token) &&
+                isAudienceCorrect(token) &&
+                isIssuerCorrect(issuer)
+                )
     }
 
     private fun getSigningKey(): Key {
@@ -50,10 +66,16 @@ object JwtUtil {
         return Keys.hmacShaKeyFor(keyBytes)
     }
 
-    private fun doGenerateToken(subject: String, expirationMillis: Long, claims: Map<String, Any> = emptyMap(), headerParams: Map<String, Any> = emptyMap()): String {
+    private fun doGenerateToken(
+        subject: String,
+        expirationMillis: Long,
+        claims: Map<String, Any> = emptyMap(),
+        headerParams: Map<String, Any> = emptyMap()
+    ): String {
         return Jwts
             .builder()
             .setIssuer(issuer)
+            .setAudience(audience)
             .setClaims(claims)
             .setHeaderParams(headerParams)
             .setSubject(subject)
@@ -68,7 +90,7 @@ object JwtUtil {
     }
 
     private fun getTokenType(token: String): String {
-        return getClaimFromToken(token) { it["token_type"] }.toString()
+        return getClaimFromToken(token) { it[tokenType] }.toString()
     }
 
     private fun getExpirationDateFromToken(token: String): Date {
@@ -80,9 +102,12 @@ object JwtUtil {
         return expiration.before(Date())
     }
 
-    private fun ignoreTokenExpiration(token: String): Boolean {
-        // here you specify tokens, for that the expiration is ignored
-        return false
+    private fun isAudienceCorrect(token: String): Boolean {
+        return getClaimFromToken(token) { "aud" } == audience
+    }
+
+    private fun isIssuerCorrect(token: String): Boolean {
+        return getClaimFromToken(token) { "iss" } == issuer
     }
 
     private fun <T> getClaimFromToken(token: String, claimsResolver: (Claims) -> T): T {

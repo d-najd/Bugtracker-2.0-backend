@@ -26,7 +26,7 @@ class SecurityConfiguration(
             .cors { cors -> cors.disable() }
             .csrf { csrf -> csrf.disable() }
             .authorizeHttpRequests { auth ->
-                auth.anyRequest().permitAll()
+                auth.anyRequest().authenticated()
             }.oauth2ResourceServer { oauth2 -> oauth2.jwt { decoder() } }.build()
     }
 

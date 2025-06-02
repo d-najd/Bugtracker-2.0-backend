@@ -7,5 +7,12 @@ import java.util.*
 
 @Repository
 interface UserRepository : EntityGraphJpaRepository<User, String> {
+
     fun findByUsername(username: String): Optional<User>
+
+    fun existsByGmail(gmail: String): Boolean
+
+    fun findByGmail(gmail: String): Optional<User>
+
+    fun existsByUsername(username: String): Boolean
 }
