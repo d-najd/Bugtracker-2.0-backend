@@ -14,8 +14,8 @@ class ProjectController(
     private val service: ProjectService,
 ) {
     @GetMapping("/testing/findAll")
-    fun findAll(): List<Project> {
-        return service.findAll()
+    fun findAllTesting(): List<Project> {
+        return service.findAllTesting()
     }
 
     @GetMapping("/username/{username}")

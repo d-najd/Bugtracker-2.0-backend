@@ -6,17 +6,9 @@ import io.dnajd.mainservice.domain.table_issue.TableIssueDtoList
 import org.springframework.web.bind.annotation.PathVariable
 
 interface TableIssueService {
-    fun findAll(): List<TableIssue>
+    fun findAllTesting(): List<TableIssue>
 
     fun getAllByTableId(tableId: Long, includeChildIssues: Boolean = false): TableIssueDtoList
-
-    fun findById(
-        id: Long,
-        includeChildIssues: Boolean = false,
-        includeAssigned: Boolean = false,
-        includeComments: Boolean = false,
-        includeLabels: Boolean = false
-    ): TableIssue
 
     fun get(
         id: Long,

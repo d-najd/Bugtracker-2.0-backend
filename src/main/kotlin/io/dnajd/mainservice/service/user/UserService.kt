@@ -5,7 +5,7 @@ import io.dnajd.mainservice.domain.user.UserDto
 import java.util.*
 
 interface UserService {
-    fun findAll(): List<User>
+    fun findAllTesting(): List<User>
 
     fun findByUsername(username: String): User
 

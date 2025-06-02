@@ -18,6 +18,7 @@ class AuthController(
     fun googleSignIn(
         oauthToken: JwtAuthenticationToken
     ): ResponseEntity<Any> {
+        /*
         val gmail = oauthToken.token.getClaimAsString("email")
         val user = userService.findByGmail(gmail)
         if (user.isPresent) {
@@ -28,6 +29,7 @@ class AuthController(
 
         // user doesn't exist, prompt to choose username
         return ResponseEntity.status(204).build()
+         */
     }
 
     @PostMapping
@@ -36,8 +38,10 @@ class AuthController(
         oauthToken: JwtAuthenticationToken,
         @RequestBody userInfo: CreateUserDto
     ): ResponseEntity<Any> {
+        /*
         val gmail = oauthToken.token.getClaimAsString("email")
         val username = userInfo.username
+
 
         if (userService.existsByGmail(gmail)) {
             // User already registered with gmail? something is wrong.
@@ -53,5 +57,6 @@ class AuthController(
         val tokenHolder = JwtUtil.generateUserTokens(username)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(tokenHolder)
+         */
     }
 }

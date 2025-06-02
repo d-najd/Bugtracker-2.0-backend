@@ -4,7 +4,6 @@ import dev.krud.shapeshift.ShapeShift
 import io.dnajd.mainservice.domain.table_issue.TableIssue
 import io.dnajd.mainservice.domain.table_issue.TableIssueDto
 import io.dnajd.mainservice.domain.table_issue.TableIssueDtoList
-import io.dnajd.mainservice.infrastructure.exception.ResourceNotFoundException
 import io.dnajd.mainservice.infrastructure.mapper.mapChangedFields
 import io.dnajd.mainservice.repository.TableIssueRepository
 import jakarta.transaction.Transactional
@@ -16,7 +15,7 @@ class TableIssueServiceImpl(
     private val repository: TableIssueRepository,
     private val mapper: ShapeShift,
 ) : TableIssueService {
-    override fun findAll(): List<TableIssue> {
+    override fun findAllTesting(): List<TableIssue> {
         return repository.findAll()
     }
 
@@ -26,26 +25,6 @@ class TableIssueServiceImpl(
         return TableIssueDtoList(mapper.mapCollection(persistedIssues))
     }
 
-    override fun findById(
-        id: Long,
-        includeChildIssues: Boolean,
-        includeAssigned: Boolean,
-        includeComments: Boolean,
-        includeLabels: Boolean
-    ): TableIssue {
-        return repository.findById(
-            id,
-            TableIssue.entityGraph(
-                includeChildIssues,
-                includeAssigned,
-                includeComments,
-                includeLabels
-            )
-        ).orElseThrow {
-            throw ResourceNotFoundException(TableIssue::class)
-        }
-    }
-
     override fun get(
         id: Long,
         includeChildIssues: Boolean,
@@ -53,12 +32,21 @@ class TableIssueServiceImpl(
         includeComments: Boolean,
         includeLabels: Boolean
     ): TableIssueDto {
-        return mapper.map(findById(id, includeChildIssues, includeAssigned, includeComments, includeLabels))
+        val entity = repository.findById(
+            id,
+            TableIssue.entityGraph(
+                includeChildIssues,
+                includeAssigned,
+                includeComments,
+                includeLabels
+            )
+        )
+        return mapper.map(entity)
     }
 
     override fun issuesBelongToSameTable(fId: Long, sId: Long): Boolean {
-        val firstIssue = findById(fId)
-        val secondIssue = findById(sId)
+        val firstIssue = repository.getReferenceById(fId)
+        val secondIssue = repository.getReferenceById(sId)
 
         return firstIssue.tableId == secondIssue.tableId
     }
@@ -78,7 +66,7 @@ class TableIssueServiceImpl(
     }
 
     override fun update(id: Long, dto: TableIssueDto): TableIssueDto {
-        val persistedIssue = findById(id)
+        val persistedIssue = repository.getReferenceById(id)
         val transientIssue = mapper.mapChangedFields(persistedIssue, dto)
 
         return mapper.map(repository.saveAndFlush(transientIssue))
@@ -105,7 +93,7 @@ class TableIssueServiceImpl(
             throw IllegalArgumentException("Task $id and table $tableId don't belong to the same project")
         }
 
-        val originalIssue = findById(id)
+        val originalIssue = repository.getReferenceById(id)
         if (originalIssue.tableId == tableId) {
             throw IllegalArgumentException("Trying to change table for a issue but putting the current table? taskId: $id tableId: $tableId")
         }
@@ -127,13 +115,12 @@ class TableIssueServiceImpl(
             throw IllegalArgumentException("Trying to set parent issue to task that doesn't belong to the same project? id: $id, parentId $parentIssueId")
         }
 
-        val persistedParentIssue = findById(parentIssueId)
+        val persistedParentIssue = repository.getReferenceById(parentIssueId)
         if (persistedParentIssue.parentIssueId != null) {
-            val errorText = "Parent issue must not have its own parent issue. id: $id, parentId: $parentIssueId"
             throw IllegalArgumentException("Parent issue must not have its own parent issue. id: $id, parentId: $parentIssueId")
         }
 
-        val originalIssue = findById(id)
+        val originalIssue = repository.getReferenceById(id)
         val transientIssue = originalIssue.copy(
             parentIssueId = parentIssueId
         )
@@ -142,7 +129,7 @@ class TableIssueServiceImpl(
     }
 
     override fun delete(id: Long) {
-        val persistedTable = findById(id)
+        val persistedTable = repository.getReferenceById(id)
 
         repository.delete(persistedTable)
         repository.moveToLeftAfter(persistedTable.tableId, persistedTable.position)

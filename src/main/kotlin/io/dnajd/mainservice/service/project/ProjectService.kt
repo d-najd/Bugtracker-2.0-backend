@@ -3,11 +3,9 @@ package io.dnajd.mainservice.service.project
 import io.dnajd.mainservice.domain.project.*
 
 interface ProjectService {
-    fun findAll(): List<Project>
+    fun findAllTesting(): List<Project>
 
     fun getAllByUsername(username: String): ProjectDtoList
-
-    fun find(id: Long): Project
 
     fun get(id: Long): ProjectDto
 

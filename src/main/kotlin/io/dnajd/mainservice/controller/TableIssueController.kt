@@ -14,8 +14,8 @@ class TableIssueController(
     private val issueService: TableIssueService
 ) {
     @GetMapping("/testing/findAll")
-    fun findAll(): List<TableIssue> {
-        return issueService.findAll()
+    fun findAllTesting(): List<TableIssue> {
+        return issueService.findAllTesting()
     }
 
     @GetMapping("/tableId/{tableId}")

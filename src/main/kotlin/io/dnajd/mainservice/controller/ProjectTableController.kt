@@ -14,10 +14,10 @@ class ProjectTableController(
     private val service: ProjectTableService
 ) {
     @GetMapping("/testing/findAll")
-    fun findAll(
+    fun findAllTesting(
         @RequestParam includeIssues: Boolean = false,
     ): List<ProjectTable> {
-        return service.findAll(includeIssues)
+        return service.findAllTesting(includeIssues)
     }
 
     @GetMapping("/projectId/{projectId}")

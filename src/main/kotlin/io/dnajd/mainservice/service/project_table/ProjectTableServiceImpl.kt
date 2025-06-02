@@ -4,7 +4,6 @@ import dev.krud.shapeshift.ShapeShift
 import io.dnajd.mainservice.domain.project_table.ProjectTable
 import io.dnajd.mainservice.domain.project_table.ProjectTableDto
 import io.dnajd.mainservice.domain.project_table.ProjectTableDtoList
-import io.dnajd.mainservice.infrastructure.exception.ResourceNotFoundException
 import io.dnajd.mainservice.infrastructure.mapper.mapChangedFields
 import io.dnajd.mainservice.repository.ProjectTableRepository
 import jakarta.transaction.Transactional
@@ -16,7 +15,7 @@ class ProjectTableServiceImpl(
     private val repository: ProjectTableRepository,
     private val mapper: ShapeShift,
 ) : ProjectTableService {
-    override fun findAll(includeIssues: Boolean): List<ProjectTable> {
+    override fun findAllTesting(includeIssues: Boolean): List<ProjectTable> {
         return repository.findAll(ProjectTable.entityGraph(includeIssues = includeIssues))
     }
 
@@ -28,14 +27,8 @@ class ProjectTableServiceImpl(
         return ProjectTableDtoList(mapper.mapCollection(persistedTables))
     }
 
-    override fun find(id: Long, includeIssues: Boolean): ProjectTable {
-        return repository.findById(id, ProjectTable.entityGraph(includeIssues = includeIssues)).orElseThrow {
-            throw ResourceNotFoundException(ProjectTable::class)
-        }
-    }
-
     override fun get(id: Long, includeIssues: Boolean): ProjectTableDto {
-        val persistedTable = find(id, includeIssues)
+        val persistedTable = repository.getReferenceById(id, ProjectTable.entityGraph(includeIssues = includeIssues))
 
         return mapper.map(persistedTable)
     }
@@ -57,15 +50,15 @@ class ProjectTableServiceImpl(
     override fun update(id: Long, dto: ProjectTableDto): ProjectTableDto {
         dto.issues = null
 
-        val persistedTable = find(id, includeIssues = true)
+        val persistedTable = repository.getReferenceById(id, ProjectTable.entityGraph(includeIssues = true))
         val transientTable = mapper.mapChangedFields(persistedTable, dto)
 
         return mapper.map(repository.saveAndFlush(transientTable))
     }
 
     override fun swapTablePositions(fId: Long, sId: Long) {
-        val firstTable = find(fId)
-        val secondTable = find(sId)
+        val firstTable = repository.getReferenceById(fId)
+        val secondTable = repository.getReferenceById(sId)
 
         if (firstTable.projectId != secondTable.projectId) {
             throw IllegalArgumentException("Tables don't belong to the same project $fId $sId")
@@ -75,7 +68,7 @@ class ProjectTableServiceImpl(
     }
 
     override fun delete(id: Long) {
-        val persistedTable = find(id)
+        val persistedTable = repository.getReferenceById(id)
 
         repository.delete(persistedTable)
         repository.moveToLeftAfter(persistedTable.projectId, persistedTable.position)

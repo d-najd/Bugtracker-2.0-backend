@@ -15,7 +15,7 @@ class UserServiceImpl(
     private val repository: UserRepository,
     private val mapper: ShapeShift,
 ) : UserService {
-    override fun findAll(): List<User> {
+    override fun findAllTesting(): List<User> {
         return repository.findAll()
     }
 

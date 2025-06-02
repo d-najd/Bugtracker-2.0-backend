@@ -13,7 +13,7 @@ class ProjectAuthorityServiceImpl(
     private val repository: ProjectAuthorityRepository,
     private val mapper: ShapeShift
 ): ProjectAuthorityService {
-    override fun findAll(): List<ProjectAuthority> {
+    override fun findAllTesting(): List<ProjectAuthority> {
         return repository.findAll()
     }
 

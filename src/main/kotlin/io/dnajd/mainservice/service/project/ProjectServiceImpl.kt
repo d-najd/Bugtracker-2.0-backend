@@ -1,8 +1,9 @@
 package io.dnajd.mainservice.service.project
 
 import dev.krud.shapeshift.ShapeShift
-import io.dnajd.mainservice.domain.project.*
-import io.dnajd.mainservice.infrastructure.exception.ResourceNotFoundException
+import io.dnajd.mainservice.domain.project.Project
+import io.dnajd.mainservice.domain.project.ProjectDto
+import io.dnajd.mainservice.domain.project.ProjectDtoList
 import io.dnajd.mainservice.infrastructure.mapper.mapChangedFields
 import io.dnajd.mainservice.repository.ProjectRepository
 import jakarta.transaction.Transactional
@@ -14,12 +15,12 @@ import org.springframework.stereotype.Service
 class ProjectServiceImpl(
     private val repository: ProjectRepository,
     private val mapper: ShapeShift,
-): ProjectService {
+) : ProjectService {
     companion object {
         private val log = LoggerFactory.getLogger(ProjectServiceImpl::class.java)
     }
 
-    override fun findAll(): List<Project> {
+    override fun findAllTesting(): List<Project> {
         return repository.findAll()
     }
 
@@ -31,14 +32,8 @@ class ProjectServiceImpl(
         return ProjectDtoList(persistedProjects)
     }
 
-    override fun find(id: Long): Project {
-        return repository.findById(id).orElseThrow {
-            throw ResourceNotFoundException(Project::class)
-        }
-    }
-
     override fun get(id: Long): ProjectDto {
-        return mapper.map(find(id))
+        return mapper.map(repository.getReferenceById(id))
     }
 
     override fun create(projectDto: ProjectDto): ProjectDto {
@@ -51,14 +46,14 @@ class ProjectServiceImpl(
     }
 
     override fun update(id: Long, projectDto: ProjectDto): ProjectDto {
-        val persistedProject = find(id)
+        val persistedProject = repository.getReferenceById(id)
         val transientProject = mapper.mapChangedFields(persistedProject, projectDto)
 
         return mapper.map(repository.saveAndFlush(transientProject))
     }
 
     override fun delete(id: Long) {
-        val persistedProject = find(id)
+        val persistedProject = repository.getReferenceById(id)
 
         repository.delete(persistedProject)
     }

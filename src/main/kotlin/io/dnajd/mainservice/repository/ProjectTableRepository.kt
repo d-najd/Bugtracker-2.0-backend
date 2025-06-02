@@ -7,13 +7,14 @@ import io.dnajd.mainservice.domain.project_table.ProjectTable
 import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.jpa.repository.query.Procedure
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
 @Repository
 interface ProjectTableRepository : EntityGraphJpaRepository<ProjectTable, Long> {
     override fun findAll(entityGraph: EntityGraph): MutableList<ProjectTable>
+
+    fun getReferenceById(id: Long, entityGraph: EntityGraph): ProjectTable
 
     fun findAllByProjectId(projectId: Long, entityGraph: EntityGraph = EntityGraph.NOOP): MutableList<ProjectTable>
 
