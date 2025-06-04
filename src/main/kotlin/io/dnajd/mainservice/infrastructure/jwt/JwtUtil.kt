@@ -85,7 +85,7 @@ object JwtUtil {
             .compact()
     }
 
-    private fun getUsernameFromToken(token: String): String {
+    fun getUsernameFromToken(token: String): String {
         return getClaimFromToken(token) { it.subject }
     }
 

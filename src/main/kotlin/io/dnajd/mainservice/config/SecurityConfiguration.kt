@@ -3,14 +3,21 @@ package io.dnajd.mainservice.config
 import io.dnajd.mainservice.infrastructure.jwt.validators.JwtAudienceValidator
 import io.dnajd.mainservice.infrastructure.jwt.validators.JwtAuthorizedPartyValidator
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.annotation.Order
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator
 import org.springframework.security.oauth2.core.OAuth2TokenValidator
 import org.springframework.security.oauth2.jwt.*
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.filter.DelegatingFilterProxy
+import org.springframework.web.filter.OncePerRequestFilter
+
 
 @Configuration
 @EnableWebSecurity
@@ -18,16 +25,48 @@ class SecurityConfiguration(
     @Value("\${spring.security.oauth2.resourceserver.jwt.issuer-uri}") private val issuerUrl: String,
     @Value("\${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}") private val jwkSetUrl: String,
     @Value("\${spring.security.oauth2.resourceserver.jwt.audiences}") private val audiences: List<String>,
-    @Value("\${spring.security.oauth2.client.registration.google.client-id}") private val authorizedParty: String
+    @Value("\${spring.security.oauth2.client.registration.google.client-id}") private val authorizedParty: String,
+    private val jwtRequestFilter: JwtRequestFilter
 ) {
     @Bean
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    @Order(1)
+    fun oauthSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
+        return http
+            .cors { cors -> cors.disable() }
+            .csrf { csrf -> csrf.disable() }
+            .securityMatcher("/api/auth/**" )
+            .authorizeHttpRequests { auth ->
+                auth.anyRequest().authenticated()
+            }.oauth2ResourceServer { oauth2 ->
+                oauth2.jwt { decoder() }
+            }
+            .sessionManagement { session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            }
+            .build()
+    }
+
+
+    @Bean
+    @Order(2)
+    fun jwtSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
             .cors { cors -> cors.disable() }
             .csrf { csrf -> csrf.disable() }
             .authorizeHttpRequests { auth ->
-                auth.anyRequest().permitAll()
-            }.oauth2ResourceServer { oauth2 -> oauth2.jwt { decoder() } }.build()
+                auth.requestMatchers("api/auth/**").permitAll()
+                    .anyRequest().authenticated()
+            }
+            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .build()
+    }
+
+    // prevent spring from automatically registering filters
+    @Bean
+    fun registration(): FilterRegistrationBean<*> {
+        val registration: FilterRegistrationBean<*> = FilterRegistrationBean<OncePerRequestFilter>(jwtRequestFilter)
+        registration.isEnabled = false
+        return registration
     }
 
     fun decoder(): JwtDecoder {
