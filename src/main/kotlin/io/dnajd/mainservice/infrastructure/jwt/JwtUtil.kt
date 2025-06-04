@@ -54,11 +54,14 @@ object JwtUtil {
 
     private fun validateToken(token: String, username: String): Boolean {
         val tokenUsername = getUsernameFromToken(token)
+        val test = !isTokenExpired(token)
+        val test1 = isAudienceCorrect(token)
+        val test2 = isIssuerCorrect(token)
         return (tokenUsername == username &&
                 !isTokenExpired(token) &&
                 isAudienceCorrect(token) &&
-                isIssuerCorrect(issuer)
-                )
+                isIssuerCorrect(token)
+        )
     }
 
     private fun getSigningKey(): Key {
@@ -74,9 +77,9 @@ object JwtUtil {
     ): String {
         return Jwts
             .builder()
+            .setClaims(claims)
             .setIssuer(issuer)
             .setAudience(audience)
-            .setClaims(claims)
             .setHeaderParams(headerParams)
             .setSubject(subject)
             .setIssuedAt(Date(System.currentTimeMillis()))
@@ -103,11 +106,11 @@ object JwtUtil {
     }
 
     private fun isAudienceCorrect(token: String): Boolean {
-        return getClaimFromToken(token) { "aud" } == audience
+        return getClaimFromToken(token) { it.audience } == audience
     }
 
     private fun isIssuerCorrect(token: String): Boolean {
-        return getClaimFromToken(token) { "iss" } == issuer
+        return getClaimFromToken(token) { it.issuer } == issuer
     }
 
     private fun <T> getClaimFromToken(token: String, claimsResolver: (Claims) -> T): T {

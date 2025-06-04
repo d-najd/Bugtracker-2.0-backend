@@ -38,7 +38,7 @@ public class JwtRequestFilter(
 
             if (JwtUtil.validateAccessToken(jwtToken, userDetails.username)) {
                 val usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.authorities
+                    userDetails, null, emptyList()
                 )
                 usernamePasswordAuthenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
 
