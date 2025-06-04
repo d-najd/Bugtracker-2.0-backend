@@ -6,7 +6,9 @@ import io.dnajd.mainservice.domain.project.ProjectDtoList
 import io.dnajd.mainservice.infrastructure.Endpoints
 import io.dnajd.mainservice.service.project.ProjectService
 import org.springframework.http.HttpStatus
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
+import kotlin.reflect.jvm.jvmName
 
 @RestController
 @RequestMapping(Endpoints.PROJECT)
@@ -24,6 +26,7 @@ class ProjectController(
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasPermission(#id, 'Project', 'project_view')")
     fun get(@PathVariable id: Long): ProjectDto {
         return service.get(id)
     }
