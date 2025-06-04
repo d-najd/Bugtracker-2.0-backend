@@ -11,4 +11,10 @@ import java.util.*
 @Repository
 interface ProjectRepository : JpaRepository<Project, Long> {
     override fun findById(id: Long): Optional<Project>
+
+    @Query("" +
+            "SELECT p FROM ProjectAuthority as pa " +
+            "   JOIN Project AS p ON p.id = pa.projectId" +
+            "   WHERE pa.username = :username")
+    fun getAllByUsername(username: String): MutableList<Project>
 }

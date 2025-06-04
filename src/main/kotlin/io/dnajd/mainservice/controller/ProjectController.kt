@@ -7,6 +7,8 @@ import io.dnajd.mainservice.infrastructure.Endpoints
 import io.dnajd.mainservice.service.project.ProjectService
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
 import kotlin.reflect.jvm.jvmName
 
@@ -20,9 +22,11 @@ class ProjectController(
         return service.findAllTesting()
     }
 
-    @GetMapping("/username/{username}")
-    fun getAllByUsername(@PathVariable username: String): ProjectDtoList {
-        return service.getAllByUsername(username)
+    @GetMapping("/allByUsername")
+    fun getAllByUsername(
+        @AuthenticationPrincipal userDetails: UserDetails
+    ): ProjectDtoList {
+        return service.getAllByUsername(userDetails.username)
     }
 
     @GetMapping("/{id}")
