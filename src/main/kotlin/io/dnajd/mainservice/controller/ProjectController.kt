@@ -1,5 +1,8 @@
 package io.dnajd.mainservice.controller
 
+import io.dnajd.mainservice.config.CustomPreAuthorize
+import io.dnajd.mainservice.config.PreAuthorizePermission
+import io.dnajd.mainservice.config.PreAuthorizeType
 import io.dnajd.mainservice.domain.project.Project
 import io.dnajd.mainservice.domain.project.ProjectDto
 import io.dnajd.mainservice.domain.project.ProjectDtoList
@@ -30,7 +33,7 @@ class ProjectController(
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasPermission(#id, 'Project', 'project_view')")
+    @CustomPreAuthorize("#id", PreAuthorizeType.Project, PreAuthorizePermission.View)
     fun get(@PathVariable id: Long): ProjectDto {
         return service.get(id)
     }
@@ -46,7 +49,7 @@ class ProjectController(
 
     @PutMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    @PreAuthorize("hasPermission(#id, 'Project', 'project_owner')")
+    @CustomPreAuthorize("#id", PreAuthorizeType.Project, PreAuthorizePermission.Owner)
     fun update(
         @PathVariable id: Long,
         @RequestBody projectDto: ProjectDto
@@ -56,7 +59,7 @@ class ProjectController(
 
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasPermission(#id, 'Project', 'project_owner')")
+    @CustomPreAuthorize("#id", PreAuthorizeType.Project, PreAuthorizePermission.Owner)
     fun delete(@PathVariable id: Long) {
         service.delete(id)
     }

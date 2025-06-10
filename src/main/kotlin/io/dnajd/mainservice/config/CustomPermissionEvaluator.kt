@@ -1,6 +1,7 @@
 package io.dnajd.mainservice.config
 
 import io.dnajd.mainservice.domain.project.ProjectDto
+import io.dnajd.mainservice.domain.project_table.ProjectTableDto
 import io.dnajd.mainservice.repository.ProjectAuthorityRepository
 import org.springframework.security.access.PermissionEvaluator
 import org.springframework.security.core.Authentication
@@ -12,18 +13,6 @@ import java.io.Serializable
 class CustomPermissionEvaluator(
     private val projectAuthorityRepository: ProjectAuthorityRepository
 ) : PermissionEvaluator {
-    object Objects {
-        val PROJECT = "Project"
-    }
-
-    object Authority {
-        val VIEW = "project_view"
-        val CREATE = "project_create"
-        val DELETE = "project_delete"
-        val EDIT = "project_edit"
-        val MANAGE = "project_manage"
-        val OWNER = "project_owner"
-    }
 
     override fun hasPermission(
         authentication: Authentication,
@@ -31,10 +20,13 @@ class CustomPermissionEvaluator(
         permission: Any
     ): Boolean {
         val userDetails = authentication.principal as UserDetails
-
-        when (targetDomainObject) {
+        return when(targetDomainObject) {
             is ProjectDto -> {
-                return hasProjectPermission(userDetails, targetDomainObject.id!!, permission)
+                hasProjectPermission(userDetails, targetDomainObject.id!!, permission)
+            }
+
+            is ProjectTableDto -> {
+                hasProjectTablePermission(userDetails, targetDomainObject.id!!, permission)
             }
 
             else -> {
@@ -50,10 +42,13 @@ class CustomPermissionEvaluator(
         permission: Any
     ): Boolean {
         val userDetails = authentication.principal as UserDetails
+        return when (targetType) {
+            PreAuthorizeType.Project.value -> {
+                hasProjectPermission(userDetails, targetId as Long, permission)
+            }
 
-        when (targetType) {
-            Objects.PROJECT -> {
-                return hasProjectPermission(userDetails, targetId as Long, permission)
+            PreAuthorizeType.ProjectTable.value -> {
+                hasProjectTablePermission(userDetails, targetId as Long, permission)
             }
 
             else -> {
@@ -64,6 +59,11 @@ class CustomPermissionEvaluator(
 
     fun hasProjectPermission(userDetails: UserDetails, projectId: Long, permission: Any): Boolean {
         return projectAuthorityRepository.findByUsernameAndProjectId(userDetails.username, projectId)
-            .any { o -> o.authority == permission || o.authority == Authority.OWNER }
+            .any { o -> o.authority == permission || o.authority == PreAuthorizePermission.Owner.value }
+    }
+
+    fun hasProjectTablePermission(userDetails: UserDetails, projectTableId: Long, permission: Any): Boolean {
+        return projectAuthorityRepository.findByUsernameAndProjectTableId(userDetails.username, projectTableId)
+            .any { o -> o.authority == permission || o.authority == PreAuthorizePermission.Owner.value }
     }
 }

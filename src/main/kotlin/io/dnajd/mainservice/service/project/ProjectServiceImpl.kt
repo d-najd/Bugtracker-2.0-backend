@@ -2,6 +2,7 @@ package io.dnajd.mainservice.service.project
 
 import dev.krud.shapeshift.ShapeShift
 import io.dnajd.mainservice.config.CustomPermissionEvaluator
+import io.dnajd.mainservice.config.PreAuthorizePermission
 import io.dnajd.mainservice.domain.project.Project
 import io.dnajd.mainservice.domain.project.ProjectDto
 import io.dnajd.mainservice.domain.project.ProjectDtoList
@@ -51,7 +52,7 @@ class ProjectServiceImpl(
         val ownerProjectAuthority = ProjectAuthority(
             username = username,
             projectId = persistedProject.id,
-            authority = CustomPermissionEvaluator.Authority.OWNER
+            authority = PreAuthorizePermission.Owner.value,
         )
         projectAuthorityRepository.saveAndFlush(ownerProjectAuthority)
 
