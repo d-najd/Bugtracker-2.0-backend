@@ -1,6 +1,6 @@
 package io.dnajd.mainservice.config
 
-import io.dnajd.mainservice.domain.project.Project
+import io.dnajd.mainservice.domain.project.ProjectDto
 import io.dnajd.mainservice.repository.ProjectAuthorityRepository
 import org.springframework.security.access.PermissionEvaluator
 import org.springframework.security.core.Authentication
@@ -12,6 +12,19 @@ import java.io.Serializable
 class CustomPermissionEvaluator(
     private val projectAuthorityRepository: ProjectAuthorityRepository
 ) : PermissionEvaluator {
+    object Objects {
+        val PROJECT = "Project"
+    }
+
+    object Authority {
+        val VIEW = "project_view"
+        val CREATE = "project_create"
+        val DELETE = "project_delete"
+        val EDIT = "project_edit"
+        val MANAGE = "project_manage"
+        val OWNER = "project_owner"
+    }
+
     override fun hasPermission(
         authentication: Authentication,
         targetDomainObject: Any,
@@ -20,8 +33,8 @@ class CustomPermissionEvaluator(
         val userDetails = authentication.principal as UserDetails
 
         when (targetDomainObject) {
-            is Project -> {
-                return hasProjectPermission(userDetails, targetDomainObject.id, permission)
+            is ProjectDto -> {
+                return hasProjectPermission(userDetails, targetDomainObject.id!!, permission)
             }
 
             else -> {
@@ -39,7 +52,7 @@ class CustomPermissionEvaluator(
         val userDetails = authentication.principal as UserDetails
 
         when (targetType) {
-            "Project" -> {
+            Objects.PROJECT -> {
                 return hasProjectPermission(userDetails, targetId as Long, permission)
             }
 
@@ -51,6 +64,6 @@ class CustomPermissionEvaluator(
 
     fun hasProjectPermission(userDetails: UserDetails, projectId: Long, permission: Any): Boolean {
         return projectAuthorityRepository.findByUsernameAndProjectId(userDetails.username, projectId)
-            .any { o -> o.authority == permission }
+            .any { o -> o.authority == permission || o.authority == Authority.OWNER }
     }
 }

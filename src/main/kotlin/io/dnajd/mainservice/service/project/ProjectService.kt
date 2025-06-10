@@ -9,7 +9,7 @@ interface ProjectService {
 
     fun get(id: Long): ProjectDto
 
-    fun create(projectDto: ProjectDto): ProjectDto
+    fun create(username: String, projectDto: ProjectDto): ProjectDto
 
     fun update(id: Long, projectDto: ProjectDto): ProjectDto
 

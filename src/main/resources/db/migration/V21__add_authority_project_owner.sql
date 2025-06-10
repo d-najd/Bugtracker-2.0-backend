@@ -1,0 +1,1 @@
+INSERT INTO user_authority_type VALUES ('project_owner');

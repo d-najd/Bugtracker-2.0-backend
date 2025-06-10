@@ -37,12 +37,16 @@ class ProjectController(
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    fun create(@RequestBody projectDto: ProjectDto): ProjectDto {
-        return service.create(projectDto)
+    fun create(
+        @AuthenticationPrincipal userDetails: UserDetails,
+        @RequestBody projectDto: ProjectDto
+    ): ProjectDto {
+        return service.create(userDetails.username, projectDto)
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasPermission(#id, 'Project', 'project_owner')")
     fun update(
         @PathVariable id: Long,
         @RequestBody projectDto: ProjectDto
@@ -52,6 +56,7 @@ class ProjectController(
 
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasPermission(#id, 'Project', 'project_owner')")
     fun delete(@PathVariable id: Long) {
         service.delete(id)
     }
