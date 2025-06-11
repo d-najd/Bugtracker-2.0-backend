@@ -9,6 +9,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser
 import org.springframework.expression.spel.support.StandardEvaluationContext
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.access.PermissionEvaluator
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import java.io.Serializable
@@ -28,6 +29,10 @@ enum class PreAuthorizePermission(val value: String) {
     Owner("project_owner"),
 }
 
+
+/**
+ * Modified type safe variant of [PreAuthorize] hasAuthority
+ */
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.TYPE)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class CustomPreAuthorize(

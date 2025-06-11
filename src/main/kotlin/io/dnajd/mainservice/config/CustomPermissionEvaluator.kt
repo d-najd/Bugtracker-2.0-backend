@@ -9,6 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
 import java.io.Serializable
 
+/**
+ * The user by itself is not enough to figure out the authority but rather we need info about which project he is trying
+ * to modify.
+ */
 @Component
 class CustomPermissionEvaluator(
     private val projectAuthorityRepository: ProjectAuthorityRepository
