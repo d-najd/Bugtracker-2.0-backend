@@ -2,6 +2,9 @@ package io.dnajd.mainservice.config
 
 import io.dnajd.mainservice.domain.project.ProjectDto
 import io.dnajd.mainservice.domain.project_table.ProjectTableDto
+import io.dnajd.mainservice.domain.table_issue.TableIssueDto
+import io.dnajd.mainservice.infrastructure.PreAuthorizePermission
+import io.dnajd.mainservice.infrastructure.PreAuthorizeType
 import io.dnajd.mainservice.repository.ProjectAuthorityRepository
 import org.springframework.security.access.PermissionEvaluator
 import org.springframework.security.core.Authentication
@@ -28,11 +31,12 @@ class CustomPermissionEvaluator(
             is ProjectDto -> {
                 hasProjectPermission(userDetails, targetDomainObject.id!!, permission)
             }
-
             is ProjectTableDto -> {
-                hasProjectTablePermission(userDetails, targetDomainObject.id!!, permission)
+                hasTablePermission(userDetails, targetDomainObject.id!!, permission)
             }
-
+            is TableIssueDto -> {
+                hasIssuePermission(userDetails, targetDomainObject.id!!, permission)
+            }
             else -> {
                 throw ClassNotFoundException(targetDomainObject::class.simpleName)
             }
@@ -50,11 +54,12 @@ class CustomPermissionEvaluator(
             PreAuthorizeType.Project.value -> {
                 hasProjectPermission(userDetails, targetId as Long, permission)
             }
-
-            PreAuthorizeType.ProjectTable.value -> {
-                hasProjectTablePermission(userDetails, targetId as Long, permission)
+            PreAuthorizeType.Table.value -> {
+                hasTablePermission(userDetails, targetId as Long, permission)
             }
-
+            PreAuthorizeType.Issue.value -> {
+                hasIssuePermission(userDetails, targetId as Long, permission)
+            }
             else -> {
                 throw ClassNotFoundException(targetType)
             }
@@ -66,8 +71,13 @@ class CustomPermissionEvaluator(
             .any { o -> o.authority == permission || o.authority == PreAuthorizePermission.Owner.value }
     }
 
-    fun hasProjectTablePermission(userDetails: UserDetails, projectTableId: Long, permission: Any): Boolean {
-        return projectAuthorityRepository.findByUsernameAndProjectTableId(userDetails.username, projectTableId)
+    fun hasTablePermission(userDetails: UserDetails, tableId: Long, permission: Any): Boolean {
+        return projectAuthorityRepository.findByUsernameAndTableId(userDetails.username, tableId)
+            .any { o -> o.authority == permission || o.authority == PreAuthorizePermission.Owner.value }
+    }
+
+    fun hasIssuePermission(userDetails: UserDetails, issueId: Long, permission: Any): Boolean {
+        return projectAuthorityRepository.findByUsernameAndIssueId(userDetails.username, issueId)
             .any { o -> o.authority == permission || o.authority == PreAuthorizePermission.Owner.value }
     }
 }

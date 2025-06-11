@@ -1,4 +1,4 @@
-package io.dnajd.mainservice.config
+package io.dnajd.mainservice.infrastructure
 
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.Aspect
@@ -17,7 +17,8 @@ import java.lang.reflect.Method
 
 enum class PreAuthorizeType(val value: String) {
     Project("Project"),
-    ProjectTable("ProjectTable"),
+    Table("ProjectTable"),
+    Issue("TableIssue"),
 }
 
 enum class PreAuthorizePermission(val value: String) {

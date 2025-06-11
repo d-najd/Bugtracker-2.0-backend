@@ -1,8 +1,7 @@
 package io.dnajd.mainservice.service.project
 
 import dev.krud.shapeshift.ShapeShift
-import io.dnajd.mainservice.config.CustomPermissionEvaluator
-import io.dnajd.mainservice.config.PreAuthorizePermission
+import io.dnajd.mainservice.infrastructure.PreAuthorizePermission
 import io.dnajd.mainservice.domain.project.Project
 import io.dnajd.mainservice.domain.project.ProjectDto
 import io.dnajd.mainservice.domain.project.ProjectDtoList

@@ -1,19 +1,17 @@
 package io.dnajd.mainservice.controller
 
-import io.dnajd.mainservice.config.CustomPreAuthorize
-import io.dnajd.mainservice.config.PreAuthorizePermission
-import io.dnajd.mainservice.config.PreAuthorizeType
+import io.dnajd.mainservice.infrastructure.CustomPreAuthorize
+import io.dnajd.mainservice.infrastructure.PreAuthorizePermission
+import io.dnajd.mainservice.infrastructure.PreAuthorizeType
 import io.dnajd.mainservice.domain.project.Project
 import io.dnajd.mainservice.domain.project.ProjectDto
 import io.dnajd.mainservice.domain.project.ProjectDtoList
 import io.dnajd.mainservice.infrastructure.Endpoints
 import io.dnajd.mainservice.service.project.ProjectService
 import org.springframework.http.HttpStatus
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
-import kotlin.reflect.jvm.jvmName
 
 @RestController
 @RequestMapping(Endpoints.PROJECT)

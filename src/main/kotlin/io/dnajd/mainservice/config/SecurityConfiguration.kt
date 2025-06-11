@@ -15,7 +15,6 @@ import org.springframework.security.oauth2.core.OAuth2TokenValidator
 import org.springframework.security.oauth2.jwt.*
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.web.filter.DelegatingFilterProxy
 import org.springframework.web.filter.OncePerRequestFilter
 
 
@@ -47,9 +46,12 @@ class SecurityConfiguration(
     }
 
 
+    /**
+     * validates access tokens
+     */
     @Bean
     @Order(2)
-    fun jwtSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    fun jwtAccessTokenSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
             .cors { cors -> cors.disable() }
             .csrf { csrf -> csrf.disable() }

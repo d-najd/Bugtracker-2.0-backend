@@ -10,8 +10,14 @@ import org.springframework.stereotype.Repository
 interface ProjectAuthorityRepository : EntityGraphJpaRepository<ProjectAuthority, ProjectAuthorityIdentity> {
     fun findByUsernameAndProjectId(username: String, projectId: Long): MutableList<ProjectAuthority>
 
-    @Query("SELECT pa FROM ProjectAuthority AS pa" +
-            " INNER JOIN ProjectTable AS pt ON pt.projectId = pa.projectId" +
-            " WHERE pa.username = :username AND pt.id = :tableId")
-    fun findByUsernameAndProjectTableId(username: String, tableId: Long): MutableList<ProjectAuthority>
+    @Query("SELECT pa FROM ProjectAuthority pa " +
+            "INNER JOIN ProjectTable pt ON pt.projectId = pa.projectId " +
+            "WHERE pa.username = :username AND pt.id = :tableId")
+    fun findByUsernameAndTableId(username: String, tableId: Long): MutableList<ProjectAuthority>
+
+    @Query("SELECT DISTINCT pa FROM TableIssue pi " +
+            "INNER JOIN ProjectTable pt ON pt.id = pi.tableId " +
+            "INNER JOIN ProjectAuthority pa ON pa.projectId = pt.projectId " +
+            "WHERE pa.username = :username AND pi.id = :issueId")
+    fun findByUsernameAndIssueId(username: String, issueId: Long): MutableList<ProjectAuthority>
 }
