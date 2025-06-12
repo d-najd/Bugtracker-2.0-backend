@@ -1,4 +1,4 @@
-package io.dnajd.mainservice.service.auth
+package io.dnajd.mainservice.service.google_auth
 
 import dev.krud.shapeshift.ShapeShift
 import io.dnajd.mainservice.domain.token.JwtUserTokenHolder
@@ -9,17 +9,15 @@ import io.dnajd.mainservice.infrastructure.exception.UserNotFoundException
 import io.dnajd.mainservice.infrastructure.jwt.JwtUtil
 import io.dnajd.mainservice.repository.UserRepository
 import jakarta.transaction.Transactional
-import org.springframework.http.ResponseEntity
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.RequestBody
 
 @Service
 @Transactional
-class AuthServiceImpl(
+class GoogleAuthServiceImpl(
     private val userRepository: UserRepository,
     private val mapper: ShapeShift,
-) : AuthService {
+) : GoogleAuthService {
     override fun googleSignIn(oauthToken: JwtAuthenticationToken): JwtUserTokenHolder {
         val gmail = oauthToken.token.getClaimAsString("email")
         val user = userRepository.findByGmail(gmail)

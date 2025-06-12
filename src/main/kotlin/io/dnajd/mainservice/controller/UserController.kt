@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 /**
- * Anything that may return tokens in any kind is in [AuthController]
+ * Anything that may return tokens in any kind is in [GoogleAuthController]
  */
 @RestController
 @RequestMapping(Endpoints.USER)

@@ -4,16 +4,19 @@ import io.dnajd.mainservice.domain.user.CreateUserDto
 import io.dnajd.mainservice.infrastructure.Endpoints
 import io.dnajd.mainservice.infrastructure.exception.UserAlreadyExistsException
 import io.dnajd.mainservice.infrastructure.exception.UserNotFoundException
-import io.dnajd.mainservice.service.auth.AuthService
+import io.dnajd.mainservice.service.google_auth.GoogleAuthService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.web.bind.annotation.*
 
+/**
+ * Controller used for Google OAuth tokens
+ */
 @RestController
 @RequestMapping(Endpoints.AUTH)
-class AuthController(
-    private val service: AuthService
+class GoogleAuthController(
+    private val service: GoogleAuthService
 ) {
     @GetMapping
     fun googleSignIn(
