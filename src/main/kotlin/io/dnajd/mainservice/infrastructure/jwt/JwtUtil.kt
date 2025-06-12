@@ -33,9 +33,15 @@ object JwtUtil {
 
     fun refreshRefreshToken(refreshToken: String): JwtTokenHolder {
         val username = getUsernameFromToken(refreshToken)
+        val firstIssueDateMilli = getFirstIssueDate(refreshToken).toInstant().epochSecond
+        val expirationDateMilli = getExpirationDateFromToken(refreshToken).toInstant().epochSecond
+
+        val maxExpirationMilli = firstIssueDateMilli + refreshMaxExpirationMillis
+        val expirationMilli = minOf(maxExpirationMilli, expirationDateMilli)
+
         return JwtTokenHolder(
             generateAccessToken(username),
-            generateRefreshToken(username, getFirstIssueDate(refreshToken))
+            generateRefreshToken(username, getFirstIssueDate(refreshToken), expirationMilli)
         )
     }
 
@@ -52,7 +58,10 @@ object JwtUtil {
     }
 
     fun validateRefreshToken(token: String, username: String): Boolean {
-        return (validateToken(token, username) && getTokenType(token) == tokenTypeRefresh)
+        val firstIssueDate = getFirstIssueDate(token)
+
+        return (validateToken(token, username) &&
+                getTokenType(token) == tokenTypeRefresh)
     }
 
     fun getUsernameFromToken(token: String): String {
@@ -66,13 +75,14 @@ object JwtUtil {
 
     private fun generateRefreshToken(
         username: String,
-        firstIssueDate: Date = Date(System.currentTimeMillis())
+        firstIssueDate: Date = Date(System.currentTimeMillis()),
+        expirationMillis: Long = refreshExpirationMillis,
     ): String {
         val claims: Map<String, Any> = mapOf(
             Pair(tokenType, tokenTypeRefresh),
             Pair(firstIssueDateField, firstIssueDate)
         )
-        return doGenerateToken(username, refreshExpirationMillis, claims)
+        return doGenerateToken(username, expirationMillis, claims)
     }
 
     private fun validateToken(token: String, username: String): Boolean {
@@ -81,7 +91,7 @@ object JwtUtil {
                 !isTokenExpired(token) &&
                 isAudienceCorrect(token) &&
                 isIssuerCorrect(token)
-        )
+                )
     }
 
     private fun getSigningKey(): Key {
