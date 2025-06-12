@@ -27,10 +27,6 @@ class ProjectServiceImpl(
         private val log = LoggerFactory.getLogger(ProjectServiceImpl::class.java)
     }
 
-    override fun findAllTesting(): List<Project> {
-        return repository.findAll()
-    }
-
     override fun getAllByUsername(username: String): ProjectDtoList {
         log.error("This is just a placeholder implementation till RBAC is implemented")
 

@@ -13,10 +13,6 @@ class ProjectAuthorityServiceImpl(
     private val repository: ProjectAuthorityRepository,
     private val mapper: ShapeShift
 ): ProjectAuthorityService {
-    override fun findAllTesting(): List<ProjectAuthority> {
-        return repository.findAll()
-    }
-
     override fun findByUsernameAndProjectId(username: String, projectId: Long): ProjectAuthorityDtoList {
         val persistedAuthorities = repository.findByUsernameAndProjectId(username, projectId)
 

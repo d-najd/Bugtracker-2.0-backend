@@ -13,19 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(Endpoints.USER)
 class UserController(
-    private val userService: UserService
+    private val service: UserService
 ) {
-    /*
-    @GetMapping("/testing/findAll")
-    fun findAll(): List<User> {
-        return userService.findAllTesting()
-    }
 
-    @GetMapping("/{username}")
-    fun getByUsername(
-        @PathVariable username: String
-    ): UserDto {
-        return userService.getByUsername(username)
-    }
-     */
 }

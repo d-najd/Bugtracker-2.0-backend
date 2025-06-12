@@ -17,13 +17,6 @@ import org.springframework.web.bind.annotation.RestController
 class ProjectAuthorityController(
     private val service: ProjectAuthorityService,
 ) {
-    /*
-    @GetMapping("/testing/findAll")
-    fun findAllTesting(): List<ProjectAuthority> {
-        return service.findAllTesting()
-    }
-     */
-
     @GetMapping("/username/{username}/projectId/{projectId}")
     @CustomPreAuthorize("#projectId", PreAuthorizeType.Project, PreAuthorizePermission.View)
     fun getByUsernameAndProjectId(

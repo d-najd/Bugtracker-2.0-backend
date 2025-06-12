@@ -7,9 +7,4 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import java.util.*
 
 interface UserService: UserDetailsService {
-    fun findAllTesting(): List<User>
-
-    fun getByUsername(username: String): UserDto
-
-    override fun loadUserByUsername(username: String): UserDetails
 }

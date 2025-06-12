@@ -14,15 +14,4 @@ class UserServiceImpl(
     private val repository: UserRepository,
     private val mapper: ShapeShift,
 ) : UserService {
-    override fun findAllTesting(): List<User> {
-        return repository.findAll()
-    }
-
-    override fun getByUsername(username: String): UserDto {
-        return mapper.map(repository.getByUsername(username))
-    }
-
-    override fun loadUserByUsername(username: String): UserDetails {
-        return repository.getByUsername(username)
-    }
 }

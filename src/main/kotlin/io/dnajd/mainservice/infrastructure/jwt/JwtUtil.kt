@@ -23,7 +23,6 @@ object JwtUtil {
     private const val tokenType = "token_type"
     private const val tokenTypeAccess = "access"
     private const val tokenTypeRefresh = "refresh"
-    private const val tokenTypeDev = "dev"
 
     fun generateUserTokens(username: String): JwtTokenHolder {
         return JwtTokenHolder(
@@ -40,16 +39,6 @@ object JwtUtil {
         )
     }
 
-    fun generateDevToken() {
-        val claims: Map<String, Any> = mapOf(
-            Pair(tokenType, tokenTypeDev),
-        )
-
-        // Use debug mode on IDE to get dev token
-        var devToken = doGenerateToken("admin", 1000L * 60 * 60 * 24 * 3650, claims)
-        devToken += " te"
-    }
-
     fun refreshAccessToken(
         username: String
     ): JwtTokenHolder {
@@ -64,10 +53,6 @@ object JwtUtil {
 
     fun validateRefreshToken(token: String, username: String): Boolean {
         return (validateToken(token, username) && getTokenType(token) == tokenTypeRefresh)
-    }
-
-    fun validateDevToken(token: String): Boolean {
-        return (validateToken(token, "admin") && getTokenType(token) == tokenTypeDev)
     }
 
     fun getUsernameFromToken(token: String): String {

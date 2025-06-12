@@ -18,13 +18,6 @@ import org.springframework.web.bind.annotation.*
 class TableIssueController(
     private val issueService: TableIssueService
 ) {
-    /*
-    @GetMapping("/testing/findAll")
-    fun findAllTesting(): List<TableIssue> {
-        return issueService.findAllTesting()
-    }
-     */
-
     @GetMapping("/tableId/{tableId}")
     @CustomPreAuthorize("#tableId", PreAuthorizeType.Table, PreAuthorizePermission.View)
     fun getAllByTableId(

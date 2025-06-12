@@ -15,10 +15,6 @@ class TableIssueServiceImpl(
     private val repository: TableIssueRepository,
     private val mapper: ShapeShift,
 ) : TableIssueService {
-    override fun findAllTesting(): List<TableIssue> {
-        return repository.findAll()
-    }
-
     override fun getAllByTableId(tableId: Long, includeChildIssues: Boolean): TableIssueDtoList {
         val persistedIssues = repository.findAllByTableId(tableId, TableIssue.entityGraph(includeChildIssues))
 

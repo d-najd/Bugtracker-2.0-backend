@@ -15,10 +15,6 @@ class ProjectTableServiceImpl(
     private val repository: ProjectTableRepository,
     private val mapper: ShapeShift,
 ) : ProjectTableService {
-    override fun findAllTesting(includeIssues: Boolean): List<ProjectTable> {
-        return repository.findAll(ProjectTable.entityGraph(includeIssues = includeIssues))
-    }
-
     override fun getAllByProjectId(projectId: Long, includeIssues: Boolean): ProjectTableDtoList {
         val persistedTables = repository.findAllByProjectId(
             projectId, ProjectTable.entityGraph(includeIssues = includeIssues)
