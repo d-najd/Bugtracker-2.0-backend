@@ -23,11 +23,38 @@ object JwtUtil {
     private const val tokenType = "token_type"
     private const val tokenTypeAccess = "access"
     private const val tokenTypeRefresh = "refresh"
+    private const val tokenTypeDev = "dev"
 
     fun generateUserTokens(username: String): JwtTokenHolder {
         return JwtTokenHolder(
             generateAccessToken(username),
             generateRefreshToken(username),
+        )
+    }
+
+    fun refreshRefreshToken(refreshToken: String): JwtTokenHolder {
+        val username = getUsernameFromToken(refreshToken)
+        return JwtTokenHolder(
+            generateAccessToken(username),
+            generateRefreshToken(username, getFirstIssueDate(refreshToken))
+        )
+    }
+
+    fun generateDevToken() {
+        val claims: Map<String, Any> = mapOf(
+            Pair(tokenType, tokenTypeDev),
+        )
+
+        // Use debug mode on IDE to get dev token
+        var devToken = doGenerateToken("admin", 1000L * 60 * 60 * 24 * 3650, claims)
+        devToken += " te"
+    }
+
+    fun refreshAccessToken(
+        username: String
+    ): JwtTokenHolder {
+        return JwtTokenHolder(
+            generateAccessToken(username)
         )
     }
 
@@ -39,15 +66,26 @@ object JwtUtil {
         return (validateToken(token, username) && getTokenType(token) == tokenTypeRefresh)
     }
 
-    fun generateAccessToken(username: String): String {
+    fun validateDevToken(token: String): Boolean {
+        return (validateToken(token, "admin") && getTokenType(token) == tokenTypeDev)
+    }
+
+    fun getUsernameFromToken(token: String): String {
+        return getClaimFromToken(token) { it.subject }
+    }
+
+    private fun generateAccessToken(username: String): String {
         val claims: Map<String, Any> = mapOf(Pair(tokenType, tokenTypeAccess))
         return doGenerateToken(username, accessExpirationMillis, claims)
     }
 
-    private fun generateRefreshToken(username: String): String {
+    private fun generateRefreshToken(
+        username: String,
+        firstIssueDate: Date = Date(System.currentTimeMillis())
+    ): String {
         val claims: Map<String, Any> = mapOf(
             Pair(tokenType, tokenTypeRefresh),
-            Pair(firstIssueDateField, Date(System.currentTimeMillis()))
+            Pair(firstIssueDateField, firstIssueDate)
         )
         return doGenerateToken(username, refreshExpirationMillis, claims)
     }
@@ -85,10 +123,6 @@ object JwtUtil {
             .compact()
     }
 
-    fun getUsernameFromToken(token: String): String {
-        return getClaimFromToken(token) { it.subject }
-    }
-
     private fun getTokenType(token: String): String {
         return getClaimFromToken(token) { it[tokenType] }.toString()
     }
@@ -108,6 +142,10 @@ object JwtUtil {
 
     private fun isIssuerCorrect(token: String): Boolean {
         return getClaimFromToken(token) { it.issuer } == issuer
+    }
+
+    private fun getFirstIssueDate(token: String): Date {
+        return getClaimFromToken(token) { it[firstIssueDateField] } as Date
     }
 
     private fun <T> getClaimFromToken(token: String, claimsResolver: (Claims) -> T): T {

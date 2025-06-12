@@ -1,7 +1,5 @@
 server.port: 8080
 
-spring.datasource.driver-class-name: com.mysql.cj.jdbc.Driver
-
 spring:
   jackson.date-format: yyyy-MM-d HH:mm:ss
   application.name: main-service
@@ -9,6 +7,7 @@ spring:
     url: jdbc:mysql://localhost:3306/bugtracker
     username: root
     password: root-password
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa.hibernate:
     ddl-auto: validate
   security:

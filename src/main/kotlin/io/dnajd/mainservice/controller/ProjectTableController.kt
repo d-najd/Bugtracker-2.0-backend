@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.*
 class ProjectTableController(
     private val service: ProjectTableService
 ) {
+    /*
     @GetMapping("/testing/findAll")
     fun findAllTesting(
         @RequestParam includeIssues: Boolean = false,
     ): List<ProjectTable> {
         return service.findAllTesting(includeIssues)
     }
+     */
 
     @GetMapping("/projectId/{projectId}")
     @CustomPreAuthorize("#projectId", PreAuthorizeType.Project, PreAuthorizePermission.View)

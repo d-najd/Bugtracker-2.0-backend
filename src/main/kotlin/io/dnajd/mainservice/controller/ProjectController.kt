@@ -1,14 +1,14 @@
 package io.dnajd.mainservice.controller
 
-import io.dnajd.mainservice.infrastructure.CustomPreAuthorize
-import io.dnajd.mainservice.infrastructure.PreAuthorizePermission
-import io.dnajd.mainservice.infrastructure.PreAuthorizeType
 import io.dnajd.mainservice.domain.project.Project
 import io.dnajd.mainservice.domain.project.ProjectDto
 import io.dnajd.mainservice.domain.project.ProjectDtoList
-import io.dnajd.mainservice.infrastructure.Endpoints
+import io.dnajd.mainservice.infrastructure.*
 import io.dnajd.mainservice.service.project.ProjectService
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpStatus
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.*
 class ProjectController(
     private val service: ProjectService,
 ) {
+    /*
     @GetMapping("/testing/findAll")
     fun findAllTesting(): List<Project> {
         return service.findAllTesting()
     }
+     */
 
     @GetMapping("/allByUsername")
     fun getAllByUsername(
