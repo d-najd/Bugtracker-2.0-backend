@@ -7,4 +7,5 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import java.util.*
 
 interface UserService: UserDetailsService {
+    override fun loadUserByUsername(username: String): UserDetails
 }
