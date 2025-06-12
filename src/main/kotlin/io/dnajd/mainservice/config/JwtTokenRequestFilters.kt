@@ -79,15 +79,9 @@ fun jwtTokenRequestFilterBase(
     tokenValidator: (String, String) -> Boolean
 ) {
     val requestTokenHeader = request.getHeader("Authorization")
-    var username: String? = null
-    var jwtToken: String? = null
 
-    if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-        jwtToken = requestTokenHeader.substring(7);
-        username = JwtUtil.getUsernameFromToken(jwtToken)
-    } else {
-        throw IllegalArgumentException("JWT Token does not begin with Bearer String")
-    }
+    val jwtToken: String = JwtUtil.extractTokenFromHeader(requestTokenHeader)
+    val username: String = JwtUtil.getUsernameFromToken(jwtToken)
 
     if (SecurityContextHolder.getContext().authentication == null) {
         val userDetails = jwtUserDetailsService.loadUserByUsername(username);
@@ -104,7 +98,7 @@ fun jwtTokenRequestFilterBase(
 
     filterChain.doFilter(request, response)
 
-    // Disabling the filter
+    // Disabling default spring enabling of all filters for all requests
     val registration = FilterRegistrationBean(oncePerRequestFilter)
     registration.isEnabled = false
 }

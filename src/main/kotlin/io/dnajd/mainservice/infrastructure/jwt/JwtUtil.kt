@@ -18,6 +18,7 @@ object JwtUtil {
     private const val issuer = "d-najd.bugtracker.backend"
     private const val audience = "d-najd.bugtracker.android"
 
+    // Field is in epoch seconds like "exp" and "iat"
     private const val firstIssueDateField = "first_issue_date"
 
     private const val tokenType = "token_type"
@@ -33,15 +34,16 @@ object JwtUtil {
 
     fun refreshRefreshToken(refreshToken: String): JwtTokenHolder {
         val username = getUsernameFromToken(refreshToken)
-        val firstIssueDateMilli = getFirstIssueDate(refreshToken).toInstant().epochSecond
-        val expirationDateMilli = getExpirationDateFromToken(refreshToken).toInstant().epochSecond
+        val firstIssueDateMilli = getFirstIssueDate(refreshToken).toInstant().toEpochMilli()
+        val expirationDateMilli = getExpirationDateFromToken(refreshToken).toInstant().toEpochMilli()
 
         val maxExpirationMilli = firstIssueDateMilli + refreshMaxExpirationMillis
         val expirationMilli = minOf(maxExpirationMilli, expirationDateMilli)
+        val subtractedExpirationMilli = expirationMilli - Date().toInstant().toEpochMilli()
 
         return JwtTokenHolder(
             generateAccessToken(username),
-            generateRefreshToken(username, getFirstIssueDate(refreshToken), expirationMilli)
+            generateRefreshToken(username, getFirstIssueDate(refreshToken), subtractedExpirationMilli)
         )
     }
 
@@ -68,11 +70,25 @@ object JwtUtil {
         return getClaimFromToken(token) { it.subject }
     }
 
+    /**
+     * extracts Bearer token from supplied Authorization header
+     */
+    fun extractTokenFromHeader(requestTokenHeader: String): String {
+        if (requestTokenHeader.startsWith("Bearer ")) {
+            return requestTokenHeader.substring(7);
+        } else {
+            throw IllegalArgumentException("JWT Token does not begin with Bearer String")
+        }
+    }
+
     private fun generateAccessToken(username: String): String {
         val claims: Map<String, Any> = mapOf(Pair(tokenType, tokenTypeAccess))
         return doGenerateToken(username, accessExpirationMillis, claims)
     }
 
+    /**
+     * @param expirationMillis how many milliseconds till expiration
+     */
     private fun generateRefreshToken(
         username: String,
         firstIssueDate: Date = Date(System.currentTimeMillis()),
@@ -80,7 +96,7 @@ object JwtUtil {
     ): String {
         val claims: Map<String, Any> = mapOf(
             Pair(tokenType, tokenTypeRefresh),
-            Pair(firstIssueDateField, firstIssueDate)
+            Pair(firstIssueDateField, firstIssueDate.toInstant().epochSecond)
         )
         return doGenerateToken(username, expirationMillis, claims)
     }
@@ -112,7 +128,7 @@ object JwtUtil {
             .setAudience(audience)
             .setHeaderParams(headerParams)
             .setSubject(subject)
-            .setIssuedAt(Date(System.currentTimeMillis()))
+            .setIssuedAt(Date())
             .setExpiration(Date(System.currentTimeMillis() + expirationMillis))
             .signWith(getSigningKey())
             .compact()
@@ -140,7 +156,8 @@ object JwtUtil {
     }
 
     private fun getFirstIssueDate(token: String): Date {
-        return getClaimFromToken(token) { it[firstIssueDateField] } as Date
+        val date = Date(getClaimFromToken(token) { it[firstIssueDateField] } as Int * 1000L)
+        return date
     }
 
     private fun <T> getClaimFromToken(token: String, claimsResolver: (Claims) -> T): T {

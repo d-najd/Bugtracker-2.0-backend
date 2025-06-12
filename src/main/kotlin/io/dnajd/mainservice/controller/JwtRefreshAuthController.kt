@@ -2,11 +2,12 @@ package io.dnajd.mainservice.controller
 
 import io.dnajd.mainservice.domain.token.JwtTokenHolder
 import io.dnajd.mainservice.infrastructure.Endpoints
+import io.dnajd.mainservice.infrastructure.jwt.JwtUtil
 import io.dnajd.mainservice.service.jwt_refresh.JwtRefreshService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -25,9 +26,8 @@ class JwtRefreshAuthController(
 
     @GetMapping("/refresh_token")
     fun refreshRefreshToken(
-        @AuthenticationPrincipal userDetails: UserDetails,
-        auth: JwtAuthenticationToken,
+        @RequestHeader("Authorization") authorizationHeader: String,
     ): JwtTokenHolder {
-        return service.refreshRefreshToken(userDetails.username, auth)
+        return service.refreshRefreshToken(JwtUtil.extractTokenFromHeader(authorizationHeader))
     }
 }

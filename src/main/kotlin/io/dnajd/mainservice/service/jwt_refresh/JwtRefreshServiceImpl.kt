@@ -5,7 +5,6 @@ import io.dnajd.mainservice.infrastructure.exception.UserNotFoundException
 import io.dnajd.mainservice.infrastructure.jwt.JwtUtil
 import io.dnajd.mainservice.repository.UserRepository
 import jakarta.transaction.Transactional
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.stereotype.Service
 
 @Service
@@ -22,12 +21,13 @@ class JwtRefreshServiceImpl(
         return JwtUtil.refreshAccessToken(username)
     }
 
-    override fun refreshRefreshToken(username: String, refreshToken: JwtAuthenticationToken): JwtTokenHolder {
+    override fun refreshRefreshToken(refreshToken: String): JwtTokenHolder {
+        val username = JwtUtil.getUsernameFromToken(refreshToken)
         val user = userRepository.findByUsername(username)
         if (user.isEmpty) {
             throw UserNotFoundException()
         }
 
-        return JwtUtil.refreshRefreshToken(refreshToken.token.tokenValue)
+        return JwtUtil.refreshRefreshToken(refreshToken)
     }
 }
