@@ -2,7 +2,10 @@ package io.dnajd.mainservice.controller
 
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthority
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityDtoList
+import io.dnajd.mainservice.infrastructure.CustomPreAuthorize
 import io.dnajd.mainservice.infrastructure.Endpoints
+import io.dnajd.mainservice.infrastructure.PreAuthorizePermission
+import io.dnajd.mainservice.infrastructure.PreAuthorizeType
 import io.dnajd.mainservice.service.project_authority.ProjectAuthorityService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -20,6 +23,7 @@ class ProjectAuthorityController(
     }
 
     @GetMapping("/username/{username}/projectId/{projectId}")
+    @CustomPreAuthorize("#projectId", PreAuthorizeType.Project, PreAuthorizePermission.View)
     fun getByUsernameAndProjectId(
         @PathVariable username: String,
         @PathVariable projectId: Long,
