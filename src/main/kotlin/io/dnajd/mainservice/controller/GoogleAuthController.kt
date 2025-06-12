@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
  * Controller used for Google OAuth tokens
  */
 @RestController
-@RequestMapping(Endpoints.AUTH)
+@RequestMapping(Endpoints.GOOGLE_AUTH)
 class GoogleAuthController(
     private val service: GoogleAuthService
 ) {

@@ -1,6 +1,6 @@
 package io.dnajd.mainservice.infrastructure.jwt
 
-import io.dnajd.mainservice.domain.token.JwtUserTokenHolder
+import io.dnajd.mainservice.domain.token.JwtTokenHolder
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.io.Decoders
@@ -22,10 +22,10 @@ object JwtUtil {
 
     private const val tokenType = "token_type"
     private const val tokenTypeAccess = "access"
-    private const val tokenTypeRefresh = "access"
+    private const val tokenTypeRefresh = "refresh"
 
-    fun generateUserTokens(username: String): JwtUserTokenHolder {
-        return JwtUserTokenHolder(
+    fun generateUserTokens(username: String): JwtTokenHolder {
+        return JwtTokenHolder(
             generateAccessToken(username),
             generateRefreshToken(username),
         )
@@ -44,7 +44,7 @@ object JwtUtil {
         return doGenerateToken(username, accessExpirationMillis, claims)
     }
 
-    fun generateRefreshToken(username: String): String {
+    private fun generateRefreshToken(username: String): String {
         val claims: Map<String, Any> = mapOf(
             Pair(tokenType, tokenTypeRefresh),
             Pair(firstIssueDateField, Date(System.currentTimeMillis()))
@@ -54,9 +54,6 @@ object JwtUtil {
 
     private fun validateToken(token: String, username: String): Boolean {
         val tokenUsername = getUsernameFromToken(token)
-        val test = !isTokenExpired(token)
-        val test1 = isAudienceCorrect(token)
-        val test2 = isIssuerCorrect(token)
         return (tokenUsername == username &&
                 !isTokenExpired(token) &&
                 isAudienceCorrect(token) &&

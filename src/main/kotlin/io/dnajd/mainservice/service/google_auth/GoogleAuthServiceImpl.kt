@@ -1,7 +1,7 @@
 package io.dnajd.mainservice.service.google_auth
 
 import dev.krud.shapeshift.ShapeShift
-import io.dnajd.mainservice.domain.token.JwtUserTokenHolder
+import io.dnajd.mainservice.domain.token.JwtTokenHolder
 import io.dnajd.mainservice.domain.user.CreateUserDto
 import io.dnajd.mainservice.domain.user.User
 import io.dnajd.mainservice.infrastructure.exception.UserAlreadyExistsException
@@ -18,7 +18,7 @@ class GoogleAuthServiceImpl(
     private val userRepository: UserRepository,
     private val mapper: ShapeShift,
 ) : GoogleAuthService {
-    override fun googleSignIn(oauthToken: JwtAuthenticationToken): JwtUserTokenHolder {
+    override fun googleSignIn(oauthToken: JwtAuthenticationToken): JwtTokenHolder {
         val gmail = oauthToken.token.getClaimAsString("email")
         val user = userRepository.findByGmail(gmail)
         if (user.isEmpty) {
@@ -31,7 +31,7 @@ class GoogleAuthServiceImpl(
     override fun googleSignUp(
         oauthToken: JwtAuthenticationToken,
         userInfo: CreateUserDto
-    ): JwtUserTokenHolder {
+    ): JwtTokenHolder {
         val gmail = oauthToken.token.getClaimAsString("email")
         val username = userInfo.username
 

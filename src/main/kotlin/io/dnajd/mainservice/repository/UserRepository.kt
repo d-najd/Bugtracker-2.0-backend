@@ -14,4 +14,6 @@ interface UserRepository : EntityGraphJpaRepository<User, String> {
     fun existsByUsername(username: String): Boolean
 
     fun getByUsername(username: String): User
+
+    fun findByUsername(gmail: String): Optional<User>
 }
