@@ -25,10 +25,10 @@ class GoogleAuthController(
         try {
             // User exists, return tokens
             val tokenHolder = service.googleSignIn(oauthToken)
-            return ResponseEntity.status(200).body(tokenHolder)
+            return ResponseEntity.ok(tokenHolder)
         } catch (e: UserNotFoundException) {
             // user doesn't exist, prompt to choose username and sign up
-            return ResponseEntity.status(204).build()
+            return ResponseEntity.status(404).build()
         }
     }
 
@@ -44,7 +44,7 @@ class GoogleAuthController(
             return ResponseEntity.status(HttpStatus.CREATED).body(tokenHolder)
         } catch (e: UserAlreadyExistsException) {
             // User with gmail or username already exists, prompt user to pick another
-            return ResponseEntity.status(403).build()
+            return ResponseEntity.status(409).build()
         }
     }
 }
