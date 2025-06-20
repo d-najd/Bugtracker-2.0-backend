@@ -107,7 +107,7 @@ object JwtUtil {
                 !isTokenExpired(token) &&
                 isAudienceCorrect(token) &&
                 isIssuerCorrect(token)
-                )
+        )
     }
 
     private fun getSigningKey(): Key {

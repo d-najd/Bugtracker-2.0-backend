@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
  * Only accepts refresh tokens
  */
 @RestController
-@RequestMapping(Endpoints.JWT_AUTH)
+@RequestMapping(Endpoints.JWT_REFRESH_AUTH)
 class JwtRefreshAuthController(
     private val service: JwtRefreshService
 ) {

@@ -3,9 +3,7 @@ package io.dnajd.mainservice.config
 import io.dnajd.mainservice.infrastructure.Endpoints
 import io.dnajd.mainservice.infrastructure.jwt.validators.JwtAudienceValidator
 import io.dnajd.mainservice.infrastructure.jwt.validators.JwtAuthorizedPartyValidator
-import io.dnajd.mainservice.service.user.UserService
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
@@ -18,7 +16,6 @@ import org.springframework.security.oauth2.core.OAuth2TokenValidator
 import org.springframework.security.oauth2.jwt.*
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.web.filter.OncePerRequestFilter
 
 
 @Configuration
@@ -61,7 +58,7 @@ class SecurityConfiguration(
         return http
             .cors { cors -> cors.disable() }
             .csrf { csrf -> csrf.disable() }
-            .securityMatcher("${Endpoints.JWT_AUTH}**" )
+            .securityMatcher("${Endpoints.JWT_REFRESH_AUTH}**" )
             .authorizeHttpRequests { auth ->
                 auth.anyRequest().authenticated()
             }
@@ -79,7 +76,7 @@ class SecurityConfiguration(
             .cors { cors -> cors.disable() }
             .csrf { csrf -> csrf.disable() }
             .authorizeHttpRequests { auth ->
-                auth.requestMatchers("${Endpoints.GOOGLE_AUTH}**", "${Endpoints.JWT_AUTH}**").permitAll()
+                auth.requestMatchers("${Endpoints.GOOGLE_AUTH}**", "${Endpoints.JWT_REFRESH_AUTH}**").permitAll()
                     .anyRequest().authenticated()
             }
             .addFilterBefore(jwtAccessTokenRequestFilter, UsernamePasswordAuthenticationFilter::class.java)
