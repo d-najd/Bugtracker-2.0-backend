@@ -7,5 +7,5 @@ interface JwtRefreshService {
     @Throws(UserNotFoundException::class)
     fun refreshAccessToken(username: String): JwtTokenHolder
 
-    fun refreshRefreshToken(refreshToken: String): JwtTokenHolder
+    fun refreshAccessAndRefreshTokens(refreshToken: String): JwtTokenHolder
 }

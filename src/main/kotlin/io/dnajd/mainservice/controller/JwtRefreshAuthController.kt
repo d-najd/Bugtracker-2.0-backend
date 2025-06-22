@@ -24,10 +24,10 @@ class JwtRefreshAuthController(
         return service.refreshAccessToken(userDetails.username)
     }
 
-    @GetMapping("/refresh_token")
-    fun refreshRefreshToken(
+    @GetMapping("/access_and_refresh_tokens")
+    fun refreshAccessAndRefreshTokens(
         @RequestHeader("Authorization") authorizationHeader: String,
     ): JwtTokenHolder {
-        return service.refreshRefreshToken(JwtUtil.extractTokenFromHeader(authorizationHeader))
+        return service.refreshAccessAndRefreshTokens(JwtUtil.extractTokenFromHeader(authorizationHeader))
     }
 }

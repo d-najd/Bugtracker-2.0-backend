@@ -21,13 +21,13 @@ class JwtRefreshServiceImpl(
         return JwtUtil.refreshAccessToken(username)
     }
 
-    override fun refreshRefreshToken(refreshToken: String): JwtTokenHolder {
+    override fun refreshAccessAndRefreshTokens(refreshToken: String): JwtTokenHolder {
         val username = JwtUtil.getUsernameFromToken(refreshToken)
         val user = userRepository.findByUsername(username)
         if (user.isEmpty) {
             throw UserNotFoundException()
         }
 
-        return JwtUtil.refreshRefreshToken(refreshToken)
+        return JwtUtil.refreshAccessAndRefreshTokens(refreshToken)
     }
 }

@@ -32,7 +32,7 @@ object JwtUtil {
         )
     }
 
-    fun refreshRefreshToken(refreshToken: String): JwtTokenHolder {
+    fun refreshAccessAndRefreshTokens(refreshToken: String): JwtTokenHolder {
         val username = getUsernameFromToken(refreshToken)
         val firstIssueDateMilli = getFirstIssueDate(refreshToken).toInstant().toEpochMilli()
         val expirationDateMilli = getExpirationDateFromToken(refreshToken).toInstant().toEpochMilli()
