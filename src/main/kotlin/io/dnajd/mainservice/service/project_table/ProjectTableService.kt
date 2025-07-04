@@ -1,6 +1,5 @@
 package io.dnajd.mainservice.service.project_table
 
-import io.dnajd.mainservice.domain.project_table.ProjectTable
 import io.dnajd.mainservice.domain.project_table.ProjectTableDto
 import io.dnajd.mainservice.domain.project_table.ProjectTableDtoList
 

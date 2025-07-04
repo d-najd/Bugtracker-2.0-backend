@@ -1,6 +1,5 @@
 package io.dnajd.mainservice.controller
 
-import io.dnajd.mainservice.domain.project_authority.ProjectAuthority
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityDtoList
 import io.dnajd.mainservice.infrastructure.CustomPreAuthorize
 import io.dnajd.mainservice.infrastructure.Endpoints

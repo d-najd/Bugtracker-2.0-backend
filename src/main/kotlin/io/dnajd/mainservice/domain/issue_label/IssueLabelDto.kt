@@ -6,6 +6,6 @@ import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 @DefaultMappingTarget(IssueLabel::class)
 data class IssueLabelDto(
     @JsonIgnore
-    var issueId: Long? = null,
-    var label: String? = null,
+    val issueId: Long? = null,
+    val label: String? = null,
 )

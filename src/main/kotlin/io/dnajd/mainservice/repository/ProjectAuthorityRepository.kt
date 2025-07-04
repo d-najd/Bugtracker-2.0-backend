@@ -8,16 +8,16 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ProjectAuthorityRepository : EntityGraphJpaRepository<ProjectAuthority, ProjectAuthorityIdentity> {
-    fun findByUsernameAndProjectId(username: String, projectId: Long): MutableList<ProjectAuthority>
+    fun findByUsernameAndProjectId(username: String, projectId: Long): List<ProjectAuthority>
 
     @Query("SELECT pa FROM ProjectAuthority pa " +
             "INNER JOIN ProjectTable pt ON pt.projectId = pa.projectId " +
             "WHERE pa.username = :username AND pt.id = :tableId")
-    fun findByUsernameAndTableId(username: String, tableId: Long): MutableList<ProjectAuthority>
+    fun findByUsernameAndTableId(username: String, tableId: Long): List<ProjectAuthority>
 
     @Query("SELECT DISTINCT pa FROM TableIssue pi " +
             "INNER JOIN ProjectTable pt ON pt.id = pi.tableId " +
             "INNER JOIN ProjectAuthority pa ON pa.projectId = pt.projectId " +
             "WHERE pa.username = :username AND pi.id = :issueId")
-    fun findByUsernameAndIssueId(username: String, issueId: Long): MutableList<ProjectAuthority>
+    fun findByUsernameAndIssueId(username: String, issueId: Long): List<ProjectAuthority>
 }

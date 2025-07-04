@@ -19,28 +19,28 @@ data class IssueComment(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    var id: Long = -1L,
+    val id: Long = -1L,
 
     @NotEmpty
     @Column(updatable = false)
-    var user: String = "",
+    val user: String = "",
 
     @JsonIgnore
     @Column(updatable = false)
-    var issueId: Long = -1L,
+    val issueId: Long = -1L,
 
     @Column(columnDefinition = "TEXT")
-    var message: String = "",
+    val message: String = "",
 
     @Column
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
     @NotEmpty
-    var createdAt: Date = Date(),
+    val createdAt: Date = Date(),
 
     @Column
     @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
     @UpdateTimestamp
     @NotEmpty
-    var editedAt: Date? = null,
+    val editedAt: Date? = null,
 )

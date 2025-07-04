@@ -19,7 +19,10 @@ import org.hibernate.annotations.CreationTimestamp
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import jakarta.persistence.*
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import java.util.*
+import kotlin.collections.HashSet
 
 @Entity
 @Table(
@@ -34,17 +37,17 @@ data class User(
     @Size(max = 255)
     @Column(nullable = false, length = 255)
     @JvmField
-    var username: String = "",
+    val username: String = "",
 
     @NotEmpty
     @Column(nullable = false, updatable = false)
-    var gmail: String = "",
+    val gmail: String = "",
 
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
     @Column(nullable = false)
     @NotNull
-    var createdAt: Date = Date(),
+    val createdAt: Date = Date(),
 
     @OneToMany(
         cascade = [CascadeType.REMOVE],
@@ -52,7 +55,7 @@ data class User(
     )
     @JoinColumn(name = "username")
     @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
-    var projectAuthorities: MutableList<ProjectAuthority> = mutableListOf(),
+    val projectAuthorities: MutableList<ProjectAuthority> = mutableListOf(),
 ) : UserDetails {
     companion object {
         fun entityGraph(

@@ -7,12 +7,12 @@ import java.util.*
 
 @DefaultMappingTarget(IssueCommentDto::class)
 data class IssueCommentDto(
-    var id: Long? = null,
-    var user: String? = null,
+    val id: Long? = null,
+    val user: String? = null,
     @JsonIgnore
-    var issueId: Long? = null,
+    val issueId: Long? = null,
     @MappedField
-    var message: String? = null,
-    var createdAt: Date? = null,
-    var editedAt: Date? = null,
+    val message: String? = null,
+    val createdAt: Date? = null,
+    val editedAt: Date? = null,
 )

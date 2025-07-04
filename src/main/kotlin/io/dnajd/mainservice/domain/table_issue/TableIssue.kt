@@ -20,8 +20,12 @@ import jakarta.annotation.Nullable
 import jakarta.persistence.*
 import jakarta.validation.constraints.*
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.UpdateTimestamp
+import org.hibernate.collection.spi.PersistentSet
 import java.util.*
+import kotlin.collections.HashSet
 
 @Entity
 @Table(
@@ -33,55 +37,55 @@ import java.util.*
 data class TableIssue(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = -1L,
+    val id: Long = -1L,
 
     @Column
-    var tableId: Long = -1L,
+    val tableId: Long = -1L,
 
     @Column
-    var reporter: String = "",
+    val reporter: String = "",
 
     @Nullable
     @Column(nullable = true)
-    var parentIssueId: Long? = null,
+    val parentIssueId: Long? = null,
 
     @Column(nullable = false, columnDefinition = "TINYINT UNSIGNED")
     @Min(0)
     @Max(5)
     @NotNull
     // @Type(type = "org.hibernate.type.IntegerType")
-    var severity: Int = -1,
+    val severity: Int = -1,
 
     @Column(nullable = false, length = 255)
     @NotEmpty
     @Size(max = 255)
-    var title: String = "",
+    val title: String = "",
 
     @NotNull
     @Column(nullable = false)
     @Min(0)
-    var position: Int = -1,
+    val position: Int = -1,
 
     @NotBlank
     @Column(columnDefinition = "TEXT")
-    var description: String? = null,
+    val description: String? = null,
 
     @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
     @Column(nullable = false)
     @NotNull
     @CreationTimestamp
-    var createdAt: Date? = null,
+    val createdAt: Date? = null,
 
     @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
     @Column(nullable = false)
     @NotNull
     @UpdateTimestamp
-    var updatedAt: Date? = null,
+    val updatedAt: Date? = null,
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "tableId", insertable = false, updatable = false)
-    var table: ProjectTable? = null,
+    val table: ProjectTable? = null,
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
@@ -91,7 +95,7 @@ data class TableIssue(
         insertable = false,
     )
     @MappedField(DontMapCondition::class)
-    var parentIssue: TableIssue? = null,
+    val parentIssue: TableIssue? = null,
 
     @OneToMany(
         cascade = [CascadeType.ALL],
@@ -99,7 +103,7 @@ data class TableIssue(
         fetch = FetchType.LAZY
     )
     @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
-    var childIssues: MutableSet<TableIssue> = mutableSetOf(),
+    val childIssues: List<TableIssue> = emptyList(),
 
     @OneToMany(
         cascade = [CascadeType.REMOVE],
@@ -107,7 +111,7 @@ data class TableIssue(
     )
     @JoinColumn(name = "issueId")
     @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
-    var assigned: MutableSet<IssueAssignee> = mutableSetOf(),
+    val assigned: List<IssueAssignee> = emptyList(),
 
     @OneToMany(
         cascade = [CascadeType.REMOVE],
@@ -115,7 +119,7 @@ data class TableIssue(
     )
     @JoinColumn(name = "issueId")
     @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
-    var comments: MutableSet<IssueComment> = mutableSetOf(),
+    val comments: List<IssueComment> = emptyList(),
 
     @OneToMany(
         cascade = [CascadeType.REMOVE],
@@ -123,7 +127,7 @@ data class TableIssue(
     )
     @JoinColumn(name = "issueId")
     @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
-    var labels: MutableSet<IssueLabel> = mutableSetOf(),
+    val labels: List<IssueLabel> = emptyList(),
 ) {
     companion object {
         fun entityGraph(

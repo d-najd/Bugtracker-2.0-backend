@@ -6,28 +6,30 @@ import dev.krud.shapeshift.resolver.annotation.MappedField
 import io.dnajd.mainservice.domain.issue_assignee.IssueAssigneeDto
 import io.dnajd.mainservice.domain.issue_comment.IssueCommentDto
 import io.dnajd.mainservice.domain.issue_label.IssueLabelDto
+import org.hibernate.collection.spi.PersistentSet
 import java.util.*
+import kotlin.collections.HashSet
 
 @DefaultMappingTarget(TableIssue::class)
 data class TableIssueDto(
-    var id: Long? = null,
-    var tableId: Long? = null,
-    var reporter: String? = null,
+    val id: Long? = null,
+    val tableId: Long? = null,
+    val reporter: String? = null,
     @JsonIgnore
-    var parentIssueId: Long? = null,
+    val parentIssueId: Long? = null,
     @MappedField
-    var severity: Int? = null,
+    val severity: Int? = null,
     @MappedField
-    var title: String? = null,
-    var position: Int? = null,
+    val title: String? = null,
+    val position: Int? = null,
     @MappedField
-    var description: String? = null,
-    var createdAt: Date? = null,
-    var updatedAt: Date? = null,
-    var childIssues: MutableSet<TableIssueDto>? = null,
-    var assigned: MutableSet<IssueAssigneeDto>? = null,
-    var comments: MutableSet<IssueCommentDto>? = null,
-    var labels: MutableSet<IssueLabelDto>? = null,
+    val description: String? = null,
+    val createdAt: Date? = null,
+    val updatedAt: Date? = null,
+    var childIssues: List<TableIssueDto>? = null,
+    var assigned: List<IssueAssigneeDto>? = null,
+    var comments: List<IssueCommentDto>? = null,
+    var labels: List<IssueLabelDto>? = null,
 )
 
 class TableIssueDtoList(val data: List<TableIssueDto>)

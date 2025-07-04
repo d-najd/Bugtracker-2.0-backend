@@ -3,7 +3,6 @@ package io.dnajd.mainservice.controller
 import io.dnajd.mainservice.infrastructure.CustomPreAuthorize
 import io.dnajd.mainservice.infrastructure.PreAuthorizePermission
 import io.dnajd.mainservice.infrastructure.PreAuthorizeType
-import io.dnajd.mainservice.domain.project_table.ProjectTable
 import io.dnajd.mainservice.domain.project_table.ProjectTableDto
 import io.dnajd.mainservice.domain.project_table.ProjectTableDtoList
 import io.dnajd.mainservice.infrastructure.Endpoints

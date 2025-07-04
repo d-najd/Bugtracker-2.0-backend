@@ -12,11 +12,9 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ProjectTableRepository : EntityGraphJpaRepository<ProjectTable, Long> {
-    override fun findAll(entityGraph: EntityGraph): MutableList<ProjectTable>
+    override fun findAll(entityGraph: EntityGraph): List<ProjectTable>
 
-    fun getReferenceById(id: Long, entityGraph: EntityGraph): ProjectTable
-
-    fun findAllByProjectId(projectId: Long, entityGraph: EntityGraph = EntityGraph.NOOP): MutableList<ProjectTable>
+    fun findByProjectId(projectId: Long, entityGraph: EntityGraph = EntityGraph.NOOP): List<ProjectTable>
 
     // fun findAllByProjectId(projectId: Long): MutableList<ProjectTable>
 

@@ -28,7 +28,7 @@ class TableIssueServiceImpl(
         includeComments: Boolean,
         includeLabels: Boolean
     ): TableIssueDto {
-        val entity = repository.getReferenceById(
+        val entity = repository.findById(
             id,
             TableIssue.entityGraph(
                 includeChildIssues,
@@ -36,7 +36,7 @@ class TableIssueServiceImpl(
                 includeComments,
                 includeLabels
             )
-        )
+        ).get()
         return mapper.map(entity)
     }
 

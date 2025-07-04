@@ -12,7 +12,7 @@ data class Authority(
     @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "varchar(255)")
     @Enumerated(EnumType.STRING)
     @NotNull
-    var authority: AuthorityType = AuthorityType.PROJECT_VIEW
+    val authority: AuthorityType = AuthorityType.PROJECT_VIEW
 ): GrantedAuthority {
     override fun getAuthority(): String {
         return authority.value

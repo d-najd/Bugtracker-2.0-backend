@@ -1,12 +1,12 @@
 package io.dnajd.mainservice.service.project
 
 import dev.krud.shapeshift.ShapeShift
-import io.dnajd.mainservice.infrastructure.PreAuthorizePermission
 import io.dnajd.mainservice.domain.project.Project
 import io.dnajd.mainservice.domain.project.ProjectDto
 import io.dnajd.mainservice.domain.project.ProjectDtoList
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthority
 import io.dnajd.mainservice.domain.project_table.ProjectTable
+import io.dnajd.mainservice.infrastructure.PreAuthorizePermission
 import io.dnajd.mainservice.infrastructure.mapper.mapChangedFields
 import io.dnajd.mainservice.repository.ProjectAuthorityRepository
 import io.dnajd.mainservice.repository.ProjectRepository
@@ -40,8 +40,7 @@ class ProjectServiceImpl(
     }
 
     override fun create(username: String, projectDto: ProjectDto): ProjectDto {
-        val transientProject: Project = mapper.map(projectDto)
-        transientProject.owner = username
+        val transientProject: Project = mapper.map<ProjectDto, Project>(projectDto).copy(owner = username)
         val persistedProject = repository.saveAndFlush(transientProject)
 
         val ownerProjectAuthority = ProjectAuthority(

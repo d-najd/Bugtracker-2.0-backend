@@ -16,19 +16,19 @@ import jakarta.persistence.*
 data class IssueAssignee(
     @Id
     @Column(updatable = false)
-    var issueId: Long = -1L,
+    val issueId: Long = -1L,
 
     @Id
     @Column(updatable = false)
-    var assignerUsername: String = "",
+    val assignerUsername: String = "",
 
     @Id
     @Column(updatable = false)
-    var assignedUsername: String = "",
+    val assignedUsername: String = "",
 )
 
 data class IssueAssigneeIdentity(
-    var issueId: Long = -1L,
-    var assignerUsername: String = "",
-    var assignedUsername: String = "",
+    val issueId: Long = -1L,
+    val assignerUsername: String = "",
+    val assignedUsername: String = "",
 )

@@ -16,24 +16,25 @@ class ProjectTableServiceImpl(
     private val mapper: ShapeShift,
 ) : ProjectTableService {
     override fun getAllByProjectId(projectId: Long, includeIssues: Boolean): ProjectTableDtoList {
-        val persistedTables = repository.findAllByProjectId(
-            projectId, ProjectTable.entityGraph(includeIssues = includeIssues)
+        val graph = ProjectTable.entityGraph(includeIssues = includeIssues)
+        val persistedTables = repository.findByProjectId(
+            projectId, graph
         )
 
         return ProjectTableDtoList(mapper.mapCollection(persistedTables))
     }
 
     override fun get(id: Long, includeIssues: Boolean): ProjectTableDto {
-        val persistedTable = repository.getReferenceById(id, ProjectTable.entityGraph(includeIssues = includeIssues))
+        val persistedTable = repository.findById(id, ProjectTable.entityGraph(includeIssues = includeIssues)).get()
 
         return mapper.map(persistedTable)
     }
 
     override fun create(projectId: Long, dto: ProjectTableDto): ProjectTableDto {
-        dto.issues = null
+        val dtoValidated = dto.copy(issues = null)
 
         val tablesInProjectCount = repository.countByProjectId(projectId)
-        var transientTable: ProjectTable = mapper.map(dto)
+        var transientTable: ProjectTable = mapper.map(dtoValidated)
         transientTable = transientTable.copy(
             projectId = projectId,
             position = tablesInProjectCount
@@ -44,10 +45,10 @@ class ProjectTableServiceImpl(
     }
 
     override fun update(id: Long, dto: ProjectTableDto): ProjectTableDto {
-        dto.issues = null
+        val dtoValidated = dto.copy(issues = null)
 
-        val persistedTable = repository.getReferenceById(id, ProjectTable.entityGraph(includeIssues = true))
-        val transientTable = mapper.mapChangedFields(persistedTable, dto)
+        val persistedTable = repository.findById(id, ProjectTable.entityGraph(includeIssues = true)).get()
+        val transientTable = mapper.mapChangedFields(persistedTable, dtoValidated)
 
         return mapper.map(repository.saveAndFlush(transientTable))
     }

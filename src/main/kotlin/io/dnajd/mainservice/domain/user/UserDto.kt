@@ -5,11 +5,12 @@ import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityDto
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.util.*
+import kotlin.collections.HashSet
 
 @DefaultMappingTarget(User::class)
 data class UserDto(
-    var username: String? = null,
-    var gmail: String? = null,
-    var createdAt: Date? = null,
-    var projectAuthorities: MutableList<ProjectAuthorityDto>? = null,
+    val username: String? = null,
+    val gmail: String? = null,
+    val createdAt: Date? = null,
+    val projectAuthorities: MutableList<ProjectAuthorityDto>? = null,
 )

@@ -20,39 +20,41 @@ import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 
 @Entity
-@Table(name = "project_table", uniqueConstraints = [
-    UniqueConstraint(columnNames = ["project_id", "title"]),
-    UniqueConstraint(columnNames = ["project_id", "position"])
-])
+@Table(
+    name = "project_table", uniqueConstraints = [
+        UniqueConstraint(columnNames = ["project_id", "title"]),
+        UniqueConstraint(columnNames = ["project_id", "position"])
+    ]
+)
 @AutoMapping(ProjectTableDto::class, AutoMappingStrategy.BY_NAME)
 @DefaultMappingTarget(ProjectTableDto::class)
 data class ProjectTable(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = -1L,
+    val id: Long = -1L,
 
     @Column(updatable = false)
-    var projectId: Long = -1L,
+    val projectId: Long = -1L,
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "projectId", insertable = false, updatable = false)
     @MappedField(DontMapCondition::class)
-    var project: Project? = null,
+    val project: Project? = null,
 
     @NotEmpty
     @Size(max = 255)
     @Column(nullable = false, length = 255)
-    var title: String = "",
+    val title: String = "",
 
     @NotNull
     @Column(nullable = false, columnDefinition = "INT UNSIGNED")
     @Min(0)
-    var position: Int = -1,
+    val position: Int = -1,
 
     @OneToMany(mappedBy = "tableId", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = false)
     @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
-    var issues: MutableList<TableIssue> = mutableListOf()
+    val issues: List<TableIssue> = emptyList()
 ) {
     companion object {
         /**

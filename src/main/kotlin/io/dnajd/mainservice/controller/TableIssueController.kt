@@ -31,10 +31,10 @@ class TableIssueController(
     @CustomPreAuthorize("#id", PreAuthorizeType.Issue, PreAuthorizePermission.View)
     fun get(
         @PathVariable id: Long,
-        @RequestParam includeChildIssues: Boolean = false,
-        @RequestParam includeAssigned: Boolean = false,
-        @RequestParam includeComments: Boolean = false,
-        @RequestParam includeLabels: Boolean = false,
+        @RequestParam includeChildIssues: Boolean = true,
+        @RequestParam includeAssigned: Boolean = true,
+        @RequestParam includeComments: Boolean = true,
+        @RequestParam includeLabels: Boolean = true,
     ): TableIssueDto {
         return issueService.get(id, includeChildIssues, includeAssigned, includeComments, includeLabels)
     }

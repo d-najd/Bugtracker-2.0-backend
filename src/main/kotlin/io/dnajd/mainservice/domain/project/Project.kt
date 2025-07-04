@@ -13,6 +13,8 @@ import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import java.util.*
 
 @Entity
@@ -22,27 +24,27 @@ import java.util.*
 data class Project(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = -1L,
+    val id: Long = -1L,
 
     @NotEmpty
     @Size(max = 255)
     @Column(nullable = false, length = 255)
-    var title: String = "",
+    val title: String = "",
 
     @Column
-    var owner: String = "",
+    val owner: String = "",
 
     @NotBlank
     @Column(columnDefinition = "TEXT")
-    var description: String? = null,
+    val description: String? = null,
 
     @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
     @NotNull
     @CreationTimestamp
     @Column(nullable = false)
-    var createdAt: Date? = null,
+    val createdAt: Date? = null,
 
     @OneToMany(mappedBy = "projectId", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @MappedField(DontMapCondition::class)
-    var tables: MutableList<ProjectTable> = mutableListOf(),
+    val tables: List<ProjectTable> = emptyList(),
 )

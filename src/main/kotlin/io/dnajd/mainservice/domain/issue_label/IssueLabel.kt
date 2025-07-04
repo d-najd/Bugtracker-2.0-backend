@@ -14,15 +14,15 @@ import jakarta.validation.constraints.Size
 data class IssueLabel(
     @Id
     @Column
-    var issueId: Long = -1L,
+    val issueId: Long = -1L,
 
     @Id
     @Column(length = 255)
     @Size(max = 255)
-    var label: String = "",
+    val label: String = "",
 )
 
 data class IssueLabelIdentity(
-    var issueId: Long = -1L,
-    var label: String = "",
+    val issueId: Long = -1L,
+    val label: String = "",
 )
