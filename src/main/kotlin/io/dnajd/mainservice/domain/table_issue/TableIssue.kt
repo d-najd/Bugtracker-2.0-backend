@@ -99,7 +99,7 @@ data class TableIssue(
         fetch = FetchType.LAZY
     )
     @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
-    var childIssues: MutableList<TableIssue> = mutableListOf(),
+    var childIssues: MutableSet<TableIssue> = mutableSetOf(),
 
     @OneToMany(
         cascade = [CascadeType.REMOVE],
@@ -107,7 +107,7 @@ data class TableIssue(
     )
     @JoinColumn(name = "issueId")
     @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
-    var assigned: MutableList<IssueAssignee> = mutableListOf(),
+    var assigned: MutableSet<IssueAssignee> = mutableSetOf(),
 
     @OneToMany(
         cascade = [CascadeType.REMOVE],
@@ -115,7 +115,7 @@ data class TableIssue(
     )
     @JoinColumn(name = "issueId")
     @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
-    var comments: MutableList<IssueComment> = mutableListOf(),
+    var comments: MutableSet<IssueComment> = mutableSetOf(),
 
     @OneToMany(
         cascade = [CascadeType.REMOVE],
@@ -123,7 +123,7 @@ data class TableIssue(
     )
     @JoinColumn(name = "issueId")
     @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
-    var labels: MutableList<IssueLabel> = mutableListOf(),
+    var labels: MutableSet<IssueLabel> = mutableSetOf(),
 ) {
     companion object {
         fun entityGraph(

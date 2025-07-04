@@ -28,7 +28,7 @@ class TableIssueServiceImpl(
         includeComments: Boolean,
         includeLabels: Boolean
     ): TableIssueDto {
-        val entity = repository.findById(
+        val entity = repository.getReferenceById(
             id,
             TableIssue.entityGraph(
                 includeChildIssues,

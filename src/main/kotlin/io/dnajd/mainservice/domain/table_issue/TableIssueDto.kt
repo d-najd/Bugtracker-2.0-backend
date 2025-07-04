@@ -24,10 +24,10 @@ data class TableIssueDto(
     var description: String? = null,
     var createdAt: Date? = null,
     var updatedAt: Date? = null,
-    var childIssues: MutableList<TableIssueDto>? = null,
-    var assigned: MutableList<IssueAssigneeDto>? = null,
-    var comments: MutableList<IssueCommentDto>? = null,
-    var labels: MutableList<IssueLabelDto>? = null,
+    var childIssues: MutableSet<TableIssueDto>? = null,
+    var assigned: MutableSet<IssueAssigneeDto>? = null,
+    var comments: MutableSet<IssueCommentDto>? = null,
+    var labels: MutableSet<IssueLabelDto>? = null,
 )
 
 class TableIssueDtoList(val data: List<TableIssueDto>)
