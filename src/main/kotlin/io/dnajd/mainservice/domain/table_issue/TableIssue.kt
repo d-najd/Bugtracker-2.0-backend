@@ -9,7 +9,6 @@ import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import dev.krud.shapeshift.resolver.annotation.MappedField
-import dev.krud.shapeshift.transformer.ImplicitCollectionMappingTransformer
 import io.dnajd.mainservice.domain.issue_assignee.IssueAssignee
 import io.dnajd.mainservice.domain.issue_comment.IssueComment
 import io.dnajd.mainservice.domain.issue_label.IssueLabel
@@ -21,13 +20,8 @@ import jakarta.annotation.Nullable
 import jakarta.persistence.*
 import jakarta.validation.constraints.*
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.UpdateTimestamp
-import org.hibernate.collection.spi.PersistentSet
 import java.util.*
-import kotlin.collections.HashSet
-import lombok.EqualsAndHashCode
 
 @Entity
 @Table(
@@ -104,7 +98,10 @@ data class TableIssue(
         mappedBy = "parentIssue",
         fetch = FetchType.LAZY
     )
-    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformerFixed::class)
+    @MappedField(
+        condition = LazyInitializedCondition::class,
+        transformer = ImplicitCollectionMappingTransformerFixed::class
+    )
     val childIssues: Set<TableIssue> = emptySet(),
 
     @OneToMany(
@@ -112,7 +109,10 @@ data class TableIssue(
         fetch = FetchType.LAZY,
     )
     @JoinColumn(name = "issueId")
-    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformerFixed::class)
+    @MappedField(
+        condition = LazyInitializedCondition::class,
+        transformer = ImplicitCollectionMappingTransformerFixed::class
+    )
     val assigned: Set<IssueAssignee> = emptySet(),
 
     @OneToMany(
@@ -120,7 +120,10 @@ data class TableIssue(
         fetch = FetchType.LAZY,
     )
     @JoinColumn(name = "issueId")
-    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformerFixed::class)
+    @MappedField(
+        condition = LazyInitializedCondition::class,
+        transformer = ImplicitCollectionMappingTransformerFixed::class
+    )
     val comments: Set<IssueComment> = emptySet(),
 
     @OneToMany(
@@ -128,9 +131,45 @@ data class TableIssue(
         fetch = FetchType.LAZY,
     )
     @JoinColumn(name = "issueId")
-    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformerFixed::class)
+    @MappedField(
+        condition = LazyInitializedCondition::class,
+        transformer = ImplicitCollectionMappingTransformerFixed::class
+    )
     val labels: Set<IssueLabel> = emptySet(),
 ) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
+        val another: TableIssue = other as TableIssue
+        return another.id == id &&
+                another.tableId == tableId &&
+                Objects.equals(another.reporter, reporter) &&
+                another.parentIssueId == parentIssueId &&
+                another.severity == severity &&
+                Objects.equals(another.title, title) &&
+                another.position == position &&
+                Objects.equals(another.description, description) &&
+                Objects.equals(another.createdAt, createdAt) &&
+                Objects.equals(another.updatedAt, updatedAt)
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(
+            id,
+            tableId,
+            reporter,
+            parentIssueId,
+            severity,
+            parentIssueId,
+            severity,
+            title,
+            position,
+            description,
+            createdAt,
+            updatedAt
+        )
+    }
+
     companion object {
         fun entityGraph(
             includeChildIssues: Boolean = false,
