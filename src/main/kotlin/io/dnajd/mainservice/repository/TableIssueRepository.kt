@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface TableIssueRepository : EntityGraphJpaRepository<TableIssue, Long> {
+    fun getReferenceById(id: Long, entityGraph: EntityGraph): TableIssue
+
     fun findAllByTableId(tableId: Long, entityGraph: EntityGraph = EntityGraph.NOOP): List<TableIssue>
 
     fun countByTableId(tableId: Long): Int

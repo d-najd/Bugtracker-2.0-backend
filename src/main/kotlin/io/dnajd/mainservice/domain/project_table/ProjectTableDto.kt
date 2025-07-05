@@ -11,7 +11,7 @@ data class ProjectTableDto(
     @MappedField
     val title: String? = null,
     val position: Int? = null,
-    val issues: List<TableIssueDto>? = null
+    val issues: Set<TableIssueDto>? = null
 )
 
 class ProjectTableDtoList(val data: List<ProjectTableDto>)

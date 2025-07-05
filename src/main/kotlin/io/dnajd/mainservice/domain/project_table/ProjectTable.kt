@@ -11,6 +11,7 @@ import dev.krud.shapeshift.resolver.annotation.MappedField
 import dev.krud.shapeshift.transformer.ImplicitCollectionMappingTransformer
 import io.dnajd.mainservice.domain.project.Project
 import io.dnajd.mainservice.domain.table_issue.TableIssue
+import io.dnajd.mainservice.infrastructure.ImplicitCollectionMappingTransformerFixed
 import io.dnajd.mainservice.infrastructure.mapper.DontMapCondition
 import io.dnajd.mainservice.infrastructure.mapper.LazyInitializedCondition
 import jakarta.persistence.*
@@ -53,8 +54,8 @@ data class ProjectTable(
     val position: Int = -1,
 
     @OneToMany(mappedBy = "tableId", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = false)
-    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
-    val issues: List<TableIssue> = emptyList()
+    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformerFixed::class)
+    val issues: Set<TableIssue> = emptySet()
 ) {
     companion object {
         /**

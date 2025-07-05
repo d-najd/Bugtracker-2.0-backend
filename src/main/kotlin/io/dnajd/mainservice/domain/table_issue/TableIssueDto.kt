@@ -26,10 +26,10 @@ data class TableIssueDto(
     val description: String? = null,
     val createdAt: Date? = null,
     val updatedAt: Date? = null,
-    var childIssues: List<TableIssueDto>? = null,
-    var assigned: List<IssueAssigneeDto>? = null,
-    var comments: List<IssueCommentDto>? = null,
-    var labels: List<IssueLabelDto>? = null,
+    val childIssues: Set<TableIssueDto>? = null,
+    val assigned: Set<IssueAssigneeDto>? = null,
+    val comments: Set<IssueCommentDto>? = null,
+    val labels: Set<IssueLabelDto>? = null,
 )
 
 class TableIssueDtoList(val data: List<TableIssueDto>)

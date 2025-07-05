@@ -11,6 +11,7 @@ import dev.krud.shapeshift.resolver.annotation.MappedField
 import dev.krud.shapeshift.transformer.ImplicitCollectionMappingTransformer
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthority
 import io.dnajd.mainservice.domain.table_issue.TableIssue
+import io.dnajd.mainservice.infrastructure.ImplicitCollectionMappingTransformerFixed
 import io.dnajd.mainservice.infrastructure.mapper.LazyInitializedCondition
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
@@ -54,7 +55,7 @@ data class User(
         fetch = FetchType.LAZY,
     )
     @JoinColumn(name = "username")
-    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
+    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformerFixed::class)
     val projectAuthorities: MutableList<ProjectAuthority> = mutableListOf(),
 ) : UserDetails {
     companion object {

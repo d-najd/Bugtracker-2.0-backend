@@ -46,5 +46,5 @@ data class Project(
 
     @OneToMany(mappedBy = "projectId", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @MappedField(DontMapCondition::class)
-    val tables: List<ProjectTable> = emptyList(),
+    val tables: Set<ProjectTable> = emptySet(),
 )

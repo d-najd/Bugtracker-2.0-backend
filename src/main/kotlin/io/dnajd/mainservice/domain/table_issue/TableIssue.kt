@@ -14,6 +14,7 @@ import io.dnajd.mainservice.domain.issue_assignee.IssueAssignee
 import io.dnajd.mainservice.domain.issue_comment.IssueComment
 import io.dnajd.mainservice.domain.issue_label.IssueLabel
 import io.dnajd.mainservice.domain.project_table.ProjectTable
+import io.dnajd.mainservice.infrastructure.ImplicitCollectionMappingTransformerFixed
 import io.dnajd.mainservice.infrastructure.mapper.DontMapCondition
 import io.dnajd.mainservice.infrastructure.mapper.LazyInitializedCondition
 import jakarta.annotation.Nullable
@@ -26,6 +27,7 @@ import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.collection.spi.PersistentSet
 import java.util.*
 import kotlin.collections.HashSet
+import lombok.EqualsAndHashCode
 
 @Entity
 @Table(
@@ -102,32 +104,32 @@ data class TableIssue(
         mappedBy = "parentIssue",
         fetch = FetchType.LAZY
     )
-    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
-    val childIssues: List<TableIssue> = emptyList(),
+    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformerFixed::class)
+    val childIssues: Set<TableIssue> = emptySet(),
 
     @OneToMany(
         cascade = [CascadeType.REMOVE],
         fetch = FetchType.LAZY,
     )
     @JoinColumn(name = "issueId")
-    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
-    val assigned: List<IssueAssignee> = emptyList(),
+    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformerFixed::class)
+    val assigned: Set<IssueAssignee> = emptySet(),
 
     @OneToMany(
         cascade = [CascadeType.REMOVE],
         fetch = FetchType.LAZY,
     )
     @JoinColumn(name = "issueId")
-    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
-    val comments: List<IssueComment> = emptyList(),
+    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformerFixed::class)
+    val comments: Set<IssueComment> = emptySet(),
 
     @OneToMany(
         cascade = [CascadeType.REMOVE],
         fetch = FetchType.LAZY,
     )
     @JoinColumn(name = "issueId")
-    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformer::class)
-    val labels: List<IssueLabel> = emptyList(),
+    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformerFixed::class)
+    val labels: Set<IssueLabel> = emptySet(),
 ) {
     companion object {
         fun entityGraph(

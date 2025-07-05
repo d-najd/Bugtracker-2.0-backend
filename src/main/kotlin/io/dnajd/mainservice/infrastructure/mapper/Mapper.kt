@@ -2,10 +2,10 @@ package io.dnajd.mainservice.infrastructure.mapper
 
 import dev.krud.shapeshift.ShapeShift
 import dev.krud.shapeshift.ShapeShiftBuilder
+import io.dnajd.mainservice.infrastructure.ImplicitCollectionMappingTransformerFixed
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import kotlin.reflect.KClass
-import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
@@ -14,7 +14,7 @@ import kotlin.reflect.full.primaryConstructor
 class Mapper {
 
     @Bean
-    fun shapeShiftMapper() = ShapeShiftBuilder().build()
+    fun shapeShiftMapper() = ShapeShiftBuilder().withTransformer(ImplicitCollectionMappingTransformerFixed()).build()
 }
 
 /**
@@ -24,7 +24,7 @@ class Mapper {
  * @param input Dto from which to determine which values need to be changed in [mapTo]
  * @see ShapeShift.mapChangedFieldsSameType
  */
-inline fun <reified T1: Any, T2: Any> ShapeShift.mapChangedFields(mapTo: T1, input: T2): T1 {
+inline fun <reified T1 : Any, T2 : Any> ShapeShift.mapChangedFields(mapTo: T1, input: T2): T1 {
     val mappedInput: T1 = this.map(input)
     return this.mapChangedFieldsSameType(mapTo = mapTo, input = mappedInput)
 }
@@ -36,7 +36,7 @@ inline fun <reified T1: Any, T2: Any> ShapeShift.mapChangedFields(mapTo: T1, inp
  * NOTE [T] must have no-args constructor
  * @see ShapeShift.mapChangedFields
  */
-fun <T: Any> ShapeShift.mapChangedFieldsSameType(mapTo: T, input: T): T {
+fun <T : Any> ShapeShift.mapChangedFieldsSameType(mapTo: T, input: T): T {
     val defaultInstance = input::class.primaryConstructor!!.callBy(emptyMap())
     val properties = (input::class as KClass).memberProperties
     val parameters = (input::class as KClass).primaryConstructor!!.parameters
