@@ -20,4 +20,6 @@ interface ProjectAuthorityRepository : EntityGraphJpaRepository<ProjectAuthority
             "INNER JOIN ProjectAuthority pa ON pa.projectId = pt.projectId " +
             "WHERE pa.username = :username AND pi.id = :issueId")
     fun findByUsernameAndIssueId(username: String, issueId: Long): List<ProjectAuthority>
+
+    fun deleteByUsernameAndProjectId(username: String, projectId: Long)
 }

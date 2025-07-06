@@ -28,8 +28,6 @@ class ProjectServiceImpl(
     }
 
     override fun getAllByUsername(username: String): ProjectDtoList {
-        log.error("This is just a placeholder implementation till RBAC is implemented")
-
         val persistedProjects: List<ProjectDto> = mapper.mapCollection(repository.getAllByUsername(username))
 
         return ProjectDtoList(persistedProjects)
