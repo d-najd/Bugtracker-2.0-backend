@@ -27,7 +27,7 @@ class ProjectAuthorityServiceImpl(
 
     override fun modifyViewPermission(userDetails: UserDetails, username: String, projectId: Long, value: Boolean) {
         if (value) {
-            modifyPermission(username, projectId, true, PreAuthorizePermission.View)
+            // modifyPermission(username, projectId, true, PreAuthorizePermission.View)
         }
     }
 

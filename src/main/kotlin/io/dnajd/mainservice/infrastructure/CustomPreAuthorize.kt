@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import java.io.Serializable
 import java.lang.reflect.Method
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 enum class PreAuthorizeType(val value: String) {
     Project("Project"),
@@ -41,6 +42,29 @@ annotation class CustomPreAuthorize(
     val targetType: PreAuthorizeType,
     val permission: PreAuthorizePermission,
 )
+
+/**
+ * Modified type safe variant of [PreAuthorize] hasAuthority
+ */
+@PreAuthorize("hasAuthority")
+annotation class CustomPreAuthorizeClass(
+    val targetObject: String,
+    val permission: PreAuthorizePermission,
+)
+
+@Aspect
+@Component
+class CustomPreAuthorizeClassAspect(
+    val permissionEvaluator: PermissionEvaluator
+) {
+    @Before("@annotation(customPreAuthorize)")
+    fun checkPermission(joinPoint: JoinPoint, customPreAuthorize: CustomPreAuthorize) {
+        val args = joinPoint.args
+        val method = (joinPoint.signature as MethodSignature).method
+
+        method.parameterTypes
+    }
+}
 
 @Aspect
 @Component
