@@ -21,5 +21,5 @@ interface ProjectAuthorityRepository : EntityGraphJpaRepository<ProjectAuthority
             "WHERE pa.username = :username AND pi.id = :issueId")
     fun findByUsernameAndIssueId(username: String, issueId: Long): List<ProjectAuthority>
 
-    fun deleteByUsernameAndProjectId(username: String, projectId: Long)
+    fun deleteAllByUsernameAndProjectId(username: String, projectId: Long)
 }
