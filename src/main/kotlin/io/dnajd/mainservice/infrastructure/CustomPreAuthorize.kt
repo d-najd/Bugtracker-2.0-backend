@@ -1,5 +1,6 @@
 package io.dnajd.mainservice.infrastructure
 
+import io.dnajd.mainservice.domain.project_authority.ProjectAuthority
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
@@ -14,12 +15,13 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import java.io.Serializable
 import java.lang.reflect.Method
-import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType
 
 enum class PreAuthorizeType(val value: String) {
     Project("Project"),
     Table("ProjectTable"),
     Issue("TableIssue"),
+    /** Used when a manager adds another user, the manager must have the authority that he grants and authority manage **/
+    HasGrantingAuthorityAndManage("HasGrantingAuthorityAndManage")
 }
 
 enum class PreAuthorizePermission(val value: String) {
@@ -46,7 +48,8 @@ annotation class CustomPreAuthorize(
 /**
  * Modified type safe variant of [PreAuthorize] hasAuthority
  */
-@PreAuthorize("hasAuthority")
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.TYPE)
+@Retention(AnnotationRetention.RUNTIME)
 annotation class CustomPreAuthorizeClass(
     val targetObject: String,
     val permission: PreAuthorizePermission,
@@ -57,12 +60,20 @@ annotation class CustomPreAuthorizeClass(
 class CustomPreAuthorizeClassAspect(
     val permissionEvaluator: PermissionEvaluator
 ) {
-    @Before("@annotation(customPreAuthorize)")
-    fun checkPermission(joinPoint: JoinPoint, customPreAuthorize: CustomPreAuthorize) {
+    @Before("@annotation(customPreAuthorizeClass)")
+    fun checkPermission(joinPoint: JoinPoint, customPreAuthorizeClass: CustomPreAuthorizeClass) {
         val args = joinPoint.args
         val method = (joinPoint.signature as MethodSignature).method
 
-        method.parameterTypes
+        val targetValue = CustomPreAuthorizeShared.resolveSpEL(customPreAuthorizeClass.targetObject, method, args)
+        val permission = customPreAuthorizeClass.permission.value
+
+        val auth = SecurityContextHolder.getContext().authentication
+        val hasPermission = permissionEvaluator.hasPermission(auth, targetValue, permission)
+
+        if (!hasPermission) {
+            throw AccessDeniedException("Access denied")
+        }
     }
 }
 
@@ -76,7 +87,7 @@ class CustomPreAuthorizeAspect(
         val args = joinPoint.args
         val method = (joinPoint.signature as MethodSignature).method
 
-        val targetIdValue = resolveSpEL(customPreAuthorize.targetId, method, args)
+        val targetIdValue = CustomPreAuthorizeShared.resolveSpEL(customPreAuthorize.targetId, method, args)
         val targetType = customPreAuthorize.targetType.value
         val permission = customPreAuthorize.permission.value
 
@@ -87,8 +98,10 @@ class CustomPreAuthorizeAspect(
             throw AccessDeniedException("Access denied")
         }
     }
+}
 
-    private fun resolveSpEL(expression: String, method: Method, args: Array<Any>): Serializable {
+internal object CustomPreAuthorizeShared {
+    fun resolveSpEL(expression: String, method: Method, args: Array<Any>): Serializable {
         val context = StandardEvaluationContext()
         val paramNames = StandardReflectionParameterNameDiscoverer().getParameterNames(method)
         paramNames?.forEachIndexed { index, name -> context.setVariable(name, args[index]) }
