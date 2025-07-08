@@ -59,7 +59,8 @@ enum class PreAuthorizePermission(val value: String) {
     Owner("project_owner"),
 
     /**
-     * This authority will be ignored, if its the only one empty list will be sent
+     * This authority will be ignored, if it's the only one empty list will be sent, this should only be used with
+     * special types of evaluators like [PreAuthorizeEvaluator.HasGrantingAuthority]
      */
     None("NoneIgnore")
 }
