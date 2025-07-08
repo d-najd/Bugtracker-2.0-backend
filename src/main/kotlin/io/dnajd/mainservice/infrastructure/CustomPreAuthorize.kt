@@ -4,17 +4,13 @@ import io.dnajd.mainservice.config.CustomPermissionEvaluator
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityIdentity
 import io.dnajd.mainservice.domain.project_table.ProjectTable
 import io.dnajd.mainservice.domain.table_issue.TableIssue
-import jakarta.el.TypeConverter
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
 import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.core.StandardReflectionParameterNameDiscoverer
-import org.springframework.core.convert.support.DefaultConversionService
-import org.springframework.core.convert.support.GenericConversionService
 import org.springframework.expression.spel.standard.SpelExpressionParser
 import org.springframework.expression.spel.support.StandardEvaluationContext
-import org.springframework.expression.spel.support.StandardTypeConverter
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.context.SecurityContextHolder
@@ -37,10 +33,12 @@ enum class PreAuthorizeEvaluator(val value: String) {
      * input type [ProjectTable.id]
      */
     Table("ProjectTable"),
+
     /**
      * input type [TableIssue.id]
      */
     Issue("TableIssue"),
+
     /**
      * input type [ProjectAuthorityIdentity]
      * the user must have the authorities that are inside [ProjectAuthorityIdentity] as well as other authorities passed
@@ -59,6 +57,7 @@ enum class PreAuthorizePermission(val value: String) {
     Edit("project_edit"),
     Manage("project_manage"),
     Owner("project_owner"),
+
     /**
      * This authority will be ignored, if its the only one empty list will be sent
      */
@@ -85,40 +84,6 @@ annotation class CustomPreAuthorize(
     vararg val permissions: PreAuthorizePermission,
 )
 
-/**
- * Modified type safe variant of [PreAuthorize] hasAuthority
- */
-/* This one seems less powerful
-@Target(AnnotationTarget.FUNCTION, AnnotationTarget.TYPE)
-@Retention(AnnotationRetention.RUNTIME)
-annotation class CustomPreAuthorizeClass(
-    val targetObject: String,
-    val permission: PreAuthorizePermission,
-)
-
-@Aspect
-@Component
-class CustomPreAuthorizeClassAspect(
-    val permissionEvaluator: PermissionEvaluator
-) {
-    @Before("@annotation(customPreAuthorizeClass)")
-    fun checkPermission(joinPoint: JoinPoint, customPreAuthorizeClass: CustomPreAuthorizeClass) {
-        val args = joinPoint.args
-        val method = (joinPoint.signature as MethodSignature).method
-
-        val targetValue = CustomPreAuthorizeShared.resolveSpEL(customPreAuthorizeClass.targetObject, method, args)
-        val permission = customPreAuthorizeClass.permission.value
-
-        val auth = SecurityContextHolder.getContext().authentication
-        val hasPermission = permissionEvaluator.hasPermission(auth, targetValue, permission)
-
-        if (!hasPermission) {
-            throw AccessDeniedException("Access denied")
-        }
-    }
-}
- */
-
 @Aspect
 @Component
 class CustomPreAuthorizeAspect(
@@ -131,7 +96,8 @@ class CustomPreAuthorizeAspect(
 
         val targetIdValue = CustomPreAuthorizeShared.resolveSpEL(customPreAuthorize.targetId, method, args)
         val targetType = customPreAuthorize.evaluatorType
-        val permissions = customPreAuthorize.permissions.toMutableList().filter { o -> o != PreAuthorizePermission.None }
+        val permissions =
+            customPreAuthorize.permissions.toMutableList().filter { o -> o != PreAuthorizePermission.None }
 
         val auth = SecurityContextHolder.getContext().authentication
         val hasPermission = permissionEvaluator.hasPermission(auth, targetIdValue, targetType, permissions)

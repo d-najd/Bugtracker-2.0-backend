@@ -18,31 +18,6 @@ class CustomPermissionEvaluator(
     private val projectAuthorityRepository: ProjectAuthorityRepository
 ) {
 
-    /*
-fun hasPermission(
-    authentication: Authentication,
-    targetDomainObject: Any,
-    permission: Any
-): Boolean {
-    throw IllegalStateException("Use the other evaluator as it is more powerful")
-    val userDetails = authentication.principal as UserDetails
-    return when(targetDomainObject) {
-        is ProjectDto -> {
-            hasProjectPermission(userDetails, targetDomainObject.id!!, permission)
-        }
-        is ProjectTableDto -> {
-            hasTablePermission(userDetails, targetDomainObject.id!!, permission)
-        }
-        is TableIssueDto -> {
-            hasIssuePermission(userDetails, targetDomainObject.id!!, permission)
-        }
-        else -> {
-            throw ClassNotFoundException(targetDomainObject::class.simpleName)
-        }
-    }
-    }
-     */
-
     fun hasPermission(
         authentication: Authentication,
         targetId: Serializable,
