@@ -5,6 +5,7 @@ import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import jakarta.persistence.*
 import org.springframework.security.core.GrantedAuthority
+import java.io.Serializable
 
 @Entity
 @IdClass(ProjectAuthorityIdentity::class)
@@ -34,4 +35,4 @@ data class ProjectAuthorityIdentity(
     val username: String = "",
     val projectId: Long = -1L,
     val authority: String = "",
-)
+): Serializable

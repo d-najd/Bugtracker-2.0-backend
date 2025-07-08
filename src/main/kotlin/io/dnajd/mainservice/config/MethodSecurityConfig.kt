@@ -1,5 +1,6 @@
 package io.dnajd.mainservice.config
 
+/*
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.access.PermissionEvaluator
@@ -21,3 +22,5 @@ class MethodSecurityConfig(
         return expressionHandler
     }
 }
+
+ */

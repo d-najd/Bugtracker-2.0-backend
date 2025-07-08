@@ -1,10 +1,9 @@
 package io.dnajd.mainservice.controller
 
+import io.dnajd.mainservice.domain.project_authority.ProjectAuthority
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityDtoList
-import io.dnajd.mainservice.infrastructure.CustomPreAuthorize
-import io.dnajd.mainservice.infrastructure.Endpoints
-import io.dnajd.mainservice.infrastructure.PreAuthorizePermission
-import io.dnajd.mainservice.infrastructure.PreAuthorizeType
+import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityIdentity
+import io.dnajd.mainservice.infrastructure.*
 import io.dnajd.mainservice.service.project_authority.ProjectAuthorityService
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -17,12 +16,23 @@ class ProjectAuthorityController(
     private val service: ProjectAuthorityService,
 ) {
     @GetMapping("/projectId/{projectId}")
-    @CustomPreAuthorize("#projectId", PreAuthorizeType.Project, PreAuthorizePermission.View)
+    @CustomPreAuthorize("#projectId", PreAuthorizeEvaluator.Project, PreAuthorizePermission.View)
     fun getByUsernameAndProjectId(
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable projectId: Long,
     ): ProjectAuthorityDtoList {
         return service.findByUsernameAndProjectId(userDetails.username, projectId)
+    }
+
+    // @CustomPreAuthorizeClass(targetObject = "#projectAuthority", PreAuthorizePermission.View)
+    @CustomPreAuthorize("#projectAuthorityId", PreAuthorizeEvaluator.HasGrantingAuthority, PreAuthorizePermission.Manage)
+    @PostMapping
+    @ResponseStatus(value = HttpStatus.OK)
+    fun test(
+        @AuthenticationPrincipal userDetails: UserDetails,
+        @RequestBody projectAuthorityId: ProjectAuthorityIdentity
+    ) {
+
     }
 
     /*

@@ -1,12 +1,9 @@
 package io.dnajd.mainservice.config
 
-import io.dnajd.mainservice.domain.project.ProjectDto
-import io.dnajd.mainservice.domain.project_table.ProjectTableDto
-import io.dnajd.mainservice.domain.table_issue.TableIssueDto
+import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityIdentity
+import io.dnajd.mainservice.infrastructure.PreAuthorizeEvaluator
 import io.dnajd.mainservice.infrastructure.PreAuthorizePermission
-import io.dnajd.mainservice.infrastructure.PreAuthorizeType
 import io.dnajd.mainservice.repository.ProjectAuthorityRepository
-import org.springframework.security.access.PermissionEvaluator
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
@@ -19,65 +16,81 @@ import java.io.Serializable
 @Component
 class CustomPermissionEvaluator(
     private val projectAuthorityRepository: ProjectAuthorityRepository
-) : PermissionEvaluator {
+) {
 
-    override fun hasPermission(
-        authentication: Authentication,
-        targetDomainObject: Any,
-        permission: Any
-    ): Boolean {
-        val userDetails = authentication.principal as UserDetails
-        return when(targetDomainObject) {
-            is ProjectDto -> {
-                hasProjectPermission(userDetails, targetDomainObject.id!!, permission)
-            }
-            is ProjectTableDto -> {
-                hasTablePermission(userDetails, targetDomainObject.id!!, permission)
-            }
-            is TableIssueDto -> {
-                hasIssuePermission(userDetails, targetDomainObject.id!!, permission)
-            }
-            else -> {
-                throw ClassNotFoundException(targetDomainObject::class.simpleName)
-            }
+    /*
+fun hasPermission(
+    authentication: Authentication,
+    targetDomainObject: Any,
+    permission: Any
+): Boolean {
+    throw IllegalStateException("Use the other evaluator as it is more powerful")
+    val userDetails = authentication.principal as UserDetails
+    return when(targetDomainObject) {
+        is ProjectDto -> {
+            hasProjectPermission(userDetails, targetDomainObject.id!!, permission)
+        }
+        is ProjectTableDto -> {
+            hasTablePermission(userDetails, targetDomainObject.id!!, permission)
+        }
+        is TableIssueDto -> {
+            hasIssuePermission(userDetails, targetDomainObject.id!!, permission)
+        }
+        else -> {
+            throw ClassNotFoundException(targetDomainObject::class.simpleName)
         }
     }
+    }
+     */
 
-    override fun hasPermission(
+    fun hasPermission(
         authentication: Authentication,
         targetId: Serializable,
-        targetType: String,
-        permission: Any
+        evaluatorType: PreAuthorizeEvaluator,
+        permissions: List<PreAuthorizePermission>
     ): Boolean {
         val userDetails = authentication.principal as UserDetails
-        return when (targetType) {
-            PreAuthorizeType.Project.value -> {
-                hasProjectPermission(userDetails, targetId as Long, permission)
+        return when (evaluatorType) {
+            PreAuthorizeEvaluator.Project -> {
+                hasProjectPermission(userDetails, targetId as Long, permissions)
             }
-            PreAuthorizeType.Table.value -> {
-                hasTablePermission(userDetails, targetId as Long, permission)
+            PreAuthorizeEvaluator.Table -> {
+                hasTablePermission(userDetails, targetId as Long, permissions)
             }
-            PreAuthorizeType.Issue.value -> {
-                hasIssuePermission(userDetails, targetId as Long, permission)
+            PreAuthorizeEvaluator.Issue -> {
+                hasIssuePermission(userDetails, targetId as Long, permissions)
+            }
+            PreAuthorizeEvaluator.HasGrantingAuthority -> {
+                canGrantProjectAuthority(userDetails, targetId as ProjectAuthorityIdentity, permissions)
             }
             else -> {
-                throw ClassNotFoundException(targetType)
+                throw ClassNotFoundException(evaluatorType.value)
             }
         }
     }
 
-    fun hasProjectPermission(userDetails: UserDetails, projectId: Long, permission: Any): Boolean {
-        return projectAuthorityRepository.findByUsernameAndProjectId(userDetails.username, projectId)
-            .any { o -> o.authority == permission || o.authority == PreAuthorizePermission.Owner.value }
+    fun hasProjectPermission(userDetails: UserDetails, projectId: Long, permissions: List<PreAuthorizePermission>): Boolean {
+        val authorities = projectAuthorityRepository.findByUsernameAndProjectId(userDetails.username, projectId)
+        if (authorities.any { it.authority == PreAuthorizePermission.Owner.value }) return true
+        return permissions.all { o -> authorities.any { o.value == it.authority } }
     }
 
-    fun hasTablePermission(userDetails: UserDetails, tableId: Long, permission: Any): Boolean {
-        return projectAuthorityRepository.findByUsernameAndTableId(userDetails.username, tableId)
-            .any { o -> o.authority == permission || o.authority == PreAuthorizePermission.Owner.value }
+    fun hasTablePermission(userDetails: UserDetails, tableId: Long, permissions: List<PreAuthorizePermission>): Boolean {
+        val authorities = projectAuthorityRepository.findByUsernameAndTableId(userDetails.username, tableId)
+        if (authorities.any { it.authority == PreAuthorizePermission.Owner.value }) return true
+        return permissions.all { o -> authorities.any { o.value == it.authority } }
     }
 
-    fun hasIssuePermission(userDetails: UserDetails, issueId: Long, permission: Any): Boolean {
-        return projectAuthorityRepository.findByUsernameAndIssueId(userDetails.username, issueId)
-            .any { o -> o.authority == permission || o.authority == PreAuthorizePermission.Owner.value }
+    fun hasIssuePermission(userDetails: UserDetails, issueId: Long, permissions: List<PreAuthorizePermission>): Boolean {
+        val authorities = projectAuthorityRepository.findByUsernameAndIssueId(userDetails.username, issueId)
+        if (authorities.any { o -> o.authority == PreAuthorizePermission.Owner.value }) return true
+        return permissions.all { o -> authorities.any { o.value == it.authority } }
+    }
+
+    fun canGrantProjectAuthority(userDetails: UserDetails, projectAuthority: ProjectAuthorityIdentity, permissions: List<PreAuthorizePermission>): Boolean {
+        val authorities = projectAuthorityRepository.findByUsernameAndProjectId(userDetails.username, projectAuthority.projectId)
+        if (authorities.any { it.authority == PreAuthorizePermission.Owner.value }) return true
+        if (authorities.none { o -> o.authority == projectAuthority.authority}) return false
+        return permissions.all { o -> authorities.any { o.value == it.authority } }
     }
 }
