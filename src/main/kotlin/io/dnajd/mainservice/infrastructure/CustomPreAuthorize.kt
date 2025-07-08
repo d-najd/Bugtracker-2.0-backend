@@ -94,7 +94,7 @@ class CustomPreAuthorizeAspect(
         val args = joinPoint.args
         val method = (joinPoint.signature as MethodSignature).method
 
-        val targetIdValue = CustomPreAuthorizeShared.resolveSpEL(customPreAuthorize.targetId, method, args)
+        val targetIdValue = resolveSpEL(customPreAuthorize.targetId, method, args)
         val targetType = customPreAuthorize.evaluatorType
         val permissions =
             customPreAuthorize.permissions.toMutableList().filter { o -> o != PreAuthorizePermission.None }
@@ -106,9 +106,7 @@ class CustomPreAuthorizeAspect(
             throw AccessDeniedException("Access denied")
         }
     }
-}
 
-internal object CustomPreAuthorizeShared {
     fun resolveSpEL(expression: String, method: Method, args: Array<Any>): Serializable {
         val context = StandardEvaluationContext()
         val paramNames = StandardReflectionParameterNameDiscoverer().getParameterNames(method)

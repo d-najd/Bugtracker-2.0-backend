@@ -1,9 +1,11 @@
 package io.dnajd.mainservice.controller
 
-import io.dnajd.mainservice.domain.project_authority.ProjectAuthority
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityDtoList
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityIdentity
-import io.dnajd.mainservice.infrastructure.*
+import io.dnajd.mainservice.infrastructure.CustomPreAuthorize
+import io.dnajd.mainservice.infrastructure.Endpoints
+import io.dnajd.mainservice.infrastructure.PreAuthorizeEvaluator
+import io.dnajd.mainservice.infrastructure.PreAuthorizePermission
 import io.dnajd.mainservice.service.project_authority.ProjectAuthorityService
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -24,76 +26,58 @@ class ProjectAuthorityController(
         return service.findByUsernameAndProjectId(userDetails.username, projectId)
     }
 
-    // @CustomPreAuthorizeClass(targetObject = "#projectAuthority", PreAuthorizePermission.View)
-    @CustomPreAuthorize("#projectAuthorityId", PreAuthorizeEvaluator.HasGrantingAuthority, PreAuthorizePermission.Manage)
-    @PostMapping
-    @ResponseStatus(value = HttpStatus.OK)
-    fun test(
-        @AuthenticationPrincipal userDetails: UserDetails,
-        @RequestBody projectAuthorityId: ProjectAuthorityIdentity
-    ) {
-
-    }
-
-    /*
-    @CustomPreAuthorize("#projectId", PreAuthorizeType.Project, PreAuthorizePermission.Manage)
-    @ResponseStatus(value = HttpStatus.OK)
-    @PutMapping("/username/{username}/projectId/{projectId}/view/{value}")
-    fun modifyViewUserAuthority(
-        @AuthenticationPrincipal userDetails: UserDetails,
-        @PathVariable username: String,
-        @PathVariable projectId: Long,
-        @PathVariable value: Boolean
-    ) {
-        service.modifyPermission(username, projectId, value, PreAuthorizePermission.View)
-    }
-
-    @CustomPreAuthorize("#projectId", PreAuthorizeType.Project, PreAuthorizePermission.Manage)
-    @ResponseStatus(value = HttpStatus.OK)
-    @PutMapping("/username/{username}/projectId/{projectId}/view/{value}")
-    fun modifyCreateUserAuthority(
-        @AuthenticationPrincipal userDetails: UserDetails,
-        @PathVariable username: String,
-        @PathVariable projectId: Long,
-        @PathVariable value: Boolean
-    ) {
-        service.modifyPermission(userDetails.username, projectId, value, PreAuthorizePermission.Create)
-    }
-
-    @CustomPreAuthorize("#projectId", PreAuthorizeType.Project, PreAuthorizePermission.Manage)
-    @ResponseStatus(value = HttpStatus.OK)
-    @PutMapping("/username/{username}/projectId/{projectId}/view/{value}")
-    fun modifyEditUserAuthority(
-        @AuthenticationPrincipal userDetails: UserDetails,
-        @PathVariable username: String,
-        @PathVariable projectId: Long,
-        @PathVariable value: Boolean
-    ) {
-        service.modifyPermission(userDetails.username, projectId, value, PreAuthorizePermission.Edit)
-    }
-
-    @CustomPreAuthorize("#projectId", PreAuthorizeType.Project, PreAuthorizePermission.Manage)
-    @ResponseStatus(value = HttpStatus.OK)
-    @PutMapping("/username/{username}/projectId/{projectId}/view/{value}")
-    fun modifyDeleteUserAuthority(
-        @AuthenticationPrincipal userDetails: UserDetails,
-        @PathVariable username: String,
-        @PathVariable projectId: Long,
-        @PathVariable value: Boolean
-    ) {
-        service.modifyPermission(userDetails.username, projectId, value, PreAuthorizePermission.Delete)
-    }
-
-    @CustomPreAuthorize("#projectId", PreAuthorizeType.Project, PreAuthorizePermission.Owner)
-    @ResponseStatus(value = HttpStatus.OK)
-    @PutMapping("/username/{username}/projectId/{projectId}/view/{value}")
-    fun modifyManageUserAuthority(
-        @AuthenticationPrincipal userDetails: UserDetails,
-        @PathVariable username: String,
-        @PathVariable projectId: Long,
-        @PathVariable value: Boolean
-    ) {
-        service.modifyPermission(userDetails.username, projectId, value, PreAuthorizePermission.Manage)
-    }
+    /**
+     * Manager and owner are allowed to call this
      */
+    @CustomPreAuthorize(
+        "#projectAuthorityId",
+        PreAuthorizeEvaluator.HasGrantingAuthority,
+        PreAuthorizePermission.Manage
+    )
+    @PostMapping("/userAuthority/value/{value}")
+    @ResponseStatus(value = HttpStatus.OK)
+    fun modifyUserAuthority(
+        @AuthenticationPrincipal userDetails: UserDetails,
+        @RequestBody projectAuthorityId: ProjectAuthorityIdentity,
+        @PathVariable value: Boolean
+    ) {
+        if (!(projectAuthorityId.authority == PreAuthorizePermission.View.value ||
+                    projectAuthorityId.authority == PreAuthorizePermission.Edit.value ||
+                    projectAuthorityId.authority == PreAuthorizePermission.Delete.value ||
+                    projectAuthorityId.authority == PreAuthorizePermission.Create.value
+                    )
+        ) {
+            throw IllegalArgumentException("Authority not in legal authority types")
+        }
+
+        service.modifyUserAuthority(userDetails, projectAuthorityId, value)
+    }
+
+    /**
+     * Only owner is able to call this
+     */
+    @CustomPreAuthorize(
+        "#projectAuthorityId",
+        PreAuthorizeEvaluator.HasGrantingAuthority,
+        PreAuthorizePermission.Owner
+    )
+    @ResponseStatus(value = HttpStatus.OK)
+    @PostMapping("/managerAuthority/value/{value}")
+    fun modifyManagerAuthority(
+        @AuthenticationPrincipal userDetails: UserDetails,
+        @RequestBody projectAuthorityId: ProjectAuthorityIdentity,
+        @PathVariable value: Boolean
+    ) {
+        if (!(projectAuthorityId.authority == PreAuthorizePermission.View.value ||
+                    projectAuthorityId.authority == PreAuthorizePermission.Edit.value ||
+                    projectAuthorityId.authority == PreAuthorizePermission.Delete.value ||
+                    projectAuthorityId.authority == PreAuthorizePermission.Create.value ||
+                    projectAuthorityId.authority == PreAuthorizePermission.Manage.value
+                    )
+        ) {
+            throw IllegalArgumentException("Authority not in legal authority types")
+        }
+
+        service.modifyManagerAuthority(userDetails, projectAuthorityId, value)
+    }
 }
