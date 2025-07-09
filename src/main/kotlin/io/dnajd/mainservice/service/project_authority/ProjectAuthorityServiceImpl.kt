@@ -35,23 +35,16 @@ class ProjectAuthorityServiceImpl(
             projectId = projectAuthorityId.projectId,
             authority = projectAuthorityId.authority
         )
-        val userManaged = repository.findByUsernameAndProjectId(
+        val userManagedAuthorities = repository.findByUsernameAndProjectId(
             projectAuthorityId.username,
             projectAuthorityId.projectId
         )
 
-        if (userManaged.any { it.authority == PreAuthorizePermission.Manage.value || it.authority == PreAuthorizePermission.Owner.value }) {
+        if (userManagedAuthorities.any { it.authority == PreAuthorizePermission.Manage.value || it.authority == PreAuthorizePermission.Owner.value }) {
             throw AccessDeniedException("Can't modify manager or owner permissions")
         }
 
-        if (value) {
-            repository.save(projectAuthority)
-        } else if (projectAuthorityId.authority == PreAuthorizePermission.View.value) {
-            // Removing view authority removes all other authorities
-            repository.deleteAllByUsernameAndProjectId(projectAuthority.username, projectAuthority.projectId)
-        } else {
-            repository.delete(projectAuthority)
-        }
+        sharedModifyAuthority(userManagedAuthorities, projectAuthority, value)
     }
 
     override fun modifyManagerAuthority(
@@ -64,18 +57,35 @@ class ProjectAuthorityServiceImpl(
             projectId = projectAuthorityId.projectId,
             authority = projectAuthorityId.authority
         )
-        val userManaged = repository.findByUsernameAndProjectId(
+        val userManagedAuthorities = repository.findByUsernameAndProjectId(
             projectAuthorityId.username,
             projectAuthorityId.projectId
         )
 
-        if (userManaged.any { it.authority == PreAuthorizePermission.Owner.value }) {
+        if (userManagedAuthorities.any { it.authority == PreAuthorizePermission.Owner.value }) {
             throw AccessDeniedException("Can't modify owner permissions")
         }
 
+        sharedModifyAuthority(userManagedAuthorities, projectAuthority, value)
+    }
+
+    /**
+     * Shared logic for saving and removing authorities
+     */
+    private fun sharedModifyAuthority(
+        userManagedAuthorities: List<ProjectAuthority>,
+        projectAuthority: ProjectAuthority,
+        value: Boolean
+    ) {
         if (value) {
-            repository.save(projectAuthority)
-        } else if (projectAuthorityId.authority == PreAuthorizePermission.View.value) {
+            // adding any authority should also add view to the project if it isn't already added
+            if (userManagedAuthorities.none { it.authority == PreAuthorizePermission.View.value }) {
+                val viewAuthority = ProjectAuthority(username = projectAuthority.username, projectId = projectAuthority.projectId, PreAuthorizePermission.View.value)
+                repository.saveAll(listOf(viewAuthority, projectAuthority))
+            } else {
+                repository.save(projectAuthority)
+            }
+        } else if (projectAuthority.authority == PreAuthorizePermission.View.value) {
             // Removing view authority removes all other authorities
             repository.deleteAllByUsernameAndProjectId(projectAuthority.username, projectAuthority.projectId)
         } else {
