@@ -19,10 +19,10 @@ class ProjectAuthorityServiceImpl(
     private val userRepository: UserRepository,
     private val mapper: ShapeShift
 ) : ProjectAuthorityService {
-    override fun findByUsernameAndProjectId(username: String, projectId: Long): ProjectAuthorityDtoList {
-        val persistedAuthorities = repository.findByUsernameAndProjectId(username, projectId)
+    override fun findAllByProjectId(projectId: Long): ProjectAuthorityDtoList {
+        val persistedUserAuthorities = repository.findByProjectId(projectId)
 
-        return ProjectAuthorityDtoList(mapper.mapCollection(persistedAuthorities))
+        return ProjectAuthorityDtoList(mapper.mapCollection(persistedUserAuthorities))
     }
 
     override fun modifyUserAuthority(

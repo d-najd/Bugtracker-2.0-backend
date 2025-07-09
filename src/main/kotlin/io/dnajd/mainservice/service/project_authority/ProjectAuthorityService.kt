@@ -5,7 +5,7 @@ import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityIdentity
 import org.springframework.security.core.userdetails.UserDetails
 
 interface ProjectAuthorityService {
-    fun findByUsernameAndProjectId(username: String, projectId: Long): ProjectAuthorityDtoList
+    fun findAllByProjectId(projectId: Long): ProjectAuthorityDtoList
 
     /**
      * Manager and owner are allowed to call this

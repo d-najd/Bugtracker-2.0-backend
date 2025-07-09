@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ProjectAuthorityRepository : EntityGraphJpaRepository<ProjectAuthority, ProjectAuthorityIdentity> {
+    fun findByProjectId(projectId: Long): List<ProjectAuthority>
+
     fun findByUsernameAndProjectId(username: String, projectId: Long): List<ProjectAuthority>
 
     @Query("SELECT pa FROM ProjectAuthority pa " +

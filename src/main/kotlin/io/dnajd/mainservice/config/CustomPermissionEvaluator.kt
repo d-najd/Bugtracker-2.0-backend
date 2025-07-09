@@ -17,7 +17,6 @@ import java.io.Serializable
 class CustomPermissionEvaluator(
     private val projectAuthorityRepository: ProjectAuthorityRepository
 ) {
-
     fun hasPermission(
         authentication: Authentication,
         targetId: Serializable,

@@ -19,11 +19,10 @@ class ProjectAuthorityController(
 ) {
     @GetMapping("/projectId/{projectId}")
     @CustomPreAuthorize("#projectId", PreAuthorizeEvaluator.Project, PreAuthorizePermission.View)
-    fun getByUsernameAndProjectId(
-        @AuthenticationPrincipal userDetails: UserDetails,
+    fun getAllByProjectId(
         @PathVariable projectId: Long,
     ): ProjectAuthorityDtoList {
-        return service.findByUsernameAndProjectId(userDetails.username, projectId)
+        return service.findAllByProjectId(projectId)
     }
 
     /**
