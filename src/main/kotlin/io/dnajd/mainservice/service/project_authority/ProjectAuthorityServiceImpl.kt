@@ -81,9 +81,9 @@ class ProjectAuthorityServiceImpl(
             // adding any authority should also add view to the project if it isn't already added
             if (userManagedAuthorities.none { it.authority == PreAuthorizePermission.View.value }) {
                 val viewAuthority = ProjectAuthority(username = projectAuthority.username, projectId = projectAuthority.projectId, PreAuthorizePermission.View.value)
-                repository.saveAll(listOf(viewAuthority, projectAuthority))
+                repository.saveAllAndFlush(listOf(viewAuthority, projectAuthority))
             } else {
-                repository.save(projectAuthority)
+                repository.saveAndFlush(projectAuthority)
             }
         } else if (projectAuthority.authority == PreAuthorizePermission.View.value) {
             // Removing view authority removes all other authorities

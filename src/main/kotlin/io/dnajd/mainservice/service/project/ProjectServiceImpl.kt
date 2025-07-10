@@ -12,6 +12,7 @@ import io.dnajd.mainservice.repository.ProjectAuthorityRepository
 import io.dnajd.mainservice.repository.ProjectRepository
 import io.dnajd.mainservice.repository.ProjectTableRepository
 import jakarta.transaction.Transactional
+import org.hibernate.Hibernate
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -78,8 +79,6 @@ class ProjectServiceImpl(
     }
 
     override fun delete(id: Long) {
-        val persistedProject = repository.getReferenceById(id)
-
-        repository.delete(persistedProject)
+        repository.deleteDirectlyById(id)
     }
 }

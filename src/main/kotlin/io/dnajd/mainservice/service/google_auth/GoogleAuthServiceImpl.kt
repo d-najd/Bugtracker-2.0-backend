@@ -50,7 +50,7 @@ class GoogleAuthServiceImpl(
             gmail = gmail
         )
 
-        val persistedUser = userRepository.save(user)
+        val persistedUser = userRepository.saveAndFlush(user)
         return JwtUtil.generateUserTokens(username = username)
     }
 }
