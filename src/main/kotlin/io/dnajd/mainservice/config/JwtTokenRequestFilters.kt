@@ -1,15 +1,16 @@
 package io.dnajd.mainservice.config
 
 import io.dnajd.mainservice.infrastructure.jwt.JwtUtil
+import io.jsonwebtoken.MalformedJwtException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.boot.web.servlet.FilterRegistrationBean
+import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
-import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
 /**
@@ -78,27 +79,33 @@ fun jwtTokenRequestFilterBase(
     oncePerRequestFilter: OncePerRequestFilter,
     tokenValidator: (String, String) -> Boolean
 ) {
-    val requestTokenHeader = request.getHeader("Authorization")
+    try {
+        val requestTokenHeader = request.getHeader("Authorization") ?: throw org.springframework.security.access.AccessDeniedException("JWT token required")
 
-    val jwtToken: String = JwtUtil.extractTokenFromHeader(requestTokenHeader)
-    val username: String = JwtUtil.getUsernameFromToken(jwtToken)
+        val jwtToken: String = JwtUtil.extractTokenFromHeader(requestTokenHeader)
+        val username: String = JwtUtil.getUsernameFromToken(jwtToken)
 
-    if (SecurityContextHolder.getContext().authentication == null) {
-        val userDetails = jwtUserDetailsService.loadUserByUsername(username);
+        if (SecurityContextHolder.getContext().authentication == null) {
+            val userDetails = jwtUserDetailsService.loadUserByUsername(username);
 
-        if (tokenValidator.invoke(jwtToken, userDetails.username)) {
-            val usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken(
-                userDetails, null, emptyList()
-            )
-            usernamePasswordAuthenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
+            if (tokenValidator.invoke(jwtToken, userDetails.username)) {
+                val usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken(
+                    userDetails, null, emptyList()
+                )
+                usernamePasswordAuthenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
 
-            SecurityContextHolder.getContext().authentication = usernamePasswordAuthenticationToken;
+                SecurityContextHolder.getContext().authentication = usernamePasswordAuthenticationToken;
+            }
         }
+    } catch (e: org.springframework.security.access.AccessDeniedException) {
+        response.status = HttpStatus.FORBIDDEN.value()
+    } catch (e: IllegalArgumentException) {
+        response.status = HttpStatus.FORBIDDEN.value()
+        LoggerFactory.getLogger("JwtTokenRequestFilters").warn(e.message)
+    } catch (e: MalformedJwtException) {
+        response.status = HttpStatus.FORBIDDEN.value()
+        LoggerFactory.getLogger("JwtTokenRequestFilters").warn(e.message)
     }
 
     filterChain.doFilter(request, response)
-
-    // Disabling default spring enabling of all filters for all requests
-    val registration = FilterRegistrationBean(oncePerRequestFilter)
-    registration.isEnabled = false
 }
