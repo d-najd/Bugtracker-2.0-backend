@@ -31,10 +31,8 @@ class ProjectTableServiceImpl(
     }
 
     override fun create(projectId: Long, dto: ProjectTableDto): ProjectTableDto {
-        val dtoValidated = dto.copy(issues = null)
-
         val tablesInProjectCount = repository.countByProjectId(projectId)
-        var transientTable: ProjectTable = mapper.map(dtoValidated)
+        var transientTable: ProjectTable = mapper.map(dto)
         transientTable = transientTable.copy(
             projectId = projectId,
             position = tablesInProjectCount
