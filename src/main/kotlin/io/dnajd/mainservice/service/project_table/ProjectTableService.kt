@@ -12,7 +12,13 @@ interface ProjectTableService {
 
     fun update(id: Long, dto: ProjectTableDto): ProjectTableDto
 
+    /**
+     * @return returns the swapped tables
+     */
     fun swapTablePositions(fId: Long, sId: Long): ProjectTableDtoList
 
-    fun delete(id: Long)
+    /**
+     * @return returns list of modified tables due to position change
+     */
+    fun delete(id: Long): ProjectTableDtoList
 }

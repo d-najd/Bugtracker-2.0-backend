@@ -59,9 +59,6 @@ class TableIssueController(
         return issueService.update(id, dto)
     }
 
-    /**
-     * @return both of the tasks that were swapped
-     */
     @PatchMapping("/{fId}/swapPositionWith/{sId}")
     @CustomPreAuthorize("#fId", PreAuthorizeEvaluator.Issue, PreAuthorizePermission.Edit)
     fun swapIssuePositions(
@@ -72,10 +69,9 @@ class TableIssueController(
     }
 
     /**
-     * @return returns the tasks in the table (incl unmodified)
+     * TODO this currently returns unmodified issues as well, and should be changed to not do that
      */
     @PatchMapping("/{fId}/movePositionTo/{sId}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @CustomPreAuthorize("#fId", PreAuthorizeEvaluator.Issue, PreAuthorizePermission.Edit)
     fun movePositionTo(
         @PathVariable fId: Long,
@@ -85,10 +81,9 @@ class TableIssueController(
     }
 
     /**
-     * @return returns the tasks from the original and new table (incl unmodified)
+     * TODO this currently returns unmodified issues as well, and should be changed to not do that
      */
     @PatchMapping("/{id}/moveToTable/{tableId}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @CustomPreAuthorize("#tableId", PreAuthorizeEvaluator.Table, PreAuthorizePermission.Edit)
     fun moveToTable(
         @PathVariable id: Long,
@@ -108,11 +103,10 @@ class TableIssueController(
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @CustomPreAuthorize("#id", PreAuthorizeEvaluator.Issue, PreAuthorizePermission.Delete)
     fun delete(
         @PathVariable id: Long,
-    ) {
-        issueService.delete(id)
+    ): TableIssueDtoList {
+        return issueService.delete(id)
     }
 }

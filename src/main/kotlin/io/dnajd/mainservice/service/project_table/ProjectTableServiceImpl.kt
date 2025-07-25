@@ -64,10 +64,13 @@ class ProjectTableServiceImpl(
         return ProjectTableDtoList(mapper.mapCollection(updatedTables))
     }
 
-    override fun delete(id: Long) {
+    override fun delete(id: Long): ProjectTableDtoList {
         val persistedTable = repository.getReferenceById(id)
 
         repository.delete(persistedTable)
         repository.moveToLeftAfter(persistedTable.projectId, persistedTable.position)
+
+        val modifiedTables = repository.findByProjectIdAndPositionGreaterThanEqual(persistedTable.projectId, persistedTable.position)
+        return ProjectTableDtoList(mapper.mapCollection(modifiedTables))
     }
 }

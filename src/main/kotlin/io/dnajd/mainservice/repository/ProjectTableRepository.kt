@@ -43,4 +43,8 @@ interface ProjectTableRepository : EntityGraphJpaRepository<ProjectTable, Long> 
     @Modifying
     @Transactional
     fun moveToLeftAfter(@Param("projectId") projectId: Long, @Param("position") position: Int)
+    fun findByProjectIdAndPositionGreaterThanEqual(
+        projectId: Long,
+        positionIsGreaterThan: Int
+    ): List<ProjectTable>
 }

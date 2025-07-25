@@ -53,9 +53,6 @@ class ProjectTableController(
         return service.update(id, dto)
     }
 
-    /**
-     * @return returns the swapped tables
-     */
     @PatchMapping("/{fId}/swapPositionWith/{sId}")
     @CustomPreAuthorize("#fId", PreAuthorizeEvaluator.Table, PreAuthorizePermission.Edit)
     fun swapTablePositions(
@@ -66,9 +63,8 @@ class ProjectTableController(
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @CustomPreAuthorize("#id", PreAuthorizeEvaluator.Table, PreAuthorizePermission.Delete)
-    fun delete(@PathVariable id: Long) {
+    fun delete(@PathVariable id: Long): ProjectTableDtoList {
         return service.delete(id)
     }
 }

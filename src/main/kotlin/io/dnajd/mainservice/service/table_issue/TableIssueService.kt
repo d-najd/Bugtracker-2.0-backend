@@ -22,13 +22,25 @@ interface TableIssueService {
 
     fun update(@PathVariable id: Long, dto: TableIssueDto): TableIssueDto
 
+    /**
+     * @return both of the tasks that were swapped
+     */
     fun swapIssuePositions(fId: Long, sId: Long): TableIssueDtoList
 
+    /**
+     * @return returns the tasks in the table
+     */
     fun movePositionTo(fId: Long, sId: Long): TableIssueDtoList
 
+    /**
+     * @return returns the tasks from the original and new table
+     */
     fun moveToTable(id: Long, tableId: Long): TableIssueDtoList
 
     fun setParentIssue(id: Long, parentIssueId: Long)
 
-    fun delete(id: Long)
+    /**
+     * @return list of modified issues due to position change
+     */
+    fun delete(id: Long): TableIssueDtoList
 }

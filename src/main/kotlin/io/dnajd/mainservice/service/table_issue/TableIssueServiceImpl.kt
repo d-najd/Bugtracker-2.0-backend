@@ -135,10 +135,14 @@ class TableIssueServiceImpl(
         repository.saveAndFlush(transientIssue)
     }
 
-    override fun delete(id: Long) {
+    override fun delete(id: Long): TableIssueDtoList {
         val persistedTable = repository.getReferenceById(id)
 
         repository.delete(persistedTable)
         repository.moveToLeftAfter(persistedTable.tableId, persistedTable.position)
+
+        val modifiedIssues = repository.findByTableIdAndPositionGreaterThanEqual(persistedTable.tableId, persistedTable.position)
+
+        return TableIssueDtoList(mapper.mapCollection(modifiedIssues))
     }
 }

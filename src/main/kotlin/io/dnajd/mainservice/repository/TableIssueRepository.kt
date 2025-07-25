@@ -29,20 +29,24 @@ interface TableIssueRepository : EntityGraphJpaRepository<TableIssue, Long> {
         @Param("sId") sId: Long,
     )
 
-    @Query("SELECT CASE WHEN COUNT(t) > 0 THEN true ELSE false END " +
-            "FROM TableIssue t " +
-            "WHERE t.id = :taskId " +
-            "AND t.table.project.id = (SELECT tb.project.id FROM ProjectTable tb WHERE tb.id = :tableId)")
+    @Query(
+        "SELECT CASE WHEN COUNT(t) > 0 THEN true ELSE false END " +
+                "FROM TableIssue t " +
+                "WHERE t.id = :taskId " +
+                "AND t.table.project.id = (SELECT tb.project.id FROM ProjectTable tb WHERE tb.id = :tableId)"
+    )
     fun taskAndTableBelongToSameProject(
         @Param("taskId") taskId: Long,
         @Param("tableId") tableId: Long,
     ): Boolean
 
-    @Query("SELECT CASE WHEN COUNT(firstIssue) > 0 THEN true ELSE FALSE END " +
-            "FROM TableIssue firstIssue " +
-            "WHERE firstIssue.id = :fId " +
-            "AND firstIssue.table.projectId = " +
-            "(SELECT secondIssue.table.projectId FROM TableIssue secondIssue WHERE secondIssue.id = :sId)")
+    @Query(
+        "SELECT CASE WHEN COUNT(firstIssue) > 0 THEN true ELSE FALSE END " +
+                "FROM TableIssue firstIssue " +
+                "WHERE firstIssue.id = :fId " +
+                "AND firstIssue.table.projectId = " +
+                "(SELECT secondIssue.table.projectId FROM TableIssue secondIssue WHERE secondIssue.id = :sId)"
+    )
     fun tasksBelongToSameProject(
         @Param("fId") fId: Long,
         @Param("sId") sId: Long,
@@ -69,4 +73,6 @@ interface TableIssueRepository : EntityGraphJpaRepository<TableIssue, Long> {
     @Modifying
     @Transactional
     fun moveToLeftAfter(@Param("tableId") tableId: Long, @Param("position") position: Int)
+
+    fun findByTableIdAndPositionGreaterThanEqual(tableId: Long, positionIsGreaterThan: Int): List<TableIssue>
 }
