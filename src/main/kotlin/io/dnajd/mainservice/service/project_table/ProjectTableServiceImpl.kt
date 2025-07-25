@@ -51,7 +51,7 @@ class ProjectTableServiceImpl(
         return mapper.map(repository.saveAndFlush(transientTable))
     }
 
-    override fun swapTablePositions(fId: Long, sId: Long) {
+    override fun swapTablePositions(fId: Long, sId: Long): ProjectTableDtoList {
         val firstTable = repository.getReferenceById(fId)
         val secondTable = repository.getReferenceById(sId)
 
@@ -60,6 +60,8 @@ class ProjectTableServiceImpl(
         }
 
         repository.swapPositions(fId, sId)
+        val updatedTables = repository.findAllById(listOf(fId, sId))
+        return ProjectTableDtoList(mapper.mapCollection(updatedTables))
     }
 
     override fun delete(id: Long) {

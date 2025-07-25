@@ -12,7 +12,7 @@ interface ProjectTableService {
 
     fun update(id: Long, dto: ProjectTableDto): ProjectTableDto
 
-    fun swapTablePositions(fId: Long, sId: Long)
+    fun swapTablePositions(fId: Long, sId: Long): ProjectTableDtoList
 
     fun delete(id: Long)
 }

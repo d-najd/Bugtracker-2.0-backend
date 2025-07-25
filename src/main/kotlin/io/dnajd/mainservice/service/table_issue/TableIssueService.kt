@@ -22,11 +22,11 @@ interface TableIssueService {
 
     fun update(@PathVariable id: Long, dto: TableIssueDto): TableIssueDto
 
-    fun swapIssuePositions(fId: Long, sId: Long)
+    fun swapIssuePositions(fId: Long, sId: Long): TableIssueDtoList
 
-    fun movePositionTo(fId: Long, sId: Long)
+    fun movePositionTo(fId: Long, sId: Long): TableIssueDtoList
 
-    fun moveToTable(id: Long, tableId: Long): Int
+    fun moveToTable(id: Long, tableId: Long): TableIssueDtoList
 
     fun setParentIssue(id: Long, parentIssueId: Long)
 

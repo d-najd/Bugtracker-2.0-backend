@@ -68,23 +68,30 @@ class TableIssueServiceImpl(
         return mapper.map(repository.saveAndFlush(transientIssue))
     }
 
-    override fun swapIssuePositions(fId: Long, sId: Long) {
+    override fun swapIssuePositions(fId: Long, sId: Long): TableIssueDtoList {
         if (!issuesBelongToSameTable(fId, sId)) {
             throw IllegalArgumentException("Issues don't belong to the same table $fId $sId")
         }
 
         repository.swapPositions(fId, sId)
+
+        val updatedIssues = repository.findAllById(listOf(fId, sId))
+        return TableIssueDtoList(mapper.mapCollection(updatedIssues))
     }
 
-    override fun movePositionTo(fId: Long, sId: Long) {
+    override fun movePositionTo(fId: Long, sId: Long): TableIssueDtoList {
         if (!issuesBelongToSameTable(fId, sId)) {
             throw IllegalArgumentException("Issues don't belong to the same table $fId $sId")
         }
 
+        val fIssue = repository.getReferenceById(fId)
+
         repository.movePositionTo(fId, sId)
+        val issuesInTable = repository.findAllByTableId(fIssue.tableId)
+        return TableIssueDtoList(mapper.mapCollection(issuesInTable))
     }
 
-    override fun moveToTable(id: Long, tableId: Long): Int {
+    override fun moveToTable(id: Long, tableId: Long): TableIssueDtoList {
         if (!repository.taskAndTableBelongToSameProject(id, tableId)) {
             throw IllegalArgumentException("Task $id and table $tableId don't belong to the same project")
         }
@@ -103,7 +110,11 @@ class TableIssueServiceImpl(
         val persistedIssue = repository.saveAndFlush(modifiedIssue)
         repository.moveToLeftAfter(originalIssue.tableId, originalIssue.position)
 
-        return persistedIssue.position
+        val issuesInOriginalTable = repository.findAllByTableId(originalIssue.tableId)
+        val issuesInNewTable = repository.findAllByTableId(persistedIssue.tableId)
+        val issuesCombined = issuesInOriginalTable.plus(issuesInNewTable)
+
+        return TableIssueDtoList(mapper.mapCollection(issuesCombined))
     }
 
     override fun setParentIssue(id: Long, parentIssueId: Long) {

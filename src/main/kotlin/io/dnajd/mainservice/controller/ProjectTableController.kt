@@ -53,13 +53,15 @@ class ProjectTableController(
         return service.update(id, dto)
     }
 
+    /**
+     * @return returns the swapped tables
+     */
     @PatchMapping("/{fId}/swapPositionWith/{sId}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @CustomPreAuthorize("#fId", PreAuthorizeEvaluator.Table, PreAuthorizePermission.Edit)
     fun swapTablePositions(
         @PathVariable fId: Long,
         @PathVariable sId: Long
-    ) {
+    ): ProjectTableDtoList {
         return service.swapTablePositions(fId, sId)
     }
 
