@@ -6,6 +6,8 @@ import io.dnajd.mainservice.domain.project_table.ProjectTableDto
 import io.dnajd.mainservice.domain.project_table.ProjectTableDtoList
 import io.dnajd.mainservice.infrastructure.mapper.mapChangedFields
 import io.dnajd.mainservice.repository.ProjectTableRepository
+import jakarta.persistence.EntityManager
+import jakarta.persistence.PersistenceContext
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
@@ -15,6 +17,7 @@ class ProjectTableServiceImpl(
     private val repository: ProjectTableRepository,
     private val mapper: ShapeShift,
 ) : ProjectTableService {
+
     override fun getAllByProjectId(projectId: Long, includeIssues: Boolean): ProjectTableDtoList {
         val graph = ProjectTable.entityGraph(includeIssues = includeIssues)
         val persistedTables = repository.findByProjectId(
@@ -60,6 +63,7 @@ class ProjectTableServiceImpl(
         }
 
         repository.swapPositions(fId, sId)
+
         val updatedTables = repository.findAllById(listOf(fId, sId))
         return ProjectTableDtoList(mapper.mapCollection(updatedTables))
     }

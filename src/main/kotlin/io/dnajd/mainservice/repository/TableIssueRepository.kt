@@ -22,7 +22,7 @@ interface TableIssueRepository : EntityGraphJpaRepository<TableIssue, Long> {
      * No checking is done to check if the id's belong to the same [ProjectTable] here
      */
     @Query("CALL project_table_issue_swap_positions(:fId, :sId);", nativeQuery = true)
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     fun swapPositions(
         @Param("fId") fId: Long,
@@ -54,7 +54,7 @@ interface TableIssueRepository : EntityGraphJpaRepository<TableIssue, Long> {
 
 
     @Query(value = "CALL project_table_issue_move_issue(:fId, :sId);", nativeQuery = true)
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     fun movePositionTo(
         @Param("fId") fId: Long,
@@ -70,9 +70,64 @@ interface TableIssueRepository : EntityGraphJpaRepository<TableIssue, Long> {
                 "SET i.position = i.position - 1 " +
                 "WHERE i.tableId = :tableId AND i.position > :position"
     )
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     fun moveToLeftAfter(@Param("tableId") tableId: Long, @Param("position") position: Int)
 
     fun findByTableIdAndPositionGreaterThanEqual(tableId: Long, positionIsGreaterThan: Int): List<TableIssue>
 }
+/* Bug in task swapping when 44/movePositionTo/53 (removed irrelevant fields)
+
+data before
+{
+    "data": [
+        {
+            "id": 44,
+            "position": 0,
+        },
+        {
+            "id": 45,
+            "position": 1,
+        },
+        {
+            "id": 46,
+            "position": 2,
+        },
+        {
+            "id": 43,
+            "position": 3,
+        },
+        {
+            "id": 53,
+            "position": 4,
+        }
+    ]
+}
+
+data after
+
+{
+    "data": [
+        {
+            "id": 45,
+            "position": 0,
+        },
+        {
+            "id": 46,
+            "position": 1,
+        },
+        {
+            "id": 43,
+            "position": 2,
+        },
+        {
+            "id": 53,
+            "position": 4,
+        },
+        {
+            "id": 44,
+            "position": 0,
+        }
+    ]
+}
+ */

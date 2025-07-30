@@ -74,7 +74,6 @@ class TableIssueServiceImpl(
         }
 
         repository.swapPositions(fId, sId)
-
         val updatedIssues = repository.findAllById(listOf(fId, sId))
         return TableIssueDtoList(mapper.mapCollection(updatedIssues))
     }
@@ -107,7 +106,7 @@ class TableIssueServiceImpl(
             position = issuesInTableCount
         )
 
-        val persistedIssue = repository.saveAndFlush(modifiedIssue)
+        val persistedIssue = repository.save(modifiedIssue)
         repository.moveToLeftAfter(originalIssue.tableId, originalIssue.position)
 
         val issuesInOriginalTable = repository.findAllByTableId(originalIssue.tableId)

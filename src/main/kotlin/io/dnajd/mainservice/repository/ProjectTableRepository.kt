@@ -24,7 +24,7 @@ interface ProjectTableRepository : EntityGraphJpaRepository<ProjectTable, Long> 
      * No checking is done to check if the id's belong to the same [Project] here
      */
     @Query(value = "CALL project_table_swap_positions(:fId, :sId);", nativeQuery = true)
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     fun swapPositions(
         @Param("fId") sId: Long,
@@ -40,7 +40,7 @@ interface ProjectTableRepository : EntityGraphJpaRepository<ProjectTable, Long> 
                 "SET pt.position = pt.position - 1 " +
                 "WHERE pt.projectId = :projectId AND pt.position > :position"
     )
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     fun moveToLeftAfter(@Param("projectId") projectId: Long, @Param("position") position: Int)
     fun findByProjectIdAndPositionGreaterThanEqual(
