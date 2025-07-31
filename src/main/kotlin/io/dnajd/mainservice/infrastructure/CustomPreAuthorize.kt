@@ -1,6 +1,6 @@
 package io.dnajd.mainservice.infrastructure
 
-import io.dnajd.mainservice.config.CustomPermissionEvaluator
+import io.dnajd.mainservice.domain.issue_comment.IssueComment
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityIdentity
 import io.dnajd.mainservice.domain.project_table.ProjectTable
 import io.dnajd.mainservice.domain.table_issue.TableIssue
@@ -38,6 +38,11 @@ enum class PreAuthorizeEvaluator(val value: String) {
      * input type [TableIssue.id]
      */
     Issue("TableIssue"),
+
+    /**
+     * input type [io.dnajd.mainservice.domain.issue_comment.IssueComment.id]
+     */
+    IssueComment("IssueComment"),
 
     /**
      * input type [ProjectAuthorityIdentity]

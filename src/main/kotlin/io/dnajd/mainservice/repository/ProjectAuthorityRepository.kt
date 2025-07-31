@@ -23,5 +23,14 @@ interface ProjectAuthorityRepository : EntityGraphJpaRepository<ProjectAuthority
             "WHERE pa.username = :username AND pi.id = :issueId")
     fun findByUsernameAndIssueId(username: String, issueId: Long): List<ProjectAuthority>
 
+    @Query("SELECT DISTINCT pa FROM IssueComment ic " +
+            "INNER JOIN TableIssue pi ON ic.issueId = pi.id " +
+            "INNER JOIN ProjectTable pt ON pt.id = pi.tableId " +
+            "INNER JOIN ProjectAuthority pa ON pa.projectId = pt.projectId " +
+            "WHERE pa.username = :username AND ic.id = :issueCommentId")
+    fun findByUsernameAndIssueCommentId(username: String, issueCommentId: Long): List<ProjectAuthority>
+
     fun deleteAllByUsernameAndProjectId(username: String, projectId: Long)
 }
+
+val se = ProjectAuthorityRepository::findByUsernameAndIssueCommentId

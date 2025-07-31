@@ -9,4 +9,5 @@ object Endpoints {
     const val GOOGLE_AUTH: String = BASE + "google_auth/"
     const val JWT_REFRESH_AUTH: String = BASE + "jwt_refresh_auth/"
     const val PROJECT_AUTHORITY: String = BASE + "project-authority/"
+    const val ISSUE_COMMENT: String = BASE + "issue_comment/"
 }

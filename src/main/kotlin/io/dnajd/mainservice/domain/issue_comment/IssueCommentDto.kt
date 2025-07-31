@@ -5,7 +5,7 @@ import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import dev.krud.shapeshift.resolver.annotation.MappedField
 import java.util.*
 
-@DefaultMappingTarget(IssueCommentDto::class)
+@DefaultMappingTarget(IssueComment::class)
 data class IssueCommentDto(
     val id: Long? = null,
     val user: String? = null,

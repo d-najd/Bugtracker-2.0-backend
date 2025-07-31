@@ -20,7 +20,7 @@ interface TableIssueService {
 
     fun create(tableId: Long, reporterUsername: String, dto: TableIssueDto): TableIssueDto
 
-    fun update(@PathVariable id: Long, dto: TableIssueDto): TableIssueDto
+    fun update(id: Long, dto: TableIssueDto): TableIssueDto
 
     /**
      * @return both of the tasks that were swapped

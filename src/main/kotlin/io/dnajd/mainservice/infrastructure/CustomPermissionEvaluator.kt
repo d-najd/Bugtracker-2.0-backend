@@ -1,8 +1,6 @@
-package io.dnajd.mainservice.config
+package io.dnajd.mainservice.infrastructure
 
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityIdentity
-import io.dnajd.mainservice.infrastructure.PreAuthorizeEvaluator
-import io.dnajd.mainservice.infrastructure.PreAuthorizePermission
 import io.dnajd.mainservice.repository.ProjectAuthorityRepository
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetails
@@ -34,6 +32,9 @@ class CustomPermissionEvaluator(
             PreAuthorizeEvaluator.Issue -> {
                 hasIssuePermission(userDetails, targetId as Long, permissions)
             }
+            PreAuthorizeEvaluator.IssueComment -> {
+                hasIssueCommentPermission(userDetails, targetId as Long, permissions)
+            }
             PreAuthorizeEvaluator.HasGrantingAuthority -> {
                 canGrantProjectAuthority(userDetails, targetId as ProjectAuthorityIdentity, permissions)
             }
@@ -58,6 +59,12 @@ class CustomPermissionEvaluator(
     fun hasIssuePermission(userDetails: UserDetails, issueId: Long, permissions: List<PreAuthorizePermission>): Boolean {
         val authorities = projectAuthorityRepository.findByUsernameAndIssueId(userDetails.username, issueId)
         if (authorities.any { o -> o.authority == PreAuthorizePermission.Owner.value }) return true
+        return permissions.all { o -> authorities.any { o.value == it.authority } }
+    }
+
+    fun hasIssueCommentPermission(userDetails: UserDetails, issueCommentId: Long, permissions: List<PreAuthorizePermission>): Boolean {
+        val authorities = projectAuthorityRepository.findByUsernameAndIssueCommentId(userDetails.username, issueCommentId)
+        if (authorities.any { it.authority == PreAuthorizePermission.Owner.value }) return true
         return permissions.all { o -> authorities.any { o.value == it.authority } }
     }
 
