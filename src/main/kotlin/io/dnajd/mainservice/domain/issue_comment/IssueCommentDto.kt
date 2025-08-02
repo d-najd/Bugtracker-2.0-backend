@@ -9,7 +9,6 @@ import java.util.*
 data class IssueCommentDto(
     val id: Long? = null,
     val user: String? = null,
-    @JsonIgnore
     val issueId: Long? = null,
     @MappedField
     val message: String? = null,

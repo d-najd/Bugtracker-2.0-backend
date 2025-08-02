@@ -25,7 +25,6 @@ data class IssueComment(
     @Column(updatable = false)
     val user: String = "",
 
-    @JsonIgnore
     @Column(updatable = false)
     val issueId: Long = -1L,
 
