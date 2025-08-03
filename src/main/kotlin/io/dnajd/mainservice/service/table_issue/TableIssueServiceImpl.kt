@@ -8,6 +8,7 @@ import io.dnajd.mainservice.infrastructure.mapper.mapChangedFields
 import io.dnajd.mainservice.repository.TableIssueRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
+import java.util.Date
 
 @Service
 @Transactional
@@ -62,7 +63,7 @@ class TableIssueServiceImpl(
     }
 
     override fun update(id: Long, dto: TableIssueDto): TableIssueDto {
-        val persistedIssue = repository.getReferenceById(id)
+        val persistedIssue = repository.getReferenceById(id).copy(updatedAt = Date())
         val transientIssue = mapper.mapChangedFields(persistedIssue, dto)
 
         return mapper.map(repository.saveAndFlush(transientIssue))

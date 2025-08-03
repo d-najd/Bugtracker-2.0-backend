@@ -39,7 +39,6 @@ data class IssueComment(
 
     @Column
     @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
-    @UpdateTimestamp
     @NotEmpty
     val editedAt: Date? = null,
 )

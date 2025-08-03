@@ -7,6 +7,7 @@ import io.dnajd.mainservice.infrastructure.mapper.mapChangedFields
 import io.dnajd.mainservice.repository.IssueCommentRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
+import java.util.Date
 
 @Service
 @Transactional
@@ -26,7 +27,9 @@ class IssueCommentServiceImpl(
     }
 
     override fun update(id: Long, dto: IssueCommentDto): IssueCommentDto {
-        val persistedComment = repository.getReferenceById(id)
+        val persistedComment = repository.getReferenceById(id).copy(
+            editedAt = Date()
+        )
         val transientComment = mapper.mapChangedFields(persistedComment, dto)
 
         return mapper.map(repository.saveAndFlush(transientComment))

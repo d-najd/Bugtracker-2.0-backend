@@ -75,7 +75,6 @@ data class TableIssue(
     @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
     @Column(nullable = false)
     @NotNull
-    @UpdateTimestamp
     val updatedAt: Date? = null,
 
     @JsonIgnore
