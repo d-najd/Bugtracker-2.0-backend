@@ -73,7 +73,7 @@ data class TableIssue(
     val createdAt: Date? = null,
 
     @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
-    @Column(nullable = false)
+    @Column
     @NotNull
     val updatedAt: Date? = null,
 
