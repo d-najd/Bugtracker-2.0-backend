@@ -10,4 +10,5 @@ object Endpoints {
     const val JWT_REFRESH_AUTH: String = BASE + "jwt_refresh_auth/"
     const val PROJECT_AUTHORITY: String = BASE + "project-authority/"
     const val ISSUE_COMMENT: String = BASE + "issue_comment/"
+    const val PROJECT_ICON: String = BASE + "project_icon/"
 }
