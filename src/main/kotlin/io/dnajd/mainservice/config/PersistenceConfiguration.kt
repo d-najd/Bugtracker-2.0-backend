@@ -1,4 +1,4 @@
-package io.dnajd.mainservice.infrastructure
+package io.dnajd.mainservice.config
 
 import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy
 import org.springframework.context.annotation.Bean

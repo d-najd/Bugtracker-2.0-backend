@@ -13,8 +13,6 @@ import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import org.hibernate.annotations.CreationTimestamp
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import java.util.*
 
 @Entity

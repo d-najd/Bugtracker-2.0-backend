@@ -4,7 +4,7 @@ import dev.krud.shapeshift.ShapeShift
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthority
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityDtoList
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityIdentity
-import io.dnajd.mainservice.infrastructure.PreAuthorizePermission
+import io.dnajd.mainservice.infrastructure.ScopedPermission
 import io.dnajd.mainservice.repository.ProjectAuthorityRepository
 import io.dnajd.mainservice.repository.UserRepository
 import org.springframework.security.core.userdetails.UserDetails
@@ -40,7 +40,7 @@ class ProjectAuthorityServiceImpl(
             projectAuthorityId.projectId
         )
 
-        if (userManagedAuthorities.any { it.authority == PreAuthorizePermission.Manage.value || it.authority == PreAuthorizePermission.Owner.value }) {
+        if (userManagedAuthorities.any { it.authority == ScopedPermission.Manage.value || it.authority == ScopedPermission.Owner.value }) {
             throw AccessDeniedException("Can't modify manager or owner permissions")
         }
 
@@ -62,7 +62,7 @@ class ProjectAuthorityServiceImpl(
             projectAuthorityId.projectId
         )
 
-        if (userManagedAuthorities.any { it.authority == PreAuthorizePermission.Owner.value }) {
+        if (userManagedAuthorities.any { it.authority == ScopedPermission.Owner.value }) {
             throw AccessDeniedException("Can't modify owner permissions")
         }
 
@@ -79,13 +79,13 @@ class ProjectAuthorityServiceImpl(
     ) {
         if (value) {
             // adding any authority should also add view to the project if it isn't already added
-            if (userManagedAuthorities.none { it.authority == PreAuthorizePermission.View.value }) {
-                val viewAuthority = ProjectAuthority(username = projectAuthority.username, projectId = projectAuthority.projectId, PreAuthorizePermission.View.value)
+            if (userManagedAuthorities.none { it.authority == ScopedPermission.View.value }) {
+                val viewAuthority = ProjectAuthority(username = projectAuthority.username, projectId = projectAuthority.projectId, ScopedPermission.View.value)
                 repository.saveAllAndFlush(listOf(viewAuthority, projectAuthority))
             } else {
                 repository.saveAndFlush(projectAuthority)
             }
-        } else if (projectAuthority.authority == PreAuthorizePermission.View.value) {
+        } else if (projectAuthority.authority == ScopedPermission.View.value) {
             // Removing view authority removes all other authorities
             repository.deleteAllByUsernameAndProjectId(projectAuthority.username, projectAuthority.projectId)
         } else {

@@ -1,10 +1,10 @@
 package io.dnajd.mainservice.controller
 
 import io.dnajd.mainservice.domain.issue_comment.IssueCommentDto
-import io.dnajd.mainservice.infrastructure.CustomPreAuthorize
+import io.dnajd.mainservice.infrastructure.ScopedAuthorize
 import io.dnajd.mainservice.infrastructure.Endpoints
-import io.dnajd.mainservice.infrastructure.PreAuthorizeEvaluator
-import io.dnajd.mainservice.infrastructure.PreAuthorizePermission
+import io.dnajd.mainservice.infrastructure.ScopedEvaluatorType
+import io.dnajd.mainservice.infrastructure.ScopedPermission
 import io.dnajd.mainservice.service.issue_comment.IssueCommentService
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -25,7 +25,7 @@ class IssueCommentController(
 ) {
     @PostMapping("/issueId/{issueId}")
     @ResponseStatus(value = HttpStatus.CREATED)
-    @CustomPreAuthorize("#issueId", PreAuthorizeEvaluator.Issue, PreAuthorizePermission.Create)
+    @ScopedAuthorize("#issueId", ScopedEvaluatorType.Issue, ScopedPermission.Create)
     fun create(
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable issueId: Long,
@@ -37,7 +37,7 @@ class IssueCommentController(
     // I think the user should be able to edit the comment if they have already commented.
     @PutMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    @CustomPreAuthorize("#id", PreAuthorizeEvaluator.IssueComment, PreAuthorizePermission.View)
+    @ScopedAuthorize("#id", ScopedEvaluatorType.IssueComment, ScopedPermission.View)
     fun update(
         @PathVariable id: Long,
         @RequestBody dto: IssueCommentDto
@@ -47,7 +47,7 @@ class IssueCommentController(
 
     // I think the user should be able to edit the comment if they have already commented.
     @DeleteMapping("/{id}")
-    @CustomPreAuthorize("#id", PreAuthorizeEvaluator.IssueComment, PreAuthorizePermission.View)
+    @ScopedAuthorize("#id", ScopedEvaluatorType.IssueComment, ScopedPermission.View)
     fun delete(
         @PathVariable id: Long,
     ) {

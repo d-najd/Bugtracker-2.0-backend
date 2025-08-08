@@ -1,6 +1,5 @@
 package io.dnajd.mainservice.infrastructure
 
-import io.dnajd.mainservice.domain.issue_comment.IssueComment
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityIdentity
 import io.dnajd.mainservice.domain.project_table.ProjectTable
 import io.dnajd.mainservice.domain.table_issue.TableIssue
@@ -20,10 +19,10 @@ import java.lang.reflect.Method
 
 
 /**
- * Evaluators determine how the permission check will be done and how [PreAuthorizePermission] will be used if at all.
+ * Evaluators determine how the permission check will be done and how [ScopedPermission] will be used if at all.
  * Each evaluator must accept only one type of input
  */
-enum class PreAuthorizeEvaluator(val value: String) {
+enum class ScopedEvaluatorType(val value: String) {
     /**
      * input type [io.dnajd.mainservice.domain.project.Project.id]
      */
@@ -52,10 +51,10 @@ enum class PreAuthorizeEvaluator(val value: String) {
 }
 
 /**
- * The type of permission that will be checked by [PreAuthorizeEvaluator], how this check is done and whether the
- * permission is used is dependent on [PreAuthorizeEvaluator]
+ * The type of permission that will be checked by [ScopedEvaluatorType], how this check is done and whether the
+ * permission is used is dependent on [ScopedEvaluatorType]
  */
-enum class PreAuthorizePermission(val value: String) {
+enum class ScopedPermission(val value: String) {
     View("project_view"),
     Create("project_create"),
     Delete("project_delete"),
@@ -65,7 +64,7 @@ enum class PreAuthorizePermission(val value: String) {
 
     /**
      * This authority will be ignored, if it's the only one empty list will be sent, this should only be used with
-     * special types of evaluators like [PreAuthorizeEvaluator.HasGrantingAuthority]
+     * special types of evaluators like [ScopedEvaluatorType.HasGrantingAuthority]
      */
     None("NoneIgnore")
 }
@@ -79,31 +78,31 @@ enum class PreAuthorizePermission(val value: String) {
  * @param evaluatorType The type of permission evaluator that will be used. each evaluator must only accept one type of
  * [targetId]
  * @param permissions the permission
- * @see PreAuthorizeEvaluator
- * @see PreAuthorizePermission
+ * @see ScopedEvaluatorType
+ * @see ScopedPermission
  */
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.TYPE)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class CustomPreAuthorize(
+annotation class ScopedAuthorize(
     val targetId: String,
-    val evaluatorType: PreAuthorizeEvaluator,
-    vararg val permissions: PreAuthorizePermission,
+    val evaluatorType: ScopedEvaluatorType,
+    vararg val permissions: ScopedPermission,
 )
 
 @Aspect
 @Component
-class CustomPreAuthorizeAspect(
-    val permissionEvaluator: CustomPermissionEvaluator
+class ScopedAuthorizeAspect(
+    val permissionEvaluator: ScopedPermissionEvaluator
 ) {
-    @Before("@annotation(customPreAuthorize)")
-    fun checkPermission(joinPoint: JoinPoint, customPreAuthorize: CustomPreAuthorize) {
+    @Before("@annotation(scopedAuthorize)")
+    fun checkPermission(joinPoint: JoinPoint, scopedAuthorize: ScopedAuthorize) {
         val args = joinPoint.args
         val method = (joinPoint.signature as MethodSignature).method
 
-        val targetIdValue = resolveSpEL(customPreAuthorize.targetId, method, args)
-        val targetType = customPreAuthorize.evaluatorType
+        val targetIdValue = resolveSpEL(scopedAuthorize.targetId, method, args)
+        val targetType = scopedAuthorize.evaluatorType
         val permissions =
-            customPreAuthorize.permissions.toMutableList().filter { o -> o != PreAuthorizePermission.None }
+            scopedAuthorize.permissions.toMutableList().filter { o -> o != ScopedPermission.None }
 
         val auth = SecurityContextHolder.getContext().authentication
         val hasPermission = permissionEvaluator.hasPermission(auth, targetIdValue, targetType, permissions)

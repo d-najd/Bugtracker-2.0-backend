@@ -1,8 +1,8 @@
 package io.dnajd.mainservice.controller
 
-import io.dnajd.mainservice.infrastructure.CustomPreAuthorize
-import io.dnajd.mainservice.infrastructure.PreAuthorizePermission
-import io.dnajd.mainservice.infrastructure.PreAuthorizeEvaluator
+import io.dnajd.mainservice.infrastructure.ScopedAuthorize
+import io.dnajd.mainservice.infrastructure.ScopedPermission
+import io.dnajd.mainservice.infrastructure.ScopedEvaluatorType
 import io.dnajd.mainservice.domain.table_issue.TableIssueDto
 import io.dnajd.mainservice.domain.table_issue.TableIssueDtoList
 import io.dnajd.mainservice.infrastructure.Endpoints
@@ -18,7 +18,7 @@ class TableIssueController(
     private val issueService: TableIssueService
 ) {
     @GetMapping("/tableId/{tableId}")
-    @CustomPreAuthorize("#tableId", PreAuthorizeEvaluator.Table, PreAuthorizePermission.View)
+    @ScopedAuthorize("#tableId", ScopedEvaluatorType.Table, ScopedPermission.View)
     fun getAllByTableId(
         @PathVariable tableId: Long,
         @RequestParam includeChildIssues: Boolean = false,
@@ -27,7 +27,7 @@ class TableIssueController(
     }
 
     @GetMapping("/{id}")
-    @CustomPreAuthorize("#id", PreAuthorizeEvaluator.Issue, PreAuthorizePermission.View)
+    @ScopedAuthorize("#id", ScopedEvaluatorType.Issue, ScopedPermission.View)
     fun get(
         @PathVariable id: Long,
         @RequestParam includeChildIssues: Boolean = true,
@@ -40,7 +40,7 @@ class TableIssueController(
 
     @PostMapping("/tableId/{tableId}")
     @ResponseStatus(value = HttpStatus.CREATED)
-    @CustomPreAuthorize("#tableId", PreAuthorizeEvaluator.Table, PreAuthorizePermission.Create)
+    @ScopedAuthorize("#tableId", ScopedEvaluatorType.Table, ScopedPermission.Create)
     fun create(
         @PathVariable tableId: Long,
         @RequestBody dto: TableIssueDto,
@@ -51,7 +51,7 @@ class TableIssueController(
 
     @PutMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    @CustomPreAuthorize("#id", PreAuthorizeEvaluator.Issue, PreAuthorizePermission.Edit)
+    @ScopedAuthorize("#id", ScopedEvaluatorType.Issue, ScopedPermission.Edit)
     fun update(
         @PathVariable id: Long,
         @RequestBody dto: TableIssueDto
@@ -60,7 +60,7 @@ class TableIssueController(
     }
 
     @PatchMapping("/{fId}/swapPositionWith/{sId}")
-    @CustomPreAuthorize("#fId", PreAuthorizeEvaluator.Issue, PreAuthorizePermission.Edit)
+    @ScopedAuthorize("#fId", ScopedEvaluatorType.Issue, ScopedPermission.Edit)
     fun swapIssuePositions(
         @PathVariable fId: Long,
         @PathVariable sId: Long
@@ -72,7 +72,7 @@ class TableIssueController(
      * TODO this currently returns unmodified issues as well, and should be changed to not do that
      */
     @PatchMapping("/{fId}/movePositionTo/{sId}")
-    @CustomPreAuthorize("#fId", PreAuthorizeEvaluator.Issue, PreAuthorizePermission.Edit)
+    @ScopedAuthorize("#fId", ScopedEvaluatorType.Issue, ScopedPermission.Edit)
     fun movePositionTo(
         @PathVariable fId: Long,
         @PathVariable sId: Long
@@ -84,7 +84,7 @@ class TableIssueController(
      * TODO this currently returns unmodified issues as well, and should be changed to not do that
      */
     @PatchMapping("/{id}/moveToTable/{tableId}")
-    @CustomPreAuthorize("#tableId", PreAuthorizeEvaluator.Table, PreAuthorizePermission.Edit)
+    @ScopedAuthorize("#tableId", ScopedEvaluatorType.Table, ScopedPermission.Edit)
     fun moveToTable(
         @PathVariable id: Long,
         @PathVariable tableId: Long
@@ -94,7 +94,7 @@ class TableIssueController(
 
     @PatchMapping("/id/{id}/setParentIssue/{parentIssueId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @CustomPreAuthorize("#id", PreAuthorizeEvaluator.Issue, PreAuthorizePermission.Edit)
+    @ScopedAuthorize("#id", ScopedEvaluatorType.Issue, ScopedPermission.Edit)
     fun setParentIssue(
         @PathVariable id: Long,
         @PathVariable parentIssueId: Long
@@ -103,7 +103,7 @@ class TableIssueController(
     }
 
     @DeleteMapping("/{id}")
-    @CustomPreAuthorize("#id", PreAuthorizeEvaluator.Issue, PreAuthorizePermission.Delete)
+    @ScopedAuthorize("#id", ScopedEvaluatorType.Issue, ScopedPermission.Delete)
     fun delete(
         @PathVariable id: Long,
     ): TableIssueDtoList {

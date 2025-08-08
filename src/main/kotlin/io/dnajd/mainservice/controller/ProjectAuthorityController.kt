@@ -2,10 +2,10 @@ package io.dnajd.mainservice.controller
 
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityDtoList
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityIdentity
-import io.dnajd.mainservice.infrastructure.CustomPreAuthorize
+import io.dnajd.mainservice.infrastructure.ScopedAuthorize
 import io.dnajd.mainservice.infrastructure.Endpoints
-import io.dnajd.mainservice.infrastructure.PreAuthorizeEvaluator
-import io.dnajd.mainservice.infrastructure.PreAuthorizePermission
+import io.dnajd.mainservice.infrastructure.ScopedEvaluatorType
+import io.dnajd.mainservice.infrastructure.ScopedPermission
 import io.dnajd.mainservice.service.project_authority.ProjectAuthorityService
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -18,7 +18,7 @@ class ProjectAuthorityController(
     private val service: ProjectAuthorityService,
 ) {
     @GetMapping("/projectId/{projectId}")
-    @CustomPreAuthorize("#projectId", PreAuthorizeEvaluator.Project, PreAuthorizePermission.View)
+    @ScopedAuthorize("#projectId", ScopedEvaluatorType.Project, ScopedPermission.View)
     fun getAllByProjectId(
         @PathVariable projectId: Long,
     ): ProjectAuthorityDtoList {
@@ -28,10 +28,10 @@ class ProjectAuthorityController(
     /**
      * Manager and owner are allowed to call this
      */
-    @CustomPreAuthorize(
+    @ScopedAuthorize(
         "#projectAuthorityId",
-        PreAuthorizeEvaluator.HasGrantingAuthority,
-        PreAuthorizePermission.Manage
+        ScopedEvaluatorType.HasGrantingAuthority,
+        ScopedPermission.Manage
     )
     @PostMapping("/userAuthority/value/{value}")
     @ResponseStatus(value = HttpStatus.OK)
@@ -40,10 +40,10 @@ class ProjectAuthorityController(
         @RequestBody projectAuthorityId: ProjectAuthorityIdentity,
         @PathVariable value: Boolean
     ) {
-        if (!(projectAuthorityId.authority == PreAuthorizePermission.View.value ||
-                    projectAuthorityId.authority == PreAuthorizePermission.Edit.value ||
-                    projectAuthorityId.authority == PreAuthorizePermission.Delete.value ||
-                    projectAuthorityId.authority == PreAuthorizePermission.Create.value
+        if (!(projectAuthorityId.authority == ScopedPermission.View.value ||
+                    projectAuthorityId.authority == ScopedPermission.Edit.value ||
+                    projectAuthorityId.authority == ScopedPermission.Delete.value ||
+                    projectAuthorityId.authority == ScopedPermission.Create.value
                     )
         ) {
             throw IllegalArgumentException("Authority not in legal authority types")
@@ -55,10 +55,10 @@ class ProjectAuthorityController(
     /**
      * Only owner is able to call this
      */
-    @CustomPreAuthorize(
+    @ScopedAuthorize(
         "#projectAuthorityId",
-        PreAuthorizeEvaluator.HasGrantingAuthority,
-        PreAuthorizePermission.Owner
+        ScopedEvaluatorType.HasGrantingAuthority,
+        ScopedPermission.Owner
     )
     @ResponseStatus(value = HttpStatus.OK)
     @PostMapping("/managerAuthority/value/{value}")
@@ -67,11 +67,11 @@ class ProjectAuthorityController(
         @RequestBody projectAuthorityId: ProjectAuthorityIdentity,
         @PathVariable value: Boolean
     ) {
-        if (!(projectAuthorityId.authority == PreAuthorizePermission.View.value ||
-                    projectAuthorityId.authority == PreAuthorizePermission.Edit.value ||
-                    projectAuthorityId.authority == PreAuthorizePermission.Delete.value ||
-                    projectAuthorityId.authority == PreAuthorizePermission.Create.value ||
-                    projectAuthorityId.authority == PreAuthorizePermission.Manage.value
+        if (!(projectAuthorityId.authority == ScopedPermission.View.value ||
+                    projectAuthorityId.authority == ScopedPermission.Edit.value ||
+                    projectAuthorityId.authority == ScopedPermission.Delete.value ||
+                    projectAuthorityId.authority == ScopedPermission.Create.value ||
+                    projectAuthorityId.authority == ScopedPermission.Manage.value
                     )
         ) {
             throw IllegalArgumentException("Authority not in legal authority types")

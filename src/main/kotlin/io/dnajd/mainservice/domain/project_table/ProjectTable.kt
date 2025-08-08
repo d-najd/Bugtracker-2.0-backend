@@ -8,7 +8,6 @@ import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import dev.krud.shapeshift.resolver.annotation.MappedField
-import dev.krud.shapeshift.transformer.ImplicitCollectionMappingTransformer
 import io.dnajd.mainservice.domain.project.Project
 import io.dnajd.mainservice.domain.table_issue.TableIssue
 import io.dnajd.mainservice.infrastructure.ImplicitCollectionMappingTransformerFixed

@@ -23,7 +23,7 @@ class ProjectController(
     }
 
     @GetMapping("/{id}")
-    @CustomPreAuthorize("#id", PreAuthorizeEvaluator.Project, PreAuthorizePermission.View)
+    @ScopedAuthorize("#id", ScopedEvaluatorType.Project, ScopedPermission.View)
     fun get(@PathVariable id: Long): ProjectDto {
         return service.get(id)
     }
@@ -39,7 +39,7 @@ class ProjectController(
 
     @PutMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    @CustomPreAuthorize("#id", PreAuthorizeEvaluator.Project, PreAuthorizePermission.Owner)
+    @ScopedAuthorize("#id", ScopedEvaluatorType.Project, ScopedPermission.Owner)
     fun update(
         @PathVariable id: Long,
         @RequestBody projectDto: ProjectDto
@@ -49,7 +49,7 @@ class ProjectController(
 
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @CustomPreAuthorize("#id", PreAuthorizeEvaluator.Project, PreAuthorizePermission.Owner)
+    @ScopedAuthorize("#id", ScopedEvaluatorType.Project, ScopedPermission.Owner)
     fun delete(@PathVariable id: Long) {
         service.delete(id)
     }

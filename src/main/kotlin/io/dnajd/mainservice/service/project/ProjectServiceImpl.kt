@@ -6,13 +6,12 @@ import io.dnajd.mainservice.domain.project.ProjectDto
 import io.dnajd.mainservice.domain.project.ProjectDtoList
 import io.dnajd.mainservice.domain.project_authority.ProjectAuthority
 import io.dnajd.mainservice.domain.project_table.ProjectTable
-import io.dnajd.mainservice.infrastructure.PreAuthorizePermission
+import io.dnajd.mainservice.infrastructure.ScopedPermission
 import io.dnajd.mainservice.infrastructure.mapper.mapChangedFields
 import io.dnajd.mainservice.repository.ProjectAuthorityRepository
 import io.dnajd.mainservice.repository.ProjectRepository
 import io.dnajd.mainservice.repository.ProjectTableRepository
 import jakarta.transaction.Transactional
-import org.hibernate.Hibernate
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
@@ -45,7 +44,7 @@ class ProjectServiceImpl(
         val ownerProjectAuthority = ProjectAuthority(
             username = username,
             projectId = persistedProject.id,
-            authority = PreAuthorizePermission.Owner.value,
+            authority = ScopedPermission.Owner.value,
         )
         projectAuthorityRepository.saveAndFlush(ownerProjectAuthority)
 

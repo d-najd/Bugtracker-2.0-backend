@@ -1,8 +1,8 @@
 package io.dnajd.mainservice.controller
 
-import io.dnajd.mainservice.infrastructure.CustomPreAuthorize
-import io.dnajd.mainservice.infrastructure.PreAuthorizePermission
-import io.dnajd.mainservice.infrastructure.PreAuthorizeEvaluator
+import io.dnajd.mainservice.infrastructure.ScopedAuthorize
+import io.dnajd.mainservice.infrastructure.ScopedPermission
+import io.dnajd.mainservice.infrastructure.ScopedEvaluatorType
 import io.dnajd.mainservice.domain.project_table.ProjectTableDto
 import io.dnajd.mainservice.domain.project_table.ProjectTableDtoList
 import io.dnajd.mainservice.infrastructure.Endpoints
@@ -16,7 +16,7 @@ class ProjectTableController(
     private val service: ProjectTableService
 ) {
     @GetMapping("/projectId/{projectId}")
-    @CustomPreAuthorize("#projectId", PreAuthorizeEvaluator.Project, PreAuthorizePermission.View)
+    @ScopedAuthorize("#projectId", ScopedEvaluatorType.Project, ScopedPermission.View)
     fun getAllByProjectId(
         @PathVariable projectId: Long,
         @RequestParam includeIssues: Boolean = false,
@@ -25,7 +25,7 @@ class ProjectTableController(
     }
 
     @GetMapping("/{id}")
-    @CustomPreAuthorize("#id", PreAuthorizeEvaluator.Table, PreAuthorizePermission.View)
+    @ScopedAuthorize("#id", ScopedEvaluatorType.Table, ScopedPermission.View)
     fun get(
         @PathVariable id: Long,
         @RequestParam includeIssues: Boolean = false,
@@ -35,7 +35,7 @@ class ProjectTableController(
 
     @PostMapping("/projectId/{projectId}")
     @ResponseStatus(value = HttpStatus.CREATED)
-    @CustomPreAuthorize("#projectId", PreAuthorizeEvaluator.Project, PreAuthorizePermission.Create)
+    @ScopedAuthorize("#projectId", ScopedEvaluatorType.Project, ScopedPermission.Create)
     fun create(
         @PathVariable projectId: Long,
         @RequestBody dto: ProjectTableDto
@@ -45,7 +45,7 @@ class ProjectTableController(
 
     @PutMapping("/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    @CustomPreAuthorize("#id", PreAuthorizeEvaluator.Table, PreAuthorizePermission.Edit)
+    @ScopedAuthorize("#id", ScopedEvaluatorType.Table, ScopedPermission.Edit)
     fun update(
         @PathVariable id: Long,
         @RequestBody dto: ProjectTableDto
@@ -54,7 +54,7 @@ class ProjectTableController(
     }
 
     @PatchMapping("/{fId}/swapPositionWith/{sId}")
-    @CustomPreAuthorize("#fId", PreAuthorizeEvaluator.Table, PreAuthorizePermission.Edit)
+    @ScopedAuthorize("#fId", ScopedEvaluatorType.Table, ScopedPermission.Edit)
     fun swapTablePositions(
         @PathVariable fId: Long,
         @PathVariable sId: Long
@@ -63,7 +63,7 @@ class ProjectTableController(
     }
 
     @DeleteMapping("/{id}")
-    @CustomPreAuthorize("#id", PreAuthorizeEvaluator.Table, PreAuthorizePermission.Delete)
+    @ScopedAuthorize("#id", ScopedEvaluatorType.Table, ScopedPermission.Delete)
     fun delete(@PathVariable id: Long): ProjectTableDtoList {
         return service.delete(id)
     }
