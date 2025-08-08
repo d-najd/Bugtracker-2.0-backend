@@ -11,6 +11,8 @@ services:
       - bugtracker-dev
     ports:
       - "8080:8080"
+    volumes:
+      - bugtracker-user-content:/user-content
     depends_on:
       db:
         condition: service_healthy
@@ -40,5 +42,7 @@ networks:
     name: bugtracker-dev
 
 volumes:
+  bugtracker-user-content:
+    external: false
   bugtracker-mysql-data:
-    external: true
+    external: false
