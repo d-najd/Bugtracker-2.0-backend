@@ -17,10 +17,6 @@ class ProjectIconServiceImpl(
         const val PROJECT_ICON_DIRECTORY: String = "user-content/project-icon"
     }
 
-    init {
-        PROJECT_ICON_DIRECTORY.length
-    }
-
     override fun get(projectId: Long): MultipartFile {
         val project = projectRepository.getReferenceById(projectId)
 
@@ -40,7 +36,10 @@ class ProjectIconServiceImpl(
     }
 
     override fun update(projectId: Long, icon: MultipartFile) {
-        val uploadDir = "$PROJECT_ICON_DIRECTORY/$projectId/"
+        val uploadDir = "$PROJECT_ICON_DIRECTORY/"
+
+        // this is less expandable, I want to not have to upload the default project icons over and over
+        // val uploadDir = "$PROJECT_ICON_DIRECTORY/$projectId/"
         val directory = File(uploadDir)
         if (!directory.exists()) {
             directory.mkdirs()
