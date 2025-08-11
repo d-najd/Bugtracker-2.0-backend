@@ -46,7 +46,7 @@ object UserContentPathMapper {
     fun absolutePathToUserContentUri(absolutePath: String): String {
         val index = absolutePath.lastIndexOf(UserContentDirs.BASE)
         if (index != -1) {
-            val userContentDir = absolutePath.substring(index)
+            val userContentDir = absolutePath.substring(index + UserContentDirs.BASE.length)
             return "$USER_CONTENT_URI$userContentDir"
         } else {
             throw IllegalArgumentException("given path doesn't contain user-content")
