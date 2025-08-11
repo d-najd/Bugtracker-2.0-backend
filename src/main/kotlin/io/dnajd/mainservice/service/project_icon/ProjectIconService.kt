@@ -1,9 +1,11 @@
 package io.dnajd.mainservice.service.project_icon
 
+import org.springframework.core.io.FileSystemResource
+import org.springframework.core.io.UrlResource
 import org.springframework.web.multipart.MultipartFile
 
 interface ProjectIconService {
-    fun get(projectId: Long): MultipartFile
+    fun getByProjectId(projectId: Long): FileSystemResource
 
-    fun update(projectId: Long, icon: MultipartFile)
+    fun updateByProjectId(projectId: Long, icon: MultipartFile)
 }

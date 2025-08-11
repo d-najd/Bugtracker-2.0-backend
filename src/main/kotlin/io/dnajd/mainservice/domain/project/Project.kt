@@ -37,7 +37,7 @@ data class Project(
     val description: String? = null,
 
     @Column(nullable = false)
-    val iconUri: String = "",
+    val iconUri: String = newIconUri(),
 
     @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
     @NotNull
@@ -49,3 +49,7 @@ data class Project(
     @MappedField(DontMapCondition::class)
     val tables: Set<ProjectTable> = emptySet(),
 )
+
+private fun newIconUri(): String {
+    return ""
+}
