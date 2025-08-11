@@ -36,6 +36,9 @@ data class Project(
     @Column(columnDefinition = "TEXT")
     val description: String? = null,
 
+    @Column(nullable = false)
+    val iconUri: String = "",
+
     @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
     @NotNull
     @CreationTimestamp

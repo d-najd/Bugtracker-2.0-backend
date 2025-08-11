@@ -10,6 +10,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa.hibernate:
     ddl-auto: validate
+  servlet.multipart:
+    max-file-size: 1MB
+    max-request-size: 10MB
   security:
     oauth2:
       resourceserver:
