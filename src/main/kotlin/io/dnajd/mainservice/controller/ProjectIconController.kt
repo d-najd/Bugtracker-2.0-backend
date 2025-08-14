@@ -26,6 +26,7 @@ class ProjectIconController(
     ): ResponseEntity<FileSystemResource> {
         val file = service.getByProjectId(projectId)
         val contentType = Files.probeContentType(Path(file.path))
+        val test =""
 
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).body(file)
     }
