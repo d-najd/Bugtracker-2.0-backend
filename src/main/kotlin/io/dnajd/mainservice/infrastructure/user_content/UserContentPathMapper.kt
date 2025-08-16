@@ -22,15 +22,12 @@ object UserContentPathMapper {
     fun resolveAbsolutePathFromUri(uri: String): String {
         if (isUserContentUri(uri)) {
             val uriPath = uri.drop(USER_CONTENT_URI.length)
-            return "${UserContentDirs.ABSOLUTE_PATH}$uriPath"
+            return "${UserContentDirs.ABSOLUTE_PATH}${UserContentDirs.BASE}$uriPath"
         }
 
         return uri
     }
 
-    /**
-     *
-     */
     fun toUserContentUri(path: String, file: MultipartFile, fileName: String = file.name): String {
         return "${USER_CONTENT_URI}${toUserContentPath(path, file, fileName)}"
     }

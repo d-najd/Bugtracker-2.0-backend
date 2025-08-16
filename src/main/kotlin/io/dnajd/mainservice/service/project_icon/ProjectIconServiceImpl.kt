@@ -24,7 +24,7 @@ class ProjectIconServiceImpl(
     }
 
     init {
-        val absolutePath = "${UserContentDirs.ABSOLUTE_PATH}${UserContentDirs.PROJECT_ICON}"
+        val absolutePath = "${UserContentDirs.ABSOLUTE_PATH}${UserContentDirs.BASE}${UserContentDirs.PROJECT_ICON}"
         Files.createDirectories(Path(absolutePath))
     }
 
@@ -44,15 +44,7 @@ class ProjectIconServiceImpl(
         val project = projectRepository.getReferenceById(projectId)
 
         val newIconUri = UserContentPathMapper.toUserContentUri(UserContentDirs.PROJECT_ICON, icon, projectId.toString())
-        val newIconAbsolutePath = Path(
-            "${UserContentDirs.ABSOLUTE_PATH}${
-                UserContentPathMapper.toUserContentPath(
-                    UserContentDirs.PROJECT_ICON,
-                    icon,
-                    projectId.toString()
-                )
-            }"
-        )
+        val newIconAbsolutePath = Path(UserContentPathMapper.resolveAbsolutePathFromUri(newIconUri))
 
         Files.write(newIconAbsolutePath, icon.bytes, StandardOpenOption.CREATE, StandardOpenOption.WRITE)
 
