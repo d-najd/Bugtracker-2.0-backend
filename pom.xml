@@ -10,7 +10,7 @@
     </parent>
     <groupId>io.dnajd</groupId>
     <artifactId>bugtracker</artifactId>
-    <version>0.3.1</version>
+    <version>0.4.0</version>
     <packaging>jar</packaging>
     <name>main-service</name>
     <description>Microservice for ProjectResource</description>
