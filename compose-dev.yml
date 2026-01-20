@@ -40,6 +40,9 @@ services:
 networks:
   bugtracker-dev:
     name: bugtracker-dev
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+      com.docker.network.enable_ipv4: "true"
 
 volumes:
   bugtracker-user-content:
