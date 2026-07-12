@@ -34,3 +34,5 @@ build/
 
 ### Ignore user content ###
 **/.idea/
+
+.env

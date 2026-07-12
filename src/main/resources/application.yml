@@ -1,27 +1,28 @@
 server.port: 8080
 
 spring:
-  jackson.date-format: yyyy-MM-d HH:mm:ss
-  application.name: main-service
-  datasource:
-    url: jdbc:mysql://localhost:3306/bugtracker
-    username: root
-    password: root-password
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa.hibernate:
-    ddl-auto: validate
-  servlet.multipart:
-    max-file-size: 1MB
-    max-request-size: 10MB
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: https://accounts.google.com
-          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
-          audiences: >
-            523144607813-ccib1llvilpg1e6httmo9a0d839bhh9h.apps.googleusercontent.com
-      client:
-        registration:
-          google:
-            client-id: 523144607813-fnng3pmai446jt0ajc012aav6kedo8u4.apps.googleusercontent.com
+    config:
+        import: optional:file:.env[.properties]
+    jackson.date-format: yyyy-MM-dd HH:mm:ss
+    application.name: main-service
+    datasource:
+        url: ${DB_URL}
+        username: ${DB_USERNAME}
+        password: ${DB_PASSWORD}
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    jpa.hibernate:
+        ddl-auto: validate
+    servlet.multipart:
+        max-file-size: 1MB
+        max-request-size: 10MB
+    security:
+        oauth2:
+            resourceserver:
+                jwt:
+                    issuer-uri: ${GOOGLE_ISSUER_URI}
+                    jwk-set-uri: ${GOOGLE_JWK_SET_URI}
+                    audiences: ${GOOGLE_JWT_AUDIENCE}
+            client:
+                registration:
+                    google:
+                        client-id: ${GOOGLE_CLIENT_ID}
