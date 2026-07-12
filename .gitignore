@@ -36,3 +36,4 @@ build/
 **/.idea/
 
 .env
+kls_database.db
