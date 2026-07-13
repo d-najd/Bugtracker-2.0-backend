@@ -1,0 +1,22 @@
+package io.dnajd.mainservice.service.googleauth
+
+import io.dnajd.mainservice.controller.GoogleAuthController
+import io.dnajd.mainservice.domain.token.JwtTokenHolder
+import io.dnajd.mainservice.domain.user.CreateUserDto
+import io.dnajd.mainservice.infrastructure.exception.UserAlreadyExistsException
+import io.dnajd.mainservice.infrastructure.exception.UserNotFoundException
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
+
+/**
+ * @see GoogleAuthController
+ */
+interface GoogleAuthService {
+    @Throws(UserNotFoundException::class)
+    fun googleSignIn(oauthToken: JwtAuthenticationToken): JwtTokenHolder
+
+    @Throws(UserAlreadyExistsException::class)
+    fun googleSignUp(
+        oauthToken: JwtAuthenticationToken,
+        userInfo: CreateUserDto
+    ): JwtTokenHolder
+}

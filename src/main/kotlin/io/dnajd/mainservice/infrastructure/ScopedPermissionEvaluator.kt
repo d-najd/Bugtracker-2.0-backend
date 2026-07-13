@@ -1,6 +1,6 @@
 package io.dnajd.mainservice.infrastructure
 
-import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityIdentity
+import io.dnajd.mainservice.domain.projectauthority.ProjectAuthorityIdentity
 import io.dnajd.mainservice.repository.ProjectAuthorityRepository
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetails

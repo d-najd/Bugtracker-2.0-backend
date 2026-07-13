@@ -3,7 +3,7 @@ package io.dnajd.mainservice.controller
 import io.dnajd.mainservice.domain.token.JwtTokenHolder
 import io.dnajd.mainservice.infrastructure.Endpoints
 import io.dnajd.mainservice.infrastructure.jwt.JwtUtil
-import io.dnajd.mainservice.service.jwt_refresh.JwtRefreshService
+import io.dnajd.mainservice.service.jwtrefresh.JwtRefreshService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.GetMapping

@@ -4,8 +4,8 @@ import dev.krud.shapeshift.ShapeShift
 import io.dnajd.mainservice.domain.project.Project
 import io.dnajd.mainservice.domain.project.ProjectDto
 import io.dnajd.mainservice.domain.project.ProjectDtoList
-import io.dnajd.mainservice.domain.project_authority.ProjectAuthority
-import io.dnajd.mainservice.domain.project_table.ProjectTable
+import io.dnajd.mainservice.domain.projectauthority.ProjectAuthority
+import io.dnajd.mainservice.domain.projecttable.ProjectTable
 import io.dnajd.mainservice.infrastructure.ScopedPermission
 import io.dnajd.mainservice.infrastructure.mapper.mapChangedFields
 import io.dnajd.mainservice.repository.ProjectAuthorityRepository

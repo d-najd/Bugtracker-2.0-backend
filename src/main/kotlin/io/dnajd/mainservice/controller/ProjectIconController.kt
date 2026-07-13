@@ -4,7 +4,7 @@ import io.dnajd.mainservice.infrastructure.Endpoints
 import io.dnajd.mainservice.infrastructure.ScopedAuthorize
 import io.dnajd.mainservice.infrastructure.ScopedEvaluatorType
 import io.dnajd.mainservice.infrastructure.ScopedPermission
-import io.dnajd.mainservice.service.project_icon.ProjectIconService
+import io.dnajd.mainservice.service.projecticon.ProjectIconService
 import org.springframework.core.io.FileSystemResource
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity

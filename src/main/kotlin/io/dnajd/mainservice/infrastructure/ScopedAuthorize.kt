@@ -1,8 +1,8 @@
 package io.dnajd.mainservice.infrastructure
 
-import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityIdentity
-import io.dnajd.mainservice.domain.project_table.ProjectTable
-import io.dnajd.mainservice.domain.table_issue.TableIssue
+import io.dnajd.mainservice.domain.projectauthority.ProjectAuthorityIdentity
+import io.dnajd.mainservice.domain.projecttable.ProjectTable
+import io.dnajd.mainservice.domain.tableissue.TableIssue
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
@@ -39,7 +39,7 @@ enum class ScopedEvaluatorType(val value: String) {
     Issue("TableIssue"),
 
     /**
-     * input type [io.dnajd.mainservice.domain.issue_comment.IssueComment.id]
+     * input type [io.dnajd.mainservice.domain.issuecomment.IssueComment.id]
      */
     IssueComment("IssueComment"),
 

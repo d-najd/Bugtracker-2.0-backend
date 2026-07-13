@@ -3,10 +3,10 @@ package io.dnajd.mainservice.controller
 import io.dnajd.mainservice.infrastructure.ScopedAuthorize
 import io.dnajd.mainservice.infrastructure.ScopedPermission
 import io.dnajd.mainservice.infrastructure.ScopedEvaluatorType
-import io.dnajd.mainservice.domain.project_table.ProjectTableDto
-import io.dnajd.mainservice.domain.project_table.ProjectTableDtoList
+import io.dnajd.mainservice.domain.projecttable.ProjectTableDto
+import io.dnajd.mainservice.domain.projecttable.ProjectTableDtoList
 import io.dnajd.mainservice.infrastructure.Endpoints
-import io.dnajd.mainservice.service.project_table.ProjectTableService
+import io.dnajd.mainservice.service.projecttable.ProjectTableService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 

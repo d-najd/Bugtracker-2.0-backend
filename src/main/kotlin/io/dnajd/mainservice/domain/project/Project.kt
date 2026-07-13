@@ -5,10 +5,10 @@ import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import dev.krud.shapeshift.resolver.annotation.MappedField
-import io.dnajd.mainservice.domain.project_table.ProjectTable
+import io.dnajd.mainservice.domain.projecttable.ProjectTable
 import io.dnajd.mainservice.infrastructure.mapper.DontMapCondition
-import io.dnajd.mainservice.infrastructure.user_content.UserContentDirs
-import io.dnajd.mainservice.infrastructure.user_content.UserContentPathMapper
+import io.dnajd.mainservice.infrastructure.usercontent.UserContentDirs
+import io.dnajd.mainservice.infrastructure.usercontent.UserContentPathMapper
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotEmpty

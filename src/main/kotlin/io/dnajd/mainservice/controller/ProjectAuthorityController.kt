@@ -1,12 +1,12 @@
 package io.dnajd.mainservice.controller
 
-import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityDtoList
-import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityIdentity
+import io.dnajd.mainservice.domain.projectauthority.ProjectAuthorityDtoList
+import io.dnajd.mainservice.domain.projectauthority.ProjectAuthorityIdentity
 import io.dnajd.mainservice.infrastructure.ScopedAuthorize
 import io.dnajd.mainservice.infrastructure.Endpoints
 import io.dnajd.mainservice.infrastructure.ScopedEvaluatorType
 import io.dnajd.mainservice.infrastructure.ScopedPermission
-import io.dnajd.mainservice.service.project_authority.ProjectAuthorityService
+import io.dnajd.mainservice.service.projectauthority.ProjectAuthorityService
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails

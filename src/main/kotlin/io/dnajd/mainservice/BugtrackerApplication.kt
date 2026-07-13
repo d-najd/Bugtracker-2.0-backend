@@ -12,8 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient
 class BugtrackerApplication
 
 @Bean
-fun getWebClientBuilder(): WebClient.Builder =
-    WebClient.builder()
+fun getWebClientBuilder(): WebClient.Builder = WebClient.builder()
 
 fun main(args: Array<String>) {
     // JwtUtil.generateDevToken()

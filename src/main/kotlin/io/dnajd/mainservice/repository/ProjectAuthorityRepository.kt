@@ -1,8 +1,8 @@
 package io.dnajd.mainservice.repository
 
 import com.cosium.spring.data.jpa.entity.graph.repository.EntityGraphJpaRepository
-import io.dnajd.mainservice.domain.project_authority.ProjectAuthority
-import io.dnajd.mainservice.domain.project_authority.ProjectAuthorityIdentity
+import io.dnajd.mainservice.domain.projectauthority.ProjectAuthority
+import io.dnajd.mainservice.domain.projectauthority.ProjectAuthorityIdentity
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 
@@ -32,5 +32,3 @@ interface ProjectAuthorityRepository : EntityGraphJpaRepository<ProjectAuthority
 
     fun deleteAllByUsernameAndProjectId(username: String, projectId: Long)
 }
-
-val se = ProjectAuthorityRepository::findByUsernameAndIssueCommentId

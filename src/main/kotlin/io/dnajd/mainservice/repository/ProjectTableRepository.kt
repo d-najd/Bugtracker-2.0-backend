@@ -3,7 +3,7 @@ package io.dnajd.mainservice.repository
 import com.cosium.spring.data.jpa.entity.graph.domain2.EntityGraph
 import com.cosium.spring.data.jpa.entity.graph.repository.EntityGraphJpaRepository
 import io.dnajd.mainservice.domain.project.Project
-import io.dnajd.mainservice.domain.project_table.ProjectTable
+import io.dnajd.mainservice.domain.projecttable.ProjectTable
 import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query

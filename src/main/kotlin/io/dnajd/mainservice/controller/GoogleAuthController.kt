@@ -4,7 +4,7 @@ import io.dnajd.mainservice.domain.user.CreateUserDto
 import io.dnajd.mainservice.infrastructure.Endpoints
 import io.dnajd.mainservice.infrastructure.exception.UserAlreadyExistsException
 import io.dnajd.mainservice.infrastructure.exception.UserNotFoundException
-import io.dnajd.mainservice.service.google_auth.GoogleAuthService
+import io.dnajd.mainservice.service.googleauth.GoogleAuthService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken

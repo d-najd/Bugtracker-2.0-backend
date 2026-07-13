@@ -8,9 +8,7 @@ import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
 import dev.krud.shapeshift.resolver.annotation.MappedField
-import dev.krud.shapeshift.transformer.ImplicitCollectionMappingTransformer
-import io.dnajd.mainservice.domain.project_authority.ProjectAuthority
-import io.dnajd.mainservice.domain.table_issue.TableIssue
+import io.dnajd.mainservice.domain.projectauthority.ProjectAuthority
 import io.dnajd.mainservice.infrastructure.ImplicitCollectionMappingTransformerFixed
 import io.dnajd.mainservice.infrastructure.mapper.LazyInitializedCondition
 import jakarta.validation.constraints.NotEmpty
@@ -20,10 +18,7 @@ import org.hibernate.annotations.CreationTimestamp
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import jakarta.persistence.*
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import java.util.*
-import kotlin.collections.HashSet
 
 @Entity
 @Table(
