@@ -12,17 +12,16 @@ import jakarta.validation.constraints.Size
 @AutoMapping(IssueLabelDto::class, AutoMappingStrategy.BY_NAME)
 @DefaultMappingTarget(IssueLabelDto::class)
 data class IssueLabel(
-    @Id
-    @Column
-    val issueId: Long = -1L,
-
-    @Id
-    @Column(length = 255)
-    @Size(max = 255)
-    val label: String = "",
+	@Id
+	@Column
+	val issueId: Long = -1L,
+	@Id
+	@Column(length = 255)
+	@field:Size(max = 255)
+	val label: String = "",
 )
 
 data class IssueLabelIdentity(
-    val issueId: Long = -1L,
-    val label: String = "",
+	val issueId: Long = -1L,
+	val label: String = "",
 )

@@ -1,15 +1,22 @@
 package io.dnajd.mainservice.service.project
 
-import io.dnajd.mainservice.domain.project.*
+import io.dnajd.mainservice.domain.project.ProjectDto
+import io.dnajd.mainservice.domain.project.ProjectDtoList
 
 interface ProjectService {
-    fun getAllByUsername(username: String): ProjectDtoList
+	fun getAllByUsername(username: String): ProjectDtoList
 
-    fun get(id: Long): ProjectDto
+	fun get(id: Long): ProjectDto
 
-    fun create(username: String, projectDto: ProjectDto): ProjectDto
+	fun create(
+		username: String,
+		projectDto: ProjectDto,
+	): ProjectDto
 
-    fun update(id: Long, projectDto: ProjectDto): ProjectDto
+	fun update(
+		id: Long,
+		projectDto: ProjectDto,
+	): ProjectDto
 
-    fun delete(id: Long)
+	fun delete(id: Long)
 }

@@ -17,17 +17,15 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(Endpoints.JWT_REFRESH_AUTH)
 class JwtRefreshAuthController(
-    private val service: JwtRefreshService
+	private val service: JwtRefreshService,
 ) {
-    @GetMapping("/access_token")
-    fun refreshAccessToken(@AuthenticationPrincipal userDetails: UserDetails): JwtTokenHolder {
-        return service.refreshAccessToken(userDetails.username)
-    }
+	@GetMapping("/access_token")
+	fun refreshAccessToken(
+		@AuthenticationPrincipal userDetails: UserDetails,
+	): JwtTokenHolder = service.refreshAccessToken(userDetails.username)
 
-    @GetMapping("/access_and_refresh_tokens")
-    fun refreshAccessAndRefreshTokens(
-        @RequestHeader("Authorization") authorizationHeader: String,
-    ): JwtTokenHolder {
-        return service.refreshAccessAndRefreshTokens(JwtUtil.extractTokenFromHeader(authorizationHeader))
-    }
+	@GetMapping("/access_and_refresh_tokens")
+	fun refreshAccessAndRefreshTokens(
+		@RequestHeader("Authorization") authorizationHeader: String,
+	): JwtTokenHolder = service.refreshAccessAndRefreshTokens(JwtUtil.extractTokenFromHeader(authorizationHeader))
 }

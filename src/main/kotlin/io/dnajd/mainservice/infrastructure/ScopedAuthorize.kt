@@ -17,58 +17,60 @@ import org.springframework.stereotype.Component
 import java.io.Serializable
 import java.lang.reflect.Method
 
-
 /**
  * Evaluators determine how the permission check will be done and how [ScopedPermission] will be used if at all.
  * Each evaluator must accept only one type of input
  */
-enum class ScopedEvaluatorType(val value: String) {
-    /**
-     * input type [io.dnajd.mainservice.domain.project.Project.id]
-     */
-    Project("Project"),
+enum class ScopedEvaluatorType(
+	val value: String,
+) {
+	/**
+	 * input type [io.dnajd.mainservice.domain.project.Project.id]
+	 */
+	Project("Project"),
 
-    /**
-     * input type [ProjectTable.id]
-     */
-    Table("ProjectTable"),
+	/**
+	 * input type [ProjectTable.id]
+	 */
+	Table("ProjectTable"),
 
-    /**
-     * input type [TableIssue.id]
-     */
-    Issue("TableIssue"),
+	/**
+	 * input type [TableIssue.id]
+	 */
+	Issue("TableIssue"),
 
-    /**
-     * input type [io.dnajd.mainservice.domain.issuecomment.IssueComment.id]
-     */
-    IssueComment("IssueComment"),
+	/**
+	 * input type [io.dnajd.mainservice.domain.issuecomment.IssueComment.id]
+	 */
+	IssueComment("IssueComment"),
 
-    /**
-     * input type [ProjectAuthorityIdentity]
-     * the user must have the authorities that are inside [ProjectAuthorityIdentity] as well as other authorities passed
-     */
-    HasGrantingAuthority("HasGrantingAuthorityAndManage")
+	/**
+	 * input type [ProjectAuthorityIdentity]
+	 * the user must have the authorities that are inside [ProjectAuthorityIdentity] as well as other authorities passed
+	 */
+	HasGrantingAuthority("HasGrantingAuthorityAndManage"),
 }
 
 /**
  * The type of permission that will be checked by [ScopedEvaluatorType], how this check is done and whether the
  * permission is used is dependent on [ScopedEvaluatorType]
  */
-enum class ScopedPermission(val value: String) {
-    View("project_view"),
-    Create("project_create"),
-    Delete("project_delete"),
-    Edit("project_edit"),
-    Manage("project_manage"),
-    Owner("project_owner"),
+enum class ScopedPermission(
+	val value: String,
+) {
+	View("project_view"),
+	Create("project_create"),
+	Delete("project_delete"),
+	Edit("project_edit"),
+	Manage("project_manage"),
+	Owner("project_owner"),
 
-    /**
-     * This authority will be ignored, if it's the only one empty list will be sent, this should only be used with
-     * special types of evaluators like [ScopedEvaluatorType.HasGrantingAuthority]
-     */
-    None("NoneIgnore")
+	/**
+	 * This authority will be ignored, if it's the only one empty list will be sent, this should only be used with
+	 * special types of evaluators like [ScopedEvaluatorType.HasGrantingAuthority]
+	 */
+	None("NoneIgnore"),
 }
-
 
 /**
  * Modified type safe variant of [PreAuthorize] hasAuthority
@@ -84,41 +86,48 @@ enum class ScopedPermission(val value: String) {
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.TYPE)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class ScopedAuthorize(
-    val targetId: String,
-    val evaluatorType: ScopedEvaluatorType,
-    vararg val permissions: ScopedPermission,
+	val targetId: String,
+	val evaluatorType: ScopedEvaluatorType,
+	vararg val permissions: ScopedPermission,
 )
 
 @Aspect
 @Component
 class ScopedAuthorizeAspect(
-    val permissionEvaluator: ScopedPermissionEvaluator
+	val permissionEvaluator: ScopedPermissionEvaluator,
 ) {
-    @Before("@annotation(scopedAuthorize)")
-    fun checkPermission(joinPoint: JoinPoint, scopedAuthorize: ScopedAuthorize) {
-        val args = joinPoint.args
-        val method = (joinPoint.signature as MethodSignature).method
+	@Before("@annotation(scopedAuthorize)")
+	fun checkPermission(
+		joinPoint: JoinPoint,
+		scopedAuthorize: ScopedAuthorize,
+	) {
+		val args = joinPoint.args
+		val method = (joinPoint.signature as MethodSignature).method
 
-        val targetIdValue = resolveSpEL(scopedAuthorize.targetId, method, args)
-        val targetType = scopedAuthorize.evaluatorType
-        val permissions =
-            scopedAuthorize.permissions.toMutableList().filter { o -> o != ScopedPermission.None }
+		val targetIdValue = resolveSpEL(scopedAuthorize.targetId, method, args)
+		val targetType = scopedAuthorize.evaluatorType
+		val permissions =
+			scopedAuthorize.permissions.toMutableList().filter { o -> o != ScopedPermission.None }
 
-        val auth = SecurityContextHolder.getContext().authentication
-        val hasPermission = permissionEvaluator.hasPermission(auth, targetIdValue, targetType, permissions)
+		val auth = SecurityContextHolder.getContext().authentication
+		val hasPermission = permissionEvaluator.hasPermission(auth, targetIdValue, targetType, permissions)
 
-        if (!hasPermission) {
-            throw AccessDeniedException("Access denied")
-        }
-    }
+		if (!hasPermission) {
+			throw AccessDeniedException("Access denied")
+		}
+	}
 
-    fun resolveSpEL(expression: String, method: Method, args: Array<Any>): Serializable {
-        val context = StandardEvaluationContext()
-        val paramNames = StandardReflectionParameterNameDiscoverer().getParameterNames(method)
-        paramNames?.forEachIndexed { index, name -> context.setVariable(name, args[index]) }
+	fun resolveSpEL(
+		expression: String,
+		method: Method,
+		args: Array<Any>,
+	): Serializable {
+		val context = StandardEvaluationContext()
+		val paramNames = StandardReflectionParameterNameDiscoverer().getParameterNames(method)
+		paramNames?.forEachIndexed { index, name -> context.setVariable(name, args[index]) }
 
-        val parser = SpelExpressionParser()
-        return parser.parseExpression(expression).getValue(context, Serializable::class.java)
-            ?: throw IllegalArgumentException("Unable to resolve expression: $expression")
-    }
+		val parser = SpelExpressionParser()
+		return parser.parseExpression(expression).getValue(context, Serializable::class.java)
+			?: throw IllegalArgumentException("Unable to resolve expression: $expression")
+	}
 }

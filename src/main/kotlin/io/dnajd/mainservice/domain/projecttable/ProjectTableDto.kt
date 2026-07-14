@@ -6,12 +6,14 @@ import io.dnajd.mainservice.domain.tableissue.TableIssueDto
 
 @DefaultMappingTarget(ProjectTable::class)
 data class ProjectTableDto(
-    val id: Long? = null,
-    val projectId: Long? = null,
-    @MappedField
-    val title: String? = null,
-    val position: Int? = null,
-    val issues: Set<TableIssueDto>? = null
+	val id: Long? = null,
+	val projectId: Long? = null,
+	@MappedField
+	val title: String? = null,
+	val position: Int? = null,
+	val issues: Set<TableIssueDto>? = null,
 )
 
-class ProjectTableDtoList(val data: List<ProjectTableDto>)
+class ProjectTableDtoList(
+	val data: List<ProjectTableDto>,
+)

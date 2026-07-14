@@ -5,6 +5,4 @@ import io.dnajd.mainservice.domain.issuecomment.IssueComment
 import org.springframework.stereotype.Repository
 
 @Repository
-interface IssueCommentRepository: EntityGraphJpaRepository<IssueComment, Long> {
-
-}
+interface IssueCommentRepository : EntityGraphJpaRepository<IssueComment, Long>

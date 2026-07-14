@@ -13,40 +13,42 @@ import org.springframework.web.multipart.MultipartFile
  * @see UserContentDirs
  */
 object UserContentPathMapper {
-    const val USER_CONTENT_URI = "user-content://"
+	const val USER_CONTENT_URI = "user-content://"
 
-    /**
-     * user-content://project-icon/icon.jpg -> project/path/user-content/project-icon/icon.jpg
-     * default - www.image-hoster/image.jpg -> www.image-hoster/image.jpg
-     */
-    fun resolveAbsolutePathFromUri(uri: String): String {
-        if (isUserContentUri(uri)) {
-            val uriPath = uri.drop(USER_CONTENT_URI.length)
-            return "${UserContentDirs.ABSOLUTE_PATH}${UserContentDirs.BASE}$uriPath"
-        }
+	/**
+	 * user-content://project-icon/icon.jpg -> project/path/user-content/project-icon/icon.jpg
+	 * default - www.image-hoster/image.jpg -> www.image-hoster/image.jpg
+	 */
+	fun resolveAbsolutePathFromUri(uri: String): String {
+		if (isUserContentUri(uri)) {
+			val uriPath = uri.drop(USER_CONTENT_URI.length)
+			return "${UserContentDirs.ABSOLUTE_PATH}${UserContentDirs.BASE}$uriPath"
+		}
 
-        return uri
-    }
+		return uri
+	}
 
-    fun toUserContentUri(path: String, file: MultipartFile, fileName: String = file.name): String {
-        return "${USER_CONTENT_URI}${toUserContentPath(path, file, fileName)}"
-    }
+	fun toUserContentUri(
+		path: String,
+		file: MultipartFile,
+		fileName: String = file.name,
+	): String = "${USER_CONTENT_URI}${toUserContentPath(path, file, fileName)}"
 
-    fun toUserContentPath(path: String, file: MultipartFile, fileName: String = file.name): String {
-        return "$path$fileName.${file.contentType!!.substringAfter("/")}"
-    }
+	fun toUserContentPath(
+		path: String,
+		file: MultipartFile,
+		fileName: String = file.name,
+	): String = "$path$fileName.${file.contentType!!.substringAfter("/")}"
 
-    fun isUserContentUri(uri: String): Boolean {
-        return uri.startsWith(USER_CONTENT_URI)
-    }
+	fun isUserContentUri(uri: String): Boolean = uri.startsWith(USER_CONTENT_URI)
 
-    fun absolutePathToUserContentUri(absolutePath: String): String {
-        val index = absolutePath.lastIndexOf(UserContentDirs.BASE)
-        if (index != -1) {
-            val userContentDir = absolutePath.substring(index + UserContentDirs.BASE.length)
-            return "$USER_CONTENT_URI$userContentDir"
-        } else {
-            throw IllegalArgumentException("given path doesn't contain user-content")
-        }
-    }
+	fun absolutePathToUserContentUri(absolutePath: String): String {
+		val index = absolutePath.lastIndexOf(UserContentDirs.BASE)
+		if (index != -1) {
+			val userContentDir = absolutePath.substring(index + UserContentDirs.BASE.length)
+			return "$USER_CONTENT_URI$userContentDir"
+		} else {
+			throw IllegalArgumentException("given path doesn't contain user-content")
+		}
+	}
 }

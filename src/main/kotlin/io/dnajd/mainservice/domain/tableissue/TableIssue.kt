@@ -24,174 +24,158 @@ import java.util.*
 
 @Entity
 @Table(
-    name = "project_table_issue",
-    uniqueConstraints = [UniqueConstraint(columnNames = ["table_id", "position"])]
+	name = "project_table_issue",
+	uniqueConstraints = [UniqueConstraint(columnNames = ["table_id", "position"])],
 )
 @AutoMapping(TableIssueDto::class, AutoMappingStrategy.BY_NAME)
 @DefaultMappingTarget(TableIssueDto::class)
 data class TableIssue(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = -1L,
-
-    @Column
-    val tableId: Long = -1L,
-
-    @Column
-    val reporter: String = "",
-
-    @Nullable
-    @Column(nullable = true)
-    val parentIssueId: Long? = null,
-
-    @Column(nullable = false, columnDefinition = "TINYINT UNSIGNED")
-    @Min(0)
-    @Max(5)
-    @NotNull
-    // @Type(type = "org.hibernate.type.IntegerType")
-    val severity: Int = -1,
-
-    @Column(nullable = false, length = 255)
-    @NotEmpty
-    @Size(max = 255)
-    val title: String = "",
-
-    @NotNull
-    @Column(nullable = false)
-    @Min(0)
-    val position: Int = -1,
-
-    @NotBlank
-    @Column(columnDefinition = "TEXT")
-    val description: String? = null,
-
-    @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
-    @Column(nullable = false)
-    @NotNull
-    @CreationTimestamp
-    val createdAt: Date? = null,
-
-    @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
-    @Column
-    @NotNull
-    val updatedAt: Date? = null,
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "tableId", insertable = false, updatable = false)
-    val table: ProjectTable? = null,
-
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    @JoinColumn(
-        name = "parentIssueId",
-        updatable = false,
-        insertable = false,
-    )
-    @MappedField(DontMapCondition::class)
-    val parentIssue: TableIssue? = null,
-
-    @OneToMany(
-        cascade = [CascadeType.ALL],
-        mappedBy = "parentIssue",
-        fetch = FetchType.LAZY
-    )
-    @MappedField(
-        condition = LazyInitializedCondition::class,
-        transformer = ImplicitCollectionMappingTransformerFixed::class
-    )
-    val childIssues: Set<TableIssue> = emptySet(),
-
-    @OneToMany(
-        cascade = [CascadeType.REMOVE],
-        fetch = FetchType.LAZY,
-    )
-    @JoinColumn(name = "issueId")
-    @MappedField(
-        condition = LazyInitializedCondition::class,
-        transformer = ImplicitCollectionMappingTransformerFixed::class
-    )
-    val assigned: Set<IssueAssignee> = emptySet(),
-
-    @OneToMany(
-        cascade = [CascadeType.REMOVE],
-        fetch = FetchType.LAZY,
-    )
-    @JoinColumn(name = "issueId")
-    @MappedField(
-        condition = LazyInitializedCondition::class,
-        transformer = ImplicitCollectionMappingTransformerFixed::class
-    )
-    val comments: Set<IssueComment> = emptySet(),
-
-    @OneToMany(
-        cascade = [CascadeType.REMOVE],
-        fetch = FetchType.LAZY,
-    )
-    @JoinColumn(name = "issueId")
-    @MappedField(
-        condition = LazyInitializedCondition::class,
-        transformer = ImplicitCollectionMappingTransformerFixed::class
-    )
-    val labels: Set<IssueLabel> = emptySet(),
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	val id: Long = -1L,
+	@Column
+	val tableId: Long = -1L,
+	@Column
+	val reporter: String = "",
+	@field:Nullable
+	@Column(nullable = true)
+	val parentIssueId: Long? = null,
+	// @Type(type = "org.hibernate.type.IntegerType")
+	@Column(nullable = false, columnDefinition = "TINYINT UNSIGNED")
+	@field:Min(0)
+	@field:Max(5)
+	@field:NotNull
+	val severity: Int = -1,
+	@Column(nullable = false, length = 255)
+	@field:NotEmpty
+	@field:Size(max = 255)
+	val title: String = "",
+	@field:NotNull
+	@Column(nullable = false)
+	@field:Min(0)
+	val position: Int = -1,
+	@field:NotBlank
+	@Column(columnDefinition = "TEXT")
+	val description: String? = null,
+	@field:JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
+	@Column(nullable = false)
+	@field:NotNull
+	@CreationTimestamp
+	val createdAt: Date? = null,
+	@field:JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
+	@Column
+	@field:NotNull
+	val updatedAt: Date? = null,
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "tableId", insertable = false, updatable = false)
+	val table: ProjectTable? = null,
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+	@JoinColumn(
+		name = "parentIssueId",
+		updatable = false,
+		insertable = false,
+	)
+	@MappedField(DontMapCondition::class)
+	val parentIssue: TableIssue? = null,
+	@OneToMany(
+		cascade = [CascadeType.ALL],
+		mappedBy = "parentIssue",
+		fetch = FetchType.LAZY,
+	)
+	@MappedField(
+		condition = LazyInitializedCondition::class,
+		transformer = ImplicitCollectionMappingTransformerFixed::class,
+	)
+	val childIssues: Set<TableIssue> = emptySet(),
+	@OneToMany(
+		cascade = [CascadeType.REMOVE],
+		fetch = FetchType.LAZY,
+	)
+	@JoinColumn(name = "issueId")
+	@MappedField(
+		condition = LazyInitializedCondition::class,
+		transformer = ImplicitCollectionMappingTransformerFixed::class,
+	)
+	val assigned: Set<IssueAssignee> = emptySet(),
+	@OneToMany(
+		cascade = [CascadeType.REMOVE],
+		fetch = FetchType.LAZY,
+	)
+	@JoinColumn(name = "issueId")
+	@MappedField(
+		condition = LazyInitializedCondition::class,
+		transformer = ImplicitCollectionMappingTransformerFixed::class,
+	)
+	val comments: Set<IssueComment> = emptySet(),
+	@OneToMany(
+		cascade = [CascadeType.REMOVE],
+		fetch = FetchType.LAZY,
+	)
+	@JoinColumn(name = "issueId")
+	@MappedField(
+		condition = LazyInitializedCondition::class,
+		transformer = ImplicitCollectionMappingTransformerFixed::class,
+	)
+	val labels: Set<IssueLabel> = emptySet(),
 ) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || javaClass != other.javaClass) return false
-        val another: TableIssue = other as TableIssue
-        return another.id == id &&
-                another.tableId == tableId &&
-                Objects.equals(another.reporter, reporter) &&
-                another.parentIssueId == parentIssueId &&
-                another.severity == severity &&
-                Objects.equals(another.title, title) &&
-                another.position == position &&
-                Objects.equals(another.description, description) &&
-                Objects.equals(another.createdAt, createdAt) &&
-                Objects.equals(another.updatedAt, updatedAt)
-    }
+	override fun equals(other: Any?): Boolean {
+		if (this === other) return true
+		if (other == null || javaClass != other.javaClass) return false
+		val another: TableIssue = other as TableIssue
+		return another.id == id &&
+			another.tableId == tableId &&
+			Objects.equals(another.reporter, reporter) &&
+			another.parentIssueId == parentIssueId &&
+			another.severity == severity &&
+			Objects.equals(another.title, title) &&
+			another.position == position &&
+			Objects.equals(another.description, description) &&
+			Objects.equals(another.createdAt, createdAt) &&
+			Objects.equals(another.updatedAt, updatedAt)
+	}
 
-    override fun hashCode(): Int {
-        return Objects.hash(
-            id,
-            tableId,
-            reporter,
-            parentIssueId,
-            severity,
-            parentIssueId,
-            severity,
-            title,
-            position,
-            description,
-            createdAt,
-            updatedAt
-        )
-    }
+	override fun hashCode(): Int =
+		Objects.hash(
+			id,
+			tableId,
+			reporter,
+			parentIssueId,
+			severity,
+			parentIssueId,
+			severity,
+			title,
+			position,
+			description,
+			createdAt,
+			updatedAt,
+		)
 
-    companion object {
-        fun entityGraph(
-            includeChildIssues: Boolean = false,
-            includeAssigned: Boolean = false,
-            includeComments: Boolean = false,
-            includeLabels: Boolean = false,
-            graphType: EntityGraphType = EntityGraphType.LOAD,
-        ): EntityGraph {
-            val graph = DynamicEntityGraph.builder(graphType)
+	companion object {
+		fun entityGraph(
+			includeChildIssues: Boolean = false,
+			includeAssigned: Boolean = false,
+			includeComments: Boolean = false,
+			includeLabels: Boolean = false,
+			graphType: EntityGraphType = EntityGraphType.LOAD,
+		): EntityGraph {
+			val graph = DynamicEntityGraph.builder(graphType)
 
-            if (includeChildIssues) {
-                graph.addPath(TableIssue::childIssues.name)
-            }
-            if (includeAssigned) {
-                graph.addPath(TableIssue::assigned.name)
-            }
-            if (includeComments) {
-                graph.addPath(TableIssue::comments.name)
-            }
-            if (includeLabels) {
-                graph.addPath(TableIssue::labels.name)
-            }
+			if (includeChildIssues) {
+				graph.addPath(TableIssue::childIssues.name)
+			}
+			if (includeAssigned) {
+				graph.addPath(TableIssue::assigned.name)
+			}
+			if (includeComments) {
+				graph.addPath(TableIssue::comments.name)
+			}
+			if (includeLabels) {
+				graph.addPath(TableIssue::labels.name)
+			}
 
-            return graph.build()
-        }
-    }
+			return graph.build()
+		}
+	}
 }

@@ -9,10 +9,8 @@ import org.springframework.stereotype.Service
 @Service
 @Transactional
 class UserServiceImpl(
-    private val repository: UserRepository,
-    private val mapper: ShapeShift,
+	private val repository: UserRepository,
+	private val mapper: ShapeShift,
 ) : UserService {
-    override fun loadUserByUsername(username: String): UserDetails {
-        return repository.getByUsername(username)
-    }
+	override fun loadUserByUsername(username: String): UserDetails = repository.getByUsername(username)
 }

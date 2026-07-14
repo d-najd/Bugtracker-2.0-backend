@@ -3,17 +3,17 @@ package io.dnajd.mainservice.repository
 import com.cosium.spring.data.jpa.entity.graph.repository.EntityGraphJpaRepository
 import io.dnajd.mainservice.domain.user.User
 import org.springframework.stereotype.Repository
-import java.util.*
+import java.util.Optional
 
 @Repository
 interface UserRepository : EntityGraphJpaRepository<User, String> {
-    fun existsByGmail(gmail: String): Boolean
+	fun existsByGmail(gmail: String): Boolean
 
-    fun findByGmail(gmail: String): Optional<User>
+	fun findByGmail(gmail: String): Optional<User>
 
-    fun existsByUsername(username: String): Boolean
+	fun existsByUsername(username: String): Boolean
 
-    fun getByUsername(username: String): User
+	fun getByUsername(username: String): User
 
-    fun findByUsername(gmail: String): Optional<User>
+	fun findByUsername(gmail: String): Optional<User>
 }

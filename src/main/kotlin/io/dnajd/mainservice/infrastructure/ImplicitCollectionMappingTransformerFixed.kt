@@ -10,30 +10,34 @@ import java.lang.reflect.ParameterizedType
  * @see ImplicitCollectionMappingTransformer
  */
 class ImplicitCollectionMappingTransformerFixed : MappingTransformer<Collection<Any>, Collection<Any>> {
-    override fun transform(context: MappingTransformerContext<out Collection<Any>>): Collection<Any>? {
-        context.originalValue ?: return null
-        val type = context.toField.genericType as? ParameterizedType ?: return null
-        val collectionType = type.actualTypeArguments[0] as? Class<*> ?: return null
-        val se = type.rawType.typeName
-        val ere = type.rawType.javaClass
-        val baseMapping = context.originalValue!!.map { context.shapeShift.map(it, collectionType) }
-        val ge = se + "" + ere
-        return when (type.rawType.typeName) {
-            List::class.java.typeName -> {
-                baseMapping
-            }
-            MutableList::class.java.typeName -> {
-                baseMapping.toMutableList()
-            }
-            Set::class.java.typeName -> {
-                baseMapping.toSet()
-            }
-            MutableSet::class.java.typeName -> {
-                baseMapping.toMutableSet()
-            }
-            else -> {
-                baseMapping
-            }
-        }
-    }
+	override fun transform(context: MappingTransformerContext<out Collection<Any>>): Collection<Any>? {
+		context.originalValue ?: return null
+		val type = context.toField.genericType as? ParameterizedType ?: return null
+		val collectionType = type.actualTypeArguments[0] as? Class<*> ?: return null
+		val se = type.rawType.typeName
+		val ere = type.rawType.javaClass
+		val baseMapping = context.originalValue!!.map { context.shapeShift.map(it, collectionType) }
+		val ge = se + "" + ere
+		return when (type.rawType.typeName) {
+			List::class.java.typeName -> {
+				baseMapping
+			}
+
+			MutableList::class.java.typeName -> {
+				baseMapping.toMutableList()
+			}
+
+			Set::class.java.typeName -> {
+				baseMapping.toSet()
+			}
+
+			MutableSet::class.java.typeName -> {
+				baseMapping.toMutableSet()
+			}
+
+			else -> {
+				baseMapping
+			}
+		}
+	}
 }

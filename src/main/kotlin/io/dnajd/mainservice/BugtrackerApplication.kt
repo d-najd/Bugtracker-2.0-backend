@@ -15,6 +15,6 @@ class BugtrackerApplication
 fun getWebClientBuilder(): WebClient.Builder = WebClient.builder()
 
 fun main(args: Array<String>) {
-    // JwtUtil.generateDevToken()
-    runApplication<BugtrackerApplication>(*args)
+	// JwtUtil.generateDevToken()
+	runApplication<BugtrackerApplication>(*args)
 }

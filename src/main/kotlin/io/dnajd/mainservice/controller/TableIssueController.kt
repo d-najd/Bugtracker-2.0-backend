@@ -1,11 +1,11 @@
 package io.dnajd.mainservice.controller
 
-import io.dnajd.mainservice.infrastructure.ScopedAuthorize
-import io.dnajd.mainservice.infrastructure.ScopedPermission
-import io.dnajd.mainservice.infrastructure.ScopedEvaluatorType
 import io.dnajd.mainservice.domain.tableissue.TableIssueDto
 import io.dnajd.mainservice.domain.tableissue.TableIssueDtoList
 import io.dnajd.mainservice.infrastructure.Endpoints
+import io.dnajd.mainservice.infrastructure.ScopedAuthorize
+import io.dnajd.mainservice.infrastructure.ScopedEvaluatorType
+import io.dnajd.mainservice.infrastructure.ScopedPermission
 import io.dnajd.mainservice.service.tableissue.TableIssueService
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -15,98 +15,82 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping(Endpoints.PROJECT_TABLE_ISSUE)
 class TableIssueController(
-    private val issueService: TableIssueService
+	private val issueService: TableIssueService,
 ) {
-    @GetMapping("/tableId/{tableId}")
-    @ScopedAuthorize("#tableId", ScopedEvaluatorType.Table, ScopedPermission.View)
-    fun getAllByTableId(
-        @PathVariable tableId: Long,
-        @RequestParam includeChildIssues: Boolean = false,
-    ): TableIssueDtoList {
-        return issueService.getAllByTableId(tableId, includeChildIssues)
-    }
+	@GetMapping("/tableId/{tableId}")
+	@ScopedAuthorize("#tableId", ScopedEvaluatorType.Table, ScopedPermission.View)
+	fun getAllByTableId(
+		@PathVariable tableId: Long,
+		@RequestParam includeChildIssues: Boolean = false,
+	): TableIssueDtoList = issueService.getAllByTableId(tableId, includeChildIssues)
 
-    @GetMapping("/{id}")
-    @ScopedAuthorize("#id", ScopedEvaluatorType.Issue, ScopedPermission.View)
-    fun get(
-        @PathVariable id: Long,
-        @RequestParam includeChildIssues: Boolean = true,
-        @RequestParam includeAssigned: Boolean = true,
-        @RequestParam includeComments: Boolean = true,
-        @RequestParam includeLabels: Boolean = true,
-    ): TableIssueDto {
-        return issueService.get(id, includeChildIssues, includeAssigned, includeComments, includeLabels)
-    }
+	@GetMapping("/{id}")
+	@ScopedAuthorize("#id", ScopedEvaluatorType.Issue, ScopedPermission.View)
+	fun get(
+		@PathVariable id: Long,
+		@RequestParam includeChildIssues: Boolean = true,
+		@RequestParam includeAssigned: Boolean = true,
+		@RequestParam includeComments: Boolean = true,
+		@RequestParam includeLabels: Boolean = true,
+	): TableIssueDto = issueService.get(id, includeChildIssues, includeAssigned, includeComments, includeLabels)
 
-    @PostMapping("/tableId/{tableId}")
-    @ResponseStatus(value = HttpStatus.CREATED)
-    @ScopedAuthorize("#tableId", ScopedEvaluatorType.Table, ScopedPermission.Create)
-    fun create(
-        @PathVariable tableId: Long,
-        @RequestBody dto: TableIssueDto,
-        @AuthenticationPrincipal userDetails: UserDetails,
-    ): TableIssueDto {
-        return issueService.create(tableId, userDetails.username, dto)
-    }
+	@PostMapping("/tableId/{tableId}")
+	@ResponseStatus(value = HttpStatus.CREATED)
+	@ScopedAuthorize("#tableId", ScopedEvaluatorType.Table, ScopedPermission.Create)
+	fun create(
+		@PathVariable tableId: Long,
+		@RequestBody dto: TableIssueDto,
+		@AuthenticationPrincipal userDetails: UserDetails,
+	): TableIssueDto = issueService.create(tableId, userDetails.username, dto)
 
-    @PutMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.OK)
-    @ScopedAuthorize("#id", ScopedEvaluatorType.Issue, ScopedPermission.Edit)
-    fun update(
-        @PathVariable id: Long,
-        @RequestBody dto: TableIssueDto
-    ): TableIssueDto {
-        return issueService.update(id, dto)
-    }
+	@PutMapping("/{id}")
+	@ResponseStatus(value = HttpStatus.OK)
+	@ScopedAuthorize("#id", ScopedEvaluatorType.Issue, ScopedPermission.Edit)
+	fun update(
+		@PathVariable id: Long,
+		@RequestBody dto: TableIssueDto,
+	): TableIssueDto = issueService.update(id, dto)
 
-    @PatchMapping("/{fId}/swapPositionWith/{sId}")
-    @ScopedAuthorize("#fId", ScopedEvaluatorType.Issue, ScopedPermission.Edit)
-    fun swapIssuePositions(
-        @PathVariable fId: Long,
-        @PathVariable sId: Long
-    ): TableIssueDtoList {
-        return issueService.swapIssuePositions(fId, sId)
-    }
+	@PatchMapping("/{fId}/swapPositionWith/{sId}")
+	@ScopedAuthorize("#fId", ScopedEvaluatorType.Issue, ScopedPermission.Edit)
+	fun swapIssuePositions(
+		@PathVariable fId: Long,
+		@PathVariable sId: Long,
+	): TableIssueDtoList = issueService.swapIssuePositions(fId, sId)
 
-    /**
-     * TODO this currently returns unmodified issues as well, and should be changed to not do that
-     */
-    @PatchMapping("/{fId}/movePositionTo/{sId}")
-    @ScopedAuthorize("#fId", ScopedEvaluatorType.Issue, ScopedPermission.Edit)
-    fun movePositionTo(
-        @PathVariable fId: Long,
-        @PathVariable sId: Long
-    ): TableIssueDtoList {
-        return issueService.movePositionTo(fId, sId)
-    }
+	/**
+	 * TODO this currently returns unmodified issues as well, and should be changed to not do that
+	 */
+	@PatchMapping("/{fId}/movePositionTo/{sId}")
+	@ScopedAuthorize("#fId", ScopedEvaluatorType.Issue, ScopedPermission.Edit)
+	fun movePositionTo(
+		@PathVariable fId: Long,
+		@PathVariable sId: Long,
+	): TableIssueDtoList = issueService.movePositionTo(fId, sId)
 
-    /**
-     * TODO this currently returns unmodified issues as well, and should be changed to not do that
-     */
-    @PatchMapping("/{id}/moveToTable/{tableId}")
-    @ScopedAuthorize("#tableId", ScopedEvaluatorType.Table, ScopedPermission.Edit)
-    fun moveToTable(
-        @PathVariable id: Long,
-        @PathVariable tableId: Long
-    ): TableIssueDtoList {
-        return issueService.moveToTable(id, tableId)
-    }
+	/**
+	 * TODO this currently returns unmodified issues as well, and should be changed to not do that
+	 */
+	@PatchMapping("/{id}/moveToTable/{tableId}")
+	@ScopedAuthorize("#tableId", ScopedEvaluatorType.Table, ScopedPermission.Edit)
+	fun moveToTable(
+		@PathVariable id: Long,
+		@PathVariable tableId: Long,
+	): TableIssueDtoList = issueService.moveToTable(id, tableId)
 
-    @PatchMapping("/id/{id}/setParentIssue/{parentIssueId}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @ScopedAuthorize("#id", ScopedEvaluatorType.Issue, ScopedPermission.Edit)
-    fun setParentIssue(
-        @PathVariable id: Long,
-        @PathVariable parentIssueId: Long
-    ) {
-        issueService.setParentIssue(id, parentIssueId)
-    }
+	@PatchMapping("/id/{id}/setParentIssue/{parentIssueId}")
+	@ResponseStatus(value = HttpStatus.NO_CONTENT)
+	@ScopedAuthorize("#id", ScopedEvaluatorType.Issue, ScopedPermission.Edit)
+	fun setParentIssue(
+		@PathVariable id: Long,
+		@PathVariable parentIssueId: Long,
+	) {
+		issueService.setParentIssue(id, parentIssueId)
+	}
 
-    @DeleteMapping("/{id}")
-    @ScopedAuthorize("#id", ScopedEvaluatorType.Issue, ScopedPermission.Delete)
-    fun delete(
-        @PathVariable id: Long,
-    ): TableIssueDtoList {
-        return issueService.delete(id)
-    }
+	@DeleteMapping("/{id}")
+	@ScopedAuthorize("#id", ScopedEvaluatorType.Issue, ScopedPermission.Delete)
+	fun delete(
+		@PathVariable id: Long,
+	): TableIssueDtoList = issueService.delete(id)
 }

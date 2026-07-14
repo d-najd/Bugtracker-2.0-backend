@@ -25,62 +25,57 @@ import kotlin.io.path.absolutePathString
 @AutoMapping(ProjectDto::class, AutoMappingStrategy.BY_NAME)
 @DefaultMappingTarget(ProjectDto::class)
 data class Project(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = -1L,
-
-    @NotEmpty
-    @Size(max = 255)
-    @Column(nullable = false, length = 255)
-    val title: String = "",
-
-    @Column
-    val owner: String = "",
-
-    @NotBlank
-    @Column(columnDefinition = "TEXT")
-    val description: String? = null,
-
-    @NotBlank
-    @NotNull
-    @Column(nullable = false)
-    @MappedField(DontMapCondition::class)
-    val iconUri: String = generateDefaultIconUri(),
-
-    @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
-    @NotNull
-    @CreationTimestamp
-    @Column(nullable = false)
-    val createdAt: Date? = null,
-
-    @OneToMany(mappedBy = "projectId", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    @MappedField(DontMapCondition::class)
-    val tables: Set<ProjectTable> = emptySet(),
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	val id: Long = -1L,
+	@field:NotEmpty
+	@field:Size(max = 255)
+	@Column(nullable = false, length = 255)
+	val title: String = "",
+	@Column
+	val owner: String = "",
+	@field:NotBlank
+	@Column(columnDefinition = "TEXT")
+	val description: String? = null,
+	@field:NotBlank
+	@field:NotNull
+	@Column(nullable = false)
+	@MappedField(DontMapCondition::class)
+	val iconUri: String = generateDefaultIconUri(),
+	@field:JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
+	@field:NotNull
+	@CreationTimestamp
+	@Column(nullable = false)
+	val createdAt: Date? = null,
+	@OneToMany(mappedBy = "projectId", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+	@MappedField(DontMapCondition::class)
+	val tables: Set<ProjectTable> = emptySet(),
 ) {
-    companion object {
-        private var defaultProjectIconUris: Set<String>? = null
+	companion object {
+		private var defaultProjectIconUris: Set<String>? = null
 
-        private fun generateDefaultIconUri(): String {
-            if (defaultProjectIconUris == null) {
-                populateDefaultProjectIconUris()
-            }
-            return defaultProjectIconUris!!.random()
-        }
+		private fun generateDefaultIconUri(): String {
+			if (defaultProjectIconUris == null) {
+				populateDefaultProjectIconUris()
+			}
+			return defaultProjectIconUris!!.random()
+		}
 
-        private fun populateDefaultProjectIconUris() {
-            val defaultProjectIconsPath =
-                Path("${UserContentDirs.ABSOLUTE_PATH}${UserContentDirs.BASE}${UserContentDirs.DEFAULT_PROJECT_ICON}")
-            if (Files.notExists(defaultProjectIconsPath)) {
-                throw IllegalStateException("Default projects missing")
-            }
-            val defaultProjectIcons = Files.list(defaultProjectIconsPath).toList()
-            if (defaultProjectIcons.size == 0) {
-                throw IllegalStateException("Default projects missing")
-            }
+		private fun populateDefaultProjectIconUris() {
+			val defaultProjectIconsPath =
+				Path("${UserContentDirs.ABSOLUTE_PATH}${UserContentDirs.BASE}${UserContentDirs.DEFAULT_PROJECT_ICON}")
+			if (Files.notExists(defaultProjectIconsPath)) {
+				throw IllegalStateException("Default projects missing")
+			}
+			val defaultProjectIcons = Files.list(defaultProjectIconsPath).toList()
+			if (defaultProjectIcons.isEmpty()) {
+				throw IllegalStateException("Default projects missing")
+			}
 
-            defaultProjectIconUris = defaultProjectIcons.map {
-                UserContentPathMapper.absolutePathToUserContentUri(it.absolutePathString())
-            }.toSet()
-        }
-    }
+			defaultProjectIconUris = defaultProjectIcons
+				.map {
+					UserContentPathMapper.absolutePathToUserContentUri(it.absolutePathString())
+				}.toSet()
+		}
+	}
 }

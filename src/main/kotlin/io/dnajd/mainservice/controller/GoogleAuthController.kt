@@ -16,35 +16,33 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping(Endpoints.GOOGLE_AUTH)
 class GoogleAuthController(
-    private val service: GoogleAuthService
+	private val service: GoogleAuthService,
 ) {
-    @GetMapping
-    fun googleSignIn(
-        oauthToken: JwtAuthenticationToken
-    ): ResponseEntity<Any> {
-        try {
-            // User exists, return tokens
-            val tokenHolder = service.googleSignIn(oauthToken)
-            return ResponseEntity.ok(tokenHolder)
-        } catch (e: UserNotFoundException) {
-            // user doesn't exist, prompt to choose username and sign up
-            return ResponseEntity.status(404).build()
-        }
-    }
+	@GetMapping
+	fun googleSignIn(oauthToken: JwtAuthenticationToken): ResponseEntity<Any> {
+		try {
+			// User exists, return tokens
+			val tokenHolder = service.googleSignIn(oauthToken)
+			return ResponseEntity.ok(tokenHolder)
+		} catch (e: UserNotFoundException) {
+			// user doesn't exist, prompt to choose username and sign up
+			return ResponseEntity.status(404).build()
+		}
+	}
 
-    @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED)
-    fun googleSignUp(
-        oauthToken: JwtAuthenticationToken,
-        @RequestBody userInfo: CreateUserDto
-    ): ResponseEntity<Any> {
-        try {
-            // User exists, return tokens
-            val tokenHolder = service.googleSignUp(oauthToken, userInfo)
-            return ResponseEntity.status(HttpStatus.CREATED).body(tokenHolder)
-        } catch (e: UserAlreadyExistsException) {
-            // User with gmail or username already exists, prompt user to pick another
-            return ResponseEntity.status(409).build()
-        }
-    }
+	@PostMapping
+	@ResponseStatus(value = HttpStatus.CREATED)
+	fun googleSignUp(
+		oauthToken: JwtAuthenticationToken,
+		@RequestBody userInfo: CreateUserDto,
+	): ResponseEntity<Any> {
+		try {
+			// User exists, return tokens
+			val tokenHolder = service.googleSignUp(oauthToken, userInfo)
+			return ResponseEntity.status(HttpStatus.CREATED).body(tokenHolder)
+		} catch (e: UserAlreadyExistsException) {
+			// User with gmail or username already exists, prompt user to pick another
+			return ResponseEntity.status(409).build()
+		}
+	}
 }

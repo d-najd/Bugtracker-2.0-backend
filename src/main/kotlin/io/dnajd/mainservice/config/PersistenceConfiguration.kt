@@ -6,11 +6,10 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class PersistenceConfiguration {
-    @Bean
-    fun cleanMigrateStrategy(): FlywayMigrationStrategy {
-        return FlywayMigrationStrategy() { flyway ->
-            flyway.repair()
-            flyway.migrate()
-        }
-    }
+	@Bean
+	fun cleanMigrateStrategy(): FlywayMigrationStrategy =
+		FlywayMigrationStrategy { flyway ->
+			flyway.repair()
+			flyway.migrate()
+		}
 }

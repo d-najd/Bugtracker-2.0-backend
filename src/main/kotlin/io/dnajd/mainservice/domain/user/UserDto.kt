@@ -6,8 +6,8 @@ import java.util.*
 
 @DefaultMappingTarget(User::class)
 data class UserDto(
-    val username: String? = null,
-    val gmail: String? = null,
-    val createdAt: Date? = null,
-    val projectAuthorities: MutableList<ProjectAuthorityDto>? = null,
+	val username: String? = null,
+	val gmail: String? = null,
+	val createdAt: Date? = null,
+	val projectAuthorities: MutableList<ProjectAuthorityDto>? = null,
 )

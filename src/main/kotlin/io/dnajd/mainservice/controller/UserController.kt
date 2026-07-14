@@ -13,7 +13,5 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(Endpoints.USER)
 class UserController(
-    private val service: UserService
-) {
-
-}
+	private val service: UserService,
+)

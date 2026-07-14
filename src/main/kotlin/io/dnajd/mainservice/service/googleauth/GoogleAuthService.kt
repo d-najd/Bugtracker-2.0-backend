@@ -11,12 +11,12 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
  * @see GoogleAuthController
  */
 interface GoogleAuthService {
-    @Throws(UserNotFoundException::class)
-    fun googleSignIn(oauthToken: JwtAuthenticationToken): JwtTokenHolder
+	@Throws(UserNotFoundException::class)
+	fun googleSignIn(oauthToken: JwtAuthenticationToken): JwtTokenHolder
 
-    @Throws(UserAlreadyExistsException::class)
-    fun googleSignUp(
-        oauthToken: JwtAuthenticationToken,
-        userInfo: CreateUserDto
-    ): JwtTokenHolder
+	@Throws(UserAlreadyExistsException::class)
+	fun googleSignUp(
+		oauthToken: JwtAuthenticationToken,
+		userInfo: CreateUserDto,
+	): JwtTokenHolder
 }

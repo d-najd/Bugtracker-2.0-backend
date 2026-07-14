@@ -21,59 +21,55 @@ import jakarta.validation.constraints.Size
 
 @Entity
 @Table(
-    name = "project_table", uniqueConstraints = [
-        UniqueConstraint(columnNames = ["project_id", "title"]),
-        UniqueConstraint(columnNames = ["project_id", "position"])
-    ]
+	name = "project_table",
+	uniqueConstraints = [
+		UniqueConstraint(columnNames = ["project_id", "title"]),
+		UniqueConstraint(columnNames = ["project_id", "position"]),
+	],
 )
 @AutoMapping(ProjectTableDto::class, AutoMappingStrategy.BY_NAME)
 @DefaultMappingTarget(ProjectTableDto::class)
 data class ProjectTable(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = -1L,
-
-    @Column(updatable = false)
-    val projectId: Long = -1L,
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "projectId", insertable = false, updatable = false)
-    @MappedField(DontMapCondition::class)
-    val project: Project? = null,
-
-    @NotEmpty
-    @Size(max = 255)
-    @Column(nullable = false, length = 255)
-    val title: String = "",
-
-    @NotNull
-    @Column(nullable = false, columnDefinition = "INT UNSIGNED")
-    @Min(0)
-    val position: Int = -1,
-
-    @OneToMany(mappedBy = "tableId", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = false)
-    @MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformerFixed::class)
-    val issues: Set<TableIssue> = emptySet()
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	val id: Long = -1L,
+	@Column(updatable = false)
+	val projectId: Long = -1L,
+	@JsonIgnore
+	@ManyToOne
+	@JoinColumn(name = "projectId", insertable = false, updatable = false)
+	@MappedField(DontMapCondition::class)
+	val project: Project? = null,
+	@field:NotEmpty
+	@field:Size(max = 255)
+	@Column(nullable = false, length = 255)
+	val title: String = "",
+	@field:NotNull
+	@Column(nullable = false, columnDefinition = "INT UNSIGNED")
+	@field:Min(0)
+	val position: Int = -1,
+	@OneToMany(mappedBy = "tableId", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = false)
+	@MappedField(condition = LazyInitializedCondition::class, transformer = ImplicitCollectionMappingTransformerFixed::class)
+	val issues: Set<TableIssue> = emptySet(),
 ) {
-    companion object {
-        /**
-         * If [includeChildIssues] is then [includeIssues] will be ignored
-         */
-        fun entityGraph(
-            includeIssues: Boolean = false,
-            includeChildIssues: Boolean = false,
-            graphType: EntityGraphType = EntityGraphType.LOAD,
-        ): EntityGraph {
-            val graph = DynamicEntityGraph.builder(graphType)
+	companion object {
+		/**
+		 * If [includeChildIssues] is then [includeIssues] will be ignored
+		 */
+		fun entityGraph(
+			includeIssues: Boolean = false,
+			includeChildIssues: Boolean = false,
+			graphType: EntityGraphType = EntityGraphType.LOAD,
+		): EntityGraph {
+			val graph = DynamicEntityGraph.builder(graphType)
 
-            if (includeChildIssues) {
-                graph.addPath(ProjectTable::issues.name, TableIssue::childIssues.name)
-            } else if (includeIssues) {
-                graph.addPath(ProjectTable::issues.name)
-            }
+			if (includeChildIssues) {
+				graph.addPath(ProjectTable::issues.name, TableIssue::childIssues.name)
+			} else if (includeIssues) {
+				graph.addPath(ProjectTable::issues.name)
+			}
 
-            return graph.build()
-        }
-    }
+			return graph.build()
+		}
+	}
 }

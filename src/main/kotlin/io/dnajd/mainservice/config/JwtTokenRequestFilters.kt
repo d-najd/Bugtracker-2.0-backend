@@ -17,48 +17,48 @@ import org.springframework.web.filter.OncePerRequestFilter
  * Component is not used since it will be automatically registered as default filter that way
  */
 class JwtAccessTokenRequestFilter(
-    private val jwtUserDetailsService: UserDetailsService,
+	private val jwtUserDetailsService: UserDetailsService,
 ) : OncePerRequestFilter() {
-    override fun doFilterInternal(
-        request: HttpServletRequest,
-        response: HttpServletResponse,
-        filterChain: FilterChain
-    ) {
-        jwtTokenRequestFilterBase(
-            request,
-            response,
-            filterChain,
-            jwtUserDetailsService,
-            this,
-            tokenValidator = { jwtToken, username ->
-                JwtUtil.validateAccessToken(jwtToken, username)
-            }
-        )
-    }
+	override fun doFilterInternal(
+		request: HttpServletRequest,
+		response: HttpServletResponse,
+		filterChain: FilterChain,
+	) {
+		jwtTokenRequestFilterBase(
+			request,
+			response,
+			filterChain,
+			jwtUserDetailsService,
+			this,
+			tokenValidator = { jwtToken, username ->
+				JwtUtil.validateAccessToken(jwtToken, username)
+			},
+		)
+	}
 }
 
 /**
  * Component is not used since it will be automatically registered as default filter that way
  */
 class JwtRefreshTokenRequestFilter(
-    private val jwtUserDetailsService: UserDetailsService,
+	private val jwtUserDetailsService: UserDetailsService,
 ) : OncePerRequestFilter() {
-    override fun doFilterInternal(
-        request: HttpServletRequest,
-        response: HttpServletResponse,
-        filterChain: FilterChain
-    ) {
-        jwtTokenRequestFilterBase(
-            request,
-            response,
-            filterChain,
-            jwtUserDetailsService,
-            this,
-            tokenValidator = { jwtToken, username ->
-                JwtUtil.validateRefreshToken(jwtToken, username)
-            }
-        )
-    }
+	override fun doFilterInternal(
+		request: HttpServletRequest,
+		response: HttpServletResponse,
+		filterChain: FilterChain,
+	) {
+		jwtTokenRequestFilterBase(
+			request,
+			response,
+			filterChain,
+			jwtUserDetailsService,
+			this,
+			tokenValidator = { jwtToken, username ->
+				JwtUtil.validateRefreshToken(jwtToken, username)
+			},
+		)
+	}
 }
 
 /**
@@ -72,40 +72,44 @@ class JwtRefreshTokenRequestFilter(
  * </pre>
  */
 fun jwtTokenRequestFilterBase(
-    request: HttpServletRequest,
-    response: HttpServletResponse,
-    filterChain: FilterChain,
-    jwtUserDetailsService: UserDetailsService,
-    oncePerRequestFilter: OncePerRequestFilter,
-    tokenValidator: (String, String) -> Boolean
+	request: HttpServletRequest,
+	response: HttpServletResponse,
+	filterChain: FilterChain,
+	jwtUserDetailsService: UserDetailsService,
+	oncePerRequestFilter: OncePerRequestFilter,
+	tokenValidator: (String, String) -> Boolean,
 ) {
-    try {
-        val requestTokenHeader = request.getHeader("Authorization") ?: throw org.springframework.security.access.AccessDeniedException("JWT token required")
+	try {
+		val requestTokenHeader =
+			request.getHeader("Authorization") ?: throw org.springframework.security.access
+				.AccessDeniedException("JWT token required")
 
-        val jwtToken: String = JwtUtil.extractTokenFromHeader(requestTokenHeader)
-        val username: String = JwtUtil.getUsernameFromToken(jwtToken)
+		val jwtToken: String = JwtUtil.extractTokenFromHeader(requestTokenHeader)
+		val username: String = JwtUtil.getUsernameFromToken(jwtToken)
 
-        if (SecurityContextHolder.getContext().authentication == null) {
-            val userDetails = jwtUserDetailsService.loadUserByUsername(username);
+		if (SecurityContextHolder.getContext().authentication == null) {
+			val userDetails = jwtUserDetailsService.loadUserByUsername(username)
 
-            if (tokenValidator.invoke(jwtToken, userDetails.username)) {
-                val usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken(
-                    userDetails, null, emptyList()
-                )
-                usernamePasswordAuthenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
+			if (tokenValidator.invoke(jwtToken, userDetails.username)) {
+				val usernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken(
+					userDetails,
+					null,
+					emptyList(),
+				)
+				usernamePasswordAuthenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
 
-                SecurityContextHolder.getContext().authentication = usernamePasswordAuthenticationToken;
-            }
-        }
-    } catch (e: org.springframework.security.access.AccessDeniedException) {
-        response.status = HttpStatus.FORBIDDEN.value()
-    } catch (e: IllegalArgumentException) {
-        response.status = HttpStatus.FORBIDDEN.value()
-        LoggerFactory.getLogger("JwtTokenRequestFilters").warn(e.message)
-    } catch (e: MalformedJwtException) {
-        response.status = HttpStatus.FORBIDDEN.value()
-        LoggerFactory.getLogger("JwtTokenRequestFilters").warn(e.message)
-    }
+				SecurityContextHolder.getContext().authentication = usernamePasswordAuthenticationToken
+			}
+		}
+	} catch (e: org.springframework.security.access.AccessDeniedException) {
+		response.status = HttpStatus.FORBIDDEN.value()
+	} catch (e: IllegalArgumentException) {
+		response.status = HttpStatus.FORBIDDEN.value()
+		LoggerFactory.getLogger("JwtTokenRequestFilters").warn(e.message)
+	} catch (e: MalformedJwtException) {
+		response.status = HttpStatus.FORBIDDEN.value()
+		LoggerFactory.getLogger("JwtTokenRequestFilters").warn(e.message)
+	}
 
-    filterChain.doFilter(request, response)
+	filterChain.doFilter(request, response)
 }

@@ -6,11 +6,11 @@ import java.util.*
 
 @DefaultMappingTarget(IssueComment::class)
 data class IssueCommentDto(
-    val id: Long? = null,
-    val user: String? = null,
-    val issueId: Long? = null,
-    @MappedField
-    val message: String? = null,
-    val createdAt: Date? = null,
-    val editedAt: Date? = null,
+	val id: Long? = null,
+	val user: String? = null,
+	val issueId: Long? = null,
+	@MappedField
+	val message: String? = null,
+	val createdAt: Date? = null,
+	val editedAt: Date? = null,
 )

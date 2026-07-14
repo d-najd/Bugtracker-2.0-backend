@@ -13,65 +13,86 @@ import java.io.Serializable
  */
 @Component
 class ScopedPermissionEvaluator(
-    private val repository: ProjectAuthorityRepository
+	private val repository: ProjectAuthorityRepository,
 ) {
-    fun hasPermission(
-        authentication: Authentication,
-        targetId: Serializable,
-        evaluatorType: ScopedEvaluatorType,
-        permissions: List<ScopedPermission>
-    ): Boolean {
-        val userDetails = authentication.principal as UserDetails
-        return when (evaluatorType) {
-            ScopedEvaluatorType.Project -> {
-                hasProjectPermission(userDetails, targetId as Long, permissions)
-            }
-            ScopedEvaluatorType.Table -> {
-                hasTablePermission(userDetails, targetId as Long, permissions)
-            }
-            ScopedEvaluatorType.Issue -> {
-                hasIssuePermission(userDetails, targetId as Long, permissions)
-            }
-            ScopedEvaluatorType.IssueComment -> {
-                hasIssueCommentPermission(userDetails, targetId as Long, permissions)
-            }
-            ScopedEvaluatorType.HasGrantingAuthority -> {
-                canGrantProjectAuthority(userDetails, targetId as ProjectAuthorityIdentity, permissions)
-            }
-            else -> {
-                throw ClassNotFoundException(evaluatorType.value)
-            }
-        }
-    }
+	fun hasPermission(
+		authentication: Authentication,
+		targetId: Serializable,
+		evaluatorType: ScopedEvaluatorType,
+		permissions: List<ScopedPermission>,
+	): Boolean {
+		val userDetails = authentication.principal as UserDetails
+		return when (evaluatorType) {
+			ScopedEvaluatorType.Project -> {
+				hasProjectPermission(userDetails, targetId as Long, permissions)
+			}
 
-    fun hasProjectPermission(userDetails: UserDetails, projectId: Long, permissions: List<ScopedPermission>): Boolean {
-        val authorities = repository.findByUsernameAndProjectId(userDetails.username, projectId)
-        if (authorities.any { it.authority == ScopedPermission.Owner.value }) return true
-        return permissions.all { o -> authorities.any { o.value == it.authority } }
-    }
+			ScopedEvaluatorType.Table -> {
+				hasTablePermission(userDetails, targetId as Long, permissions)
+			}
 
-    fun hasTablePermission(userDetails: UserDetails, tableId: Long, permissions: List<ScopedPermission>): Boolean {
-        val authorities = repository.findByUsernameAndTableId(userDetails.username, tableId)
-        if (authorities.any { it.authority == ScopedPermission.Owner.value }) return true
-        return permissions.all { o -> authorities.any { o.value == it.authority } }
-    }
+			ScopedEvaluatorType.Issue -> {
+				hasIssuePermission(userDetails, targetId as Long, permissions)
+			}
 
-    fun hasIssuePermission(userDetails: UserDetails, issueId: Long, permissions: List<ScopedPermission>): Boolean {
-        val authorities = repository.findByUsernameAndIssueId(userDetails.username, issueId)
-        if (authorities.any { o -> o.authority == ScopedPermission.Owner.value }) return true
-        return permissions.all { o -> authorities.any { o.value == it.authority } }
-    }
+			ScopedEvaluatorType.IssueComment -> {
+				hasIssueCommentPermission(userDetails, targetId as Long, permissions)
+			}
 
-    fun hasIssueCommentPermission(userDetails: UserDetails, issueCommentId: Long, permissions: List<ScopedPermission>): Boolean {
-        val authorities = repository.findByUsernameAndIssueCommentId(userDetails.username, issueCommentId)
-        if (authorities.any { it.authority == ScopedPermission.Owner.value }) return true
-        return permissions.all { o -> authorities.any { o.value == it.authority } }
-    }
+			ScopedEvaluatorType.HasGrantingAuthority -> {
+				canGrantProjectAuthority(userDetails, targetId as ProjectAuthorityIdentity, permissions)
+			}
+		}
+	}
 
-    fun canGrantProjectAuthority(userDetails: UserDetails, projectAuthority: ProjectAuthorityIdentity, permissions: List<ScopedPermission>): Boolean {
-        val authorities = repository.findByUsernameAndProjectId(userDetails.username, projectAuthority.projectId)
-        if (authorities.any { it.authority == ScopedPermission.Owner.value }) return true
-        if (authorities.none { o -> o.authority == projectAuthority.authority}) return false
-        return permissions.all { o -> authorities.any { o.value == it.authority } }
-    }
+	fun hasProjectPermission(
+		userDetails: UserDetails,
+		projectId: Long,
+		permissions: List<ScopedPermission>,
+	): Boolean {
+		val authorities = repository.findByUsernameAndProjectId(userDetails.username, projectId)
+		return authorities.any { it.authority == ScopedPermission.Owner.value } ||
+			permissions.all { o -> authorities.any { o.value == it.authority } }
+	}
+
+	fun hasTablePermission(
+		userDetails: UserDetails,
+		tableId: Long,
+		permissions: List<ScopedPermission>,
+	): Boolean {
+		val authorities = repository.findByUsernameAndTableId(userDetails.username, tableId)
+		return authorities.any { it.authority == ScopedPermission.Owner.value } ||
+			permissions.all { o -> authorities.any { o.value == it.authority } }
+	}
+
+	fun hasIssuePermission(
+		userDetails: UserDetails,
+		issueId: Long,
+		permissions: List<ScopedPermission>,
+	): Boolean {
+		val authorities = repository.findByUsernameAndIssueId(userDetails.username, issueId)
+		return authorities.any { o -> o.authority == ScopedPermission.Owner.value } ||
+			permissions.all { o -> authorities.any { o.value == it.authority } }
+	}
+
+	fun hasIssueCommentPermission(
+		userDetails: UserDetails,
+		issueCommentId: Long,
+		permissions: List<ScopedPermission>,
+	): Boolean {
+		val authorities = repository.findByUsernameAndIssueCommentId(userDetails.username, issueCommentId)
+		return authorities.any { it.authority == ScopedPermission.Owner.value } ||
+			permissions.all { o -> authorities.any { o.value == it.authority } }
+	}
+
+	fun canGrantProjectAuthority(
+		userDetails: UserDetails,
+		projectAuthority: ProjectAuthorityIdentity,
+		permissions: List<ScopedPermission>,
+	): Boolean {
+		val authorities = repository.findByUsernameAndProjectId(userDetails.username, projectAuthority.projectId)
+		if (authorities.any { it.authority == ScopedPermission.Owner.value }) return true
+		if (authorities.none { o -> o.authority == projectAuthority.authority }) return false
+		return permissions.all { o -> authorities.any { o.value == it.authority } }
+	}
 }

@@ -8,27 +8,48 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ProjectAuthorityRepository : EntityGraphJpaRepository<ProjectAuthority, ProjectAuthorityIdentity> {
-    fun findByProjectId(projectId: Long): List<ProjectAuthority>
+	fun findByProjectId(projectId: Long): List<ProjectAuthority>
 
-    fun findByUsernameAndProjectId(username: String, projectId: Long): List<ProjectAuthority>
+	fun findByUsernameAndProjectId(
+		username: String,
+		projectId: Long,
+	): List<ProjectAuthority>
 
-    @Query("SELECT pa FROM ProjectAuthority pa " +
-            "INNER JOIN ProjectTable pt ON pt.projectId = pa.projectId " +
-            "WHERE pa.username = :username AND pt.id = :tableId")
-    fun findByUsernameAndTableId(username: String, tableId: Long): List<ProjectAuthority>
+	@Query(
+		"SELECT pa FROM ProjectAuthority pa " +
+			"INNER JOIN ProjectTable pt ON pt.projectId = pa.projectId " +
+			"WHERE pa.username = :username AND pt.id = :tableId",
+	)
+	fun findByUsernameAndTableId(
+		username: String,
+		tableId: Long,
+	): List<ProjectAuthority>
 
-    @Query("SELECT DISTINCT pa FROM TableIssue pi " +
-            "INNER JOIN ProjectTable pt ON pt.id = pi.tableId " +
-            "INNER JOIN ProjectAuthority pa ON pa.projectId = pt.projectId " +
-            "WHERE pa.username = :username AND pi.id = :issueId")
-    fun findByUsernameAndIssueId(username: String, issueId: Long): List<ProjectAuthority>
+	@Query(
+		"SELECT DISTINCT pa FROM TableIssue pi " +
+			"INNER JOIN ProjectTable pt ON pt.id = pi.tableId " +
+			"INNER JOIN ProjectAuthority pa ON pa.projectId = pt.projectId " +
+			"WHERE pa.username = :username AND pi.id = :issueId",
+	)
+	fun findByUsernameAndIssueId(
+		username: String,
+		issueId: Long,
+	): List<ProjectAuthority>
 
-    @Query("SELECT DISTINCT pa FROM IssueComment ic " +
-            "INNER JOIN TableIssue pi ON ic.issueId = pi.id " +
-            "INNER JOIN ProjectTable pt ON pt.id = pi.tableId " +
-            "INNER JOIN ProjectAuthority pa ON pa.projectId = pt.projectId " +
-            "WHERE pa.username = :username AND ic.id = :issueCommentId")
-    fun findByUsernameAndIssueCommentId(username: String, issueCommentId: Long): List<ProjectAuthority>
+	@Query(
+		"SELECT DISTINCT pa FROM IssueComment ic " +
+			"INNER JOIN TableIssue pi ON ic.issueId = pi.id " +
+			"INNER JOIN ProjectTable pt ON pt.id = pi.tableId " +
+			"INNER JOIN ProjectAuthority pa ON pa.projectId = pt.projectId " +
+			"WHERE pa.username = :username AND ic.id = :issueCommentId",
+	)
+	fun findByUsernameAndIssueCommentId(
+		username: String,
+		issueCommentId: Long,
+	): List<ProjectAuthority>
 
-    fun deleteAllByUsernameAndProjectId(username: String, projectId: Long)
+	fun deleteAllByUsernameAndProjectId(
+		username: String,
+		projectId: Long,
+	)
 }

@@ -14,29 +14,24 @@ import java.util.*
 @AutoMapping(IssueCommentDto::class, AutoMappingStrategy.BY_NAME)
 @DefaultMappingTarget(IssueCommentDto::class)
 data class IssueComment(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    val id: Long = -1L,
-
-    @NotEmpty
-    @Column(updatable = false)
-    val user: String = "",
-
-    @Column(updatable = false)
-    val issueId: Long = -1L,
-
-    @Column(columnDefinition = "TEXT")
-    val message: String = "",
-
-    @Column
-    @CreationTimestamp
-    @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
-    @NotEmpty
-    val createdAt: Date = Date(),
-
-    @Column
-    @JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
-    @NotEmpty
-    val editedAt: Date? = null,
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column
+	val id: Long = -1L,
+	@field:NotEmpty
+	@Column(updatable = false)
+	val user: String = "",
+	@Column(updatable = false)
+	val issueId: Long = -1L,
+	@Column(columnDefinition = "TEXT")
+	val message: String = "",
+	@Column
+	@CreationTimestamp
+	@field:JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
+	@field:NotEmpty
+	val createdAt: Date = Date(),
+	@Column
+	@field:JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
+	@field:NotEmpty
+	val editedAt: Date? = null,
 )

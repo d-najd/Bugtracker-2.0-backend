@@ -6,13 +6,15 @@ import java.util.*
 
 @DefaultMappingTarget(Project::class)
 data class ProjectDto(
-    val id: Long? = null,
-    @MappedField
-    val title: String? = null,
-    val owner: String? = null,
-    @MappedField
-    val description: String? = null,
-    val createdAt: Date? = null,
+	val id: Long? = null,
+	@MappedField
+	val title: String? = null,
+	val owner: String? = null,
+	@MappedField
+	val description: String? = null,
+	val createdAt: Date? = null,
 )
 
-class ProjectDtoList(val data: List<ProjectDto>)
+class ProjectDtoList(
+	val data: List<ProjectDto>,
+)

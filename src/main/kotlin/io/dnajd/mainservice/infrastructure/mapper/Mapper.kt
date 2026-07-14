@@ -12,9 +12,8 @@ import kotlin.reflect.full.primaryConstructor
 
 @Configuration
 class Mapper {
-
-    @Bean
-    fun shapeShiftMapper() = ShapeShiftBuilder().withTransformer(ImplicitCollectionMappingTransformerFixed()).build()
+	@Bean
+	fun shapeShiftMapper() = ShapeShiftBuilder().withTransformer(ImplicitCollectionMappingTransformerFixed()).build()
 }
 
 /**
@@ -24,9 +23,12 @@ class Mapper {
  * @param input Dto from which to determine which values need to be changed in [mapTo]
  * @see ShapeShift.mapChangedFieldsSameType
  */
-inline fun <reified T1 : Any, T2 : Any> ShapeShift.mapChangedFields(mapTo: T1, input: T2): T1 {
-    val mappedInput: T1 = this.map(input)
-    return this.mapChangedFieldsSameType(mapTo = mapTo, input = mappedInput)
+inline fun <reified T1 : Any, T2 : Any> ShapeShift.mapChangedFields(
+	mapTo: T1,
+	input: T2,
+): T1 {
+	val mappedInput: T1 = this.map(input)
+	return this.mapChangedFieldsSameType(mapTo = mapTo, input = mappedInput)
 }
 
 /**
@@ -36,22 +38,26 @@ inline fun <reified T1 : Any, T2 : Any> ShapeShift.mapChangedFields(mapTo: T1, i
  * NOTE [T] must have no-args constructor
  * @see ShapeShift.mapChangedFields
  */
-fun <T : Any> ShapeShift.mapChangedFieldsSameType(mapTo: T, input: T): T {
-    val defaultInstance = input::class.primaryConstructor!!.callBy(emptyMap())
-    val properties = (input::class as KClass).memberProperties
-    val parameters = (input::class as KClass).primaryConstructor!!.parameters
+@Suppress("UnusedReceiverParameter")
+fun <T : Any> ShapeShift.mapChangedFieldsSameType(
+	mapTo: T,
+	input: T,
+): T {
+	val defaultInstance = input::class.primaryConstructor!!.callBy(emptyMap())
+	val properties = (input::class).memberProperties
+	val parameters = (input::class).primaryConstructor!!.parameters
 
-    val finalProperties = mutableMapOf<KParameter, Any?>()
-    properties.forEach { property ->
-        val inputValue = property.getter.call(input)
-        val parameter = parameters.find { o -> o.name == property.name }!!
+	val finalProperties = mutableMapOf<KParameter, Any?>()
+	properties.forEach { property ->
+		val inputValue = property.getter.call(input)
+		val parameter = parameters.find { o -> o.name == property.name }!!
 
-        if (inputValue != property.getter.call(defaultInstance)) {
-            finalProperties[parameter] = inputValue
-        } else {
-            finalProperties[parameter] = property.getter.call(mapTo)
-        }
-    }
+		if (inputValue != property.getter.call(defaultInstance)) {
+			finalProperties[parameter] = inputValue
+		} else {
+			finalProperties[parameter] = property.getter.call(mapTo)
+		}
+	}
 
-    return input::class.primaryConstructor!!.callBy(finalProperties);
+	return input::class.primaryConstructor!!.callBy(finalProperties)
 }

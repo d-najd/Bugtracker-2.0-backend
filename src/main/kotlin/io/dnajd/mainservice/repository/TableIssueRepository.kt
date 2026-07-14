@@ -12,69 +12,80 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface TableIssueRepository : EntityGraphJpaRepository<TableIssue, Long> {
-    fun getReferenceById(id: Long, entityGraph: EntityGraph): TableIssue
+	fun getReferenceById(
+		id: Long,
+		entityGraph: EntityGraph,
+	): TableIssue
 
-    fun findAllByTableId(tableId: Long, entityGraph: EntityGraph = EntityGraph.NOOP): List<TableIssue>
+	fun findAllByTableId(
+		tableId: Long,
+		entityGraph: EntityGraph = EntityGraph.NOOP,
+	): List<TableIssue>
 
-    fun countByTableId(tableId: Long): Int
+	fun countByTableId(tableId: Long): Int
 
-    /**
-     * No checking is done to check if the id's belong to the same [ProjectTable] here
-     */
-    @Query("CALL project_table_issue_swap_positions(:fId, :sId);", nativeQuery = true)
-    @Modifying(clearAutomatically = true)
-    @Transactional
-    fun swapPositions(
-        @Param("fId") fId: Long,
-        @Param("sId") sId: Long,
-    )
+	/**
+	 * No checking is done to check if the id's belong to the same [ProjectTable] here
+	 */
+	@Query("CALL project_table_issue_swap_positions(:fId, :sId);", nativeQuery = true)
+	@Modifying(clearAutomatically = true)
+	@Transactional
+	fun swapPositions(
+		@Param("fId") fId: Long,
+		@Param("sId") sId: Long,
+	)
 
-    @Query(
-        "SELECT CASE WHEN COUNT(t) > 0 THEN true ELSE false END " +
-                "FROM TableIssue t " +
-                "WHERE t.id = :taskId " +
-                "AND t.table.project.id = (SELECT tb.project.id FROM ProjectTable tb WHERE tb.id = :tableId)"
-    )
-    fun taskAndTableBelongToSameProject(
-        @Param("taskId") taskId: Long,
-        @Param("tableId") tableId: Long,
-    ): Boolean
+	@Query(
+		"SELECT CASE WHEN COUNT(t) > 0 THEN true ELSE false END " +
+			"FROM TableIssue t " +
+			"WHERE t.id = :taskId " +
+			"AND t.table.project.id = (SELECT tb.project.id FROM ProjectTable tb WHERE tb.id = :tableId)",
+	)
+	fun taskAndTableBelongToSameProject(
+		@Param("taskId") taskId: Long,
+		@Param("tableId") tableId: Long,
+	): Boolean
 
-    @Query(
-        "SELECT CASE WHEN COUNT(firstIssue) > 0 THEN true ELSE FALSE END " +
-                "FROM TableIssue firstIssue " +
-                "WHERE firstIssue.id = :fId " +
-                "AND firstIssue.table.projectId = " +
-                "(SELECT secondIssue.table.projectId FROM TableIssue secondIssue WHERE secondIssue.id = :sId)"
-    )
-    fun tasksBelongToSameProject(
-        @Param("fId") fId: Long,
-        @Param("sId") sId: Long,
-    ): Boolean
+	@Query(
+		"SELECT CASE WHEN COUNT(firstIssue) > 0 THEN true ELSE FALSE END " +
+			"FROM TableIssue firstIssue " +
+			"WHERE firstIssue.id = :fId " +
+			"AND firstIssue.table.projectId = " +
+			"(SELECT secondIssue.table.projectId FROM TableIssue secondIssue WHERE secondIssue.id = :sId)",
+	)
+	fun tasksBelongToSameProject(
+		@Param("fId") fId: Long,
+		@Param("sId") sId: Long,
+	): Boolean
 
+	@Query(value = "CALL project_table_issue_move_issue(:fId, :sId);", nativeQuery = true)
+	@Modifying(clearAutomatically = true)
+	@Transactional
+	fun movePositionTo(
+		@Param("fId") fId: Long,
+		@Param("sId") sId: Long,
+	)
 
-    @Query(value = "CALL project_table_issue_move_issue(:fId, :sId);", nativeQuery = true)
-    @Modifying(clearAutomatically = true)
-    @Transactional
-    fun movePositionTo(
-        @Param("fId") fId: Long,
-        @Param("sId") sId: Long,
-    );
+	/**
+	 * Use after table has been removed, moves all the project tables in given project one spot to the left after the
+	 * given position
+	 */
+	@Query(
+		"UPDATE TableIssue i " +
+			"SET i.position = i.position - 1 " +
+			"WHERE i.tableId = :tableId AND i.position > :position",
+	)
+	@Modifying(clearAutomatically = true)
+	@Transactional
+	fun moveToLeftAfter(
+		@Param("tableId") tableId: Long,
+		@Param("position") position: Int,
+	)
 
-    /**
-     * Use after table has been removed, moves all the project tables in given project one spot to the left after the
-     * given position
-     */
-    @Query(
-        "UPDATE TableIssue i " +
-                "SET i.position = i.position - 1 " +
-                "WHERE i.tableId = :tableId AND i.position > :position"
-    )
-    @Modifying(clearAutomatically = true)
-    @Transactional
-    fun moveToLeftAfter(@Param("tableId") tableId: Long, @Param("position") position: Int)
-
-    fun findByTableIdAndPositionGreaterThanEqual(tableId: Long, positionIsGreaterThan: Int): List<TableIssue>
+	fun findByTableIdAndPositionGreaterThanEqual(
+		tableId: Long,
+		positionIsGreaterThan: Int,
+	): List<TableIssue>
 }
 /* Bug in task swapping when 44/movePositionTo/53 (removed irrelevant fields)
 

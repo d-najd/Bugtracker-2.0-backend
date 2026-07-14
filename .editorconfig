@@ -1,0 +1,7 @@
+[*.{kt,kts}]
+ktlint_standard_multiline-expression-wrapping = disabled
+ktlint_standard_final-newline = disabled
+ktlint_standard_redundant-if = disabled
+ktlint_standard_no-wildcard-imports = disabled
+indent_size = 4
+indent_style = tab
