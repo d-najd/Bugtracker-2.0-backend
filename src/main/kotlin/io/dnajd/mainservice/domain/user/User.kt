@@ -32,6 +32,7 @@ data class User(
 	@field:NotEmpty
 	@field:Size(max = 255)
 	@field:Column(nullable = false, length = 255)
+	@field:JvmField
 	val username: String = "",
 	@field:NotEmpty
 	@field:Column(nullable = false, updatable = false)

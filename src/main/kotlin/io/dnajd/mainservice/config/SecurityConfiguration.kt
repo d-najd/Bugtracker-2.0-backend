@@ -20,10 +20,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 class SecurityConfiguration(
-	@field:Value("\${spring.security.oauth2.resourceserver.jwt.issuer-uri}") private val issuerUrl: String,
-	@field:Value("\${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}") private val jwkSetUrl: String,
-	@field:Value("\${spring.security.oauth2.resourceserver.jwt.audiences}") private val audiences: List<String>,
-	@field:Value("\${spring.security.oauth2.client.registration.google.client-id}") private val authorizedParty: String,
+	@param:Value("\${spring.security.oauth2.resourceserver.jwt.issuer-uri}") private val issuerUrl: String,
+	@param:Value("\${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}") private val jwkSetUrl: String,
+	@param:Value("\${spring.security.oauth2.resourceserver.jwt.audiences}") private val audiences: List<String>,
+	@param:Value("\${spring.security.oauth2.client.registration.google.client-id}") private val authorizedParty: String,
 	userDetailsService: UserDetailsService,
 ) {
 	private val jwtAccessTokenRequestFilter = JwtAccessTokenRequestFilter(userDetailsService)
