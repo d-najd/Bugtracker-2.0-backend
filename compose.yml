@@ -20,18 +20,28 @@ services:
             - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/${DB_NAME}
         env_file:
             - .env
+        healthcheck:
+            test:
+                "wget -T5 -qO- http://localhost:8080/actuator/health | grep UP
+                || exit 1"
+            start_period: 5s
+            interval: 5s
+            retries: 5
+            timeout: 5s
     db:
         image: mysql
         container_name: db
         networks:
             - bugtracker-dev
         ports:
-            - "3306:3306"
+            - "3307:3306" # for development
         volumes:
             - bugtracker-mysql-data:/var/lib/mysql
         environment:
             MYSQL_DATABASE: ${DB_NAME}
             MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
         healthcheck:
             test:
                 mysqladmin ping -h 127.0.0.1 -u ${DB_USERNAME}

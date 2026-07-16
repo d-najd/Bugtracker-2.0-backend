@@ -30,6 +30,16 @@ class SecurityConfiguration(
 	private val jwtRefreshTokenRequestFilter = JwtRefreshTokenRequestFilter(userDetailsService)
 
 	@Bean
+	@Order(0)
+	fun actuatorSecurityFilterChain(http: HttpSecurity): SecurityFilterChain =
+		http
+			.securityMatcher("/actuator/**")
+			.authorizeHttpRequests { auth ->
+				auth.anyRequest().permitAll()
+			}.csrf { csrf -> csrf.disable() }
+			.build()
+
+	@Bean
 	@Order(1)
 	fun oauthSecurityFilterChain(http: HttpSecurity): SecurityFilterChain =
 		http
