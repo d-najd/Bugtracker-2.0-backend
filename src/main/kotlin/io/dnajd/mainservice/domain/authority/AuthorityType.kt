@@ -17,11 +17,7 @@ enum class AuthorityType(
 
 @Converter(autoApply = true)
 class AuthorityTypeConverter : AttributeConverter<AuthorityType, String> {
-	override fun convertToDatabaseColumn(p0: AuthorityType): String {
-		return p0.value
-	}
+	override fun convertToDatabaseColumn(p0: AuthorityType): String = p0.value
 
-	override fun convertToEntityAttribute(p0: String): AuthorityType {
-		return AuthorityType.entries.first { it.value == p0 }
-	}
+	override fun convertToEntityAttribute(p0: String): AuthorityType = AuthorityType.entries.first { it.value == p0 }
 }
