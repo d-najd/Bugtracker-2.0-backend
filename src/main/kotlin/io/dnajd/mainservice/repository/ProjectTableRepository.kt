@@ -19,8 +19,6 @@ interface ProjectTableRepository : EntityGraphJpaRepository<ProjectTable, Long> 
 		entityGraph: EntityGraph = EntityGraph.NOOP,
 	): List<ProjectTable>
 
-	// fun findAllByProjectId(projectId: Long): MutableList<ProjectTable>
-
 	fun countByProjectId(projectId: Long): Int
 
 	/**

@@ -18,14 +18,10 @@ enum class AuthorityType(
 @Converter(autoApply = true)
 class AuthorityTypeConverter : AttributeConverter<AuthorityType, String> {
 	override fun convertToDatabaseColumn(p0: AuthorityType): String {
-		val log = LoggerFactory.getLogger(AuthorityTypeConverter::class.java)
-		log.error("Test with ${p0.value}")
 		return p0.value
 	}
 
 	override fun convertToEntityAttribute(p0: String): AuthorityType {
-		val log = LoggerFactory.getLogger(AuthorityTypeConverter::class.java)
-		log.error("Test with $p0")
 		return AuthorityType.entries.first { it.value == p0 }
 	}
 }

@@ -2,7 +2,6 @@ package io.dnajd.mainservice.domain.user
 
 import com.cosium.spring.data.jpa.entity.graph.domain2.DynamicEntityGraph
 import com.cosium.spring.data.jpa.entity.graph.domain2.EntityGraphType
-import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
 import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
@@ -38,7 +37,6 @@ data class User(
 	@field:Column(nullable = false, updatable = false)
 	val gmail: String = "",
 	@field:CreationTimestamp
-	@field:JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
 	@field:Column(nullable = false)
 	@field:NotNull
 	val createdAt: Date = Date(),

@@ -3,7 +3,6 @@ package io.dnajd.mainservice.domain.tableissue
 import com.cosium.spring.data.jpa.entity.graph.domain2.DynamicEntityGraph
 import com.cosium.spring.data.jpa.entity.graph.domain2.EntityGraph
 import com.cosium.spring.data.jpa.entity.graph.domain2.EntityGraphType
-import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
 import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
@@ -57,12 +56,10 @@ data class TableIssue(
 	@field:NotBlank
 	@Column(columnDefinition = "TEXT")
 	val description: String? = null,
-	@field:JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
 	@Column(nullable = false)
 	@field:NotNull
 	@CreationTimestamp
 	val createdAt: Date? = null,
-	@field:JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
 	@Column
 	@field:NotNull
 	val updatedAt: Date? = null,

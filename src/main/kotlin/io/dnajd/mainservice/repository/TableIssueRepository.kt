@@ -87,7 +87,7 @@ interface TableIssueRepository : EntityGraphJpaRepository<TableIssue, Long> {
 		positionIsGreaterThan: Int,
 	): List<TableIssue>
 }
-/* Bug in task swapping when 44/movePositionTo/53 (removed irrelevant fields)
+/* TODO Bug in task swapping when 44/movePositionTo/53 (removed irrelevant fields)
 
 data before
 {

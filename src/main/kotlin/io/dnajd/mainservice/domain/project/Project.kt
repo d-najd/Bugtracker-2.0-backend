@@ -1,6 +1,5 @@
 package io.dnajd.mainservice.domain.project
 
-import com.fasterxml.jackson.annotation.JsonFormat
 import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
@@ -42,7 +41,6 @@ data class Project(
 	@Column(nullable = false)
 	@MappedField(DontMapCondition::class)
 	val iconUri: String = generateDefaultIconUri(),
-	@field:JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
 	@field:NotNull
 	@CreationTimestamp
 	@Column(nullable = false)

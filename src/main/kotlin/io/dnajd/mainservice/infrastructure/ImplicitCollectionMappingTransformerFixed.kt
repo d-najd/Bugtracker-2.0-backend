@@ -14,10 +14,7 @@ class ImplicitCollectionMappingTransformerFixed : MappingTransformer<Collection<
 		context.originalValue ?: return null
 		val type = context.toField.genericType as? ParameterizedType ?: return null
 		val collectionType = type.actualTypeArguments[0] as? Class<*> ?: return null
-		val se = type.rawType.typeName
-		val ere = type.rawType.javaClass
 		val baseMapping = context.originalValue!!.map { context.shapeShift.map(it, collectionType) }
-		val ge = se + "" + ere
 		return when (type.rawType.typeName) {
 			List::class.java.typeName -> {
 				baseMapping

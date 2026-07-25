@@ -1,6 +1,5 @@
 package io.dnajd.mainservice.domain.issuecomment
 
-import com.fasterxml.jackson.annotation.JsonFormat
 import dev.krud.shapeshift.enums.AutoMappingStrategy
 import dev.krud.shapeshift.resolver.annotation.AutoMapping
 import dev.krud.shapeshift.resolver.annotation.DefaultMappingTarget
@@ -27,11 +26,9 @@ data class IssueComment(
 	val message: String = "",
 	@Column
 	@CreationTimestamp
-	@field:JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
 	@field:NotEmpty
 	val createdAt: Date = Date(),
 	@Column
-	@field:JsonFormat(pattern = "yyyy-MM-d HH:mm:ss")
 	@field:NotEmpty
 	val editedAt: Date? = null,
 )
